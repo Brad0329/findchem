@@ -5,9 +5,12 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:findchem/parser/models.dart';
+import 'package:findchem/share/share_action.dart';
+import 'package:findchem/share/share_text.dart';
 import 'package:findchem/ui/entry_card.dart';
 import 'package:findchem/ui/search_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -18,14 +21,19 @@ void main() {
     ds = Dataset.fromJson((jsonDecode(text) as Map).cast<String, Object?>());
   });
 
-  Future<void> pumpPage(WidgetTester tester, {Size size = const Size(400, 800), double textScale = 1}) async {
+  Future<void> pumpPage(
+    WidgetTester tester, {
+    Size size = const Size(400, 800),
+    double textScale = 1,
+    Dataset? data,
+  }) async {
     tester.view.physicalSize = size;
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.reset);
     await tester.pumpWidget(
       MediaQuery(
         data: MediaQueryData(size: size, textScaler: TextScaler.linear(textScale)),
-        child: MaterialApp(home: SearchPage(dataset: ds)),
+        child: MaterialApp(home: SearchPage(dataset: data ?? ds)),
       ),
     );
   }
@@ -166,6 +174,88 @@ void main() {
     final d = tester.getTopLeft(find.byType(EntryCard).at(1));
     expect(c.dy, lessThan(d.dy));
     expect(c.dx, d.dx);
+  });
+
+  group('F-003 공유 버튼', () {
+    const shareChannel = MethodChannel('dev.fluttercommunity.plus/share');
+
+    /// 공유 창 채널을 가로챈다. [fail]이면 공유 창을 못 여는 환경처럼 예외를 던진다.
+    List<String> mockShare(WidgetTester tester, {bool fail = false}) {
+      final shared = <String>[];
+      final messenger = tester.binding.defaultBinaryMessenger;
+      messenger.setMockMethodCallHandler(shareChannel, (call) async {
+        if (fail) throw PlatformException(code: 'unavailable');
+        shared.add((call.arguments as Map)['text'] as String);
+        return 'dev.fluttercommunity.plus/share/success';
+      });
+      addTearDown(() => messenger.setMockMethodCallHandler(shareChannel, null));
+      return shared;
+    }
+
+    Finder shareButtonOf(String ko) =>
+        find.descendant(of: cardOf(ko), matching: find.byTooltip(ShareText.tooltip));
+
+    testWidgets("'50-00-0' → 카드마다 공유 버튼, 누르면 그 카드의 공유 텍스트가 공유 창으로(날짜는 그 카드의 표 PDF)", (tester) async {
+      // 실제 두 PDF는 생성일이 같다(2026-07-20) — 표를 바꿔 쓰는 결함이 드러나게 사고대비물질 쪽 날짜만 바꾼다.
+      final data = Dataset(
+        byeolpyo2: ds.byeolpyo2,
+        byeolpyo3: PdfInfo(file: ds.byeolpyo3.file, created: '2030-01-01T00:00:00+09:00', pages: ds.byeolpyo3.pages),
+        extractedAt: ds.extractedAt,
+        entries: ds.entries,
+      );
+      final shared = mockShare(tester);
+      await pumpPage(tester, data: data);
+      await type(tester, '50-00-0');
+      expect(find.byTooltip(ShareText.tooltip), findsNWidgets(2));
+
+      await tester.tap(shareButtonOf('포르말린; 포름알데히드'));
+      await tester.pump();
+      await tester.tap(shareButtonOf('포르말린 또는 포름알데히드(폼알데하이드)'));
+      await tester.pump();
+      final hit = tester.widget<EntryCard>(cardOf('포르말린; 포름알데히드')).hit;
+      expect(shared.first, shareText(hit, ds.byeolpyo2));
+      expect(shared.first.split('\n').first, '[인체·생태 유해성] 포르말린; 포름알데히드');
+      expect(shared.first.split('\n').last, endsWith('(PDF 2026-07-20 기준)'));
+      expect(shared.last.split('\n').first, '[사고대비물질 · 우선 적용] 포르말린 또는 포름알데히드(폼알데하이드)');
+      expect(shared.last.split('\n').last, endsWith('(PDF 2030-01-01 기준)'));
+      expect(find.text(ShareText.copied), findsNothing);
+    });
+
+    testWidgets('클립보드 쓰기도 거부되면 "공유하지 못했습니다" 알림(아무 반응 없이 끝나지 않는다)', (tester) async {
+      mockShare(tester, fail: true);
+      final messenger = tester.binding.defaultBinaryMessenger;
+      messenger.setMockMethodCallHandler(SystemChannels.platform, (call) async {
+        if (call.method == 'Clipboard.setData') throw PlatformException(code: 'denied');
+        return null;
+      });
+      addTearDown(() => messenger.setMockMethodCallHandler(SystemChannels.platform, null));
+
+      await pumpPage(tester);
+      await type(tester, '7647-01-0');
+      await tester.tap(shareButtonOf('염화수소'));
+      await tester.pump();
+      expect(find.text(ShareText.failed), findsOneWidget);
+      expect(find.text(ShareText.copied), findsNothing);
+    });
+
+    testWidgets('공유 창을 열 수 없으면 같은 텍스트가 클립보드로, "복사했습니다" 알림', (tester) async {
+      mockShare(tester, fail: true);
+      final clipboard = <String>[];
+      final messenger = tester.binding.defaultBinaryMessenger;
+      messenger.setMockMethodCallHandler(SystemChannels.platform, (call) async {
+        if (call.method == 'Clipboard.setData') clipboard.add((call.arguments as Map)['text'] as String);
+        return null;
+      });
+      addTearDown(() => messenger.setMockMethodCallHandler(SystemChannels.platform, null));
+
+      await pumpPage(tester);
+      await type(tester, '7647-01-0');
+      await tester.tap(shareButtonOf('염화수소'));
+      await tester.pump();
+      final hit = tester.widget<EntryCard>(cardOf('염화수소')).hit;
+      expect(clipboard, [shareText(hit, ds.byeolpyo3)]);
+      expect(find.text(ShareText.copied), findsOneWidget);
+    });
   });
 
   testWidgets('시스템 글자 크기 2배에서도 카드가 넘치지 않는다(오버플로 예외 없음)', (tester) async {

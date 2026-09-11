@@ -82,7 +82,7 @@ class _SearchPageState extends State<SearchPage> {
               ),
             ),
           ),
-          Expanded(child: _ResultList(result: _result)),
+          Expanded(child: _ResultList(result: _result, dataset: widget.dataset)),
         ],
       ),
     );
@@ -90,13 +90,16 @@ class _SearchPageState extends State<SearchPage> {
 }
 
 class _ResultList extends StatelessWidget {
-  const _ResultList({required this.result});
+  const _ResultList({required this.result, required this.dataset});
 
   final SearchResult result;
+  final Dataset dataset;
 
   @override
   Widget build(BuildContext context) {
     final r = result;
+    Widget card(Hit h) =>
+        EntryCard(hit: h, pdf: h.entry.src == Source.byeolpyo3 ? dataset.byeolpyo3 : dataset.byeolpyo2);
     if (r.query.trim().isEmpty) return const SizedBox.shrink();
     final theme = Theme.of(context);
 
@@ -132,11 +135,11 @@ class _ResultList extends StatelessWidget {
             }
             final start = (i - 1) * columns;
             final rowHits = r.hits.sublist(start, (start + columns).clamp(0, r.hits.length));
-            if (columns == 1) return EntryCard(hit: rowHits.first);
+            if (columns == 1) return card(rowHits.first);
             return Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                for (final h in rowHits) Expanded(child: EntryCard(hit: h)),
+                for (final h in rowHits) Expanded(child: card(h)),
                 for (var k = rowHits.length; k < columns; k++) const Expanded(child: SizedBox()),
               ],
             );

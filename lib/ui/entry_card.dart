@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 
 import '../parser/models.dart';
 import '../search/search.dart';
+import '../share/share_action.dart';
+import '../share/share_text.dart';
 
 /// 화면 문구(테스트가 같은 상수를 본다).
 abstract final class CardText {
@@ -15,9 +17,12 @@ abstract final class CardText {
 }
 
 class EntryCard extends StatelessWidget {
-  const EntryCard({super.key, required this.hit});
+  const EntryCard({super.key, required this.hit, required this.pdf});
 
   final Hit hit;
+
+  /// 이 항목이 속한 표의 원본 PDF — 공유 텍스트 마지막 줄의 기준일(F-003).
+  final PdfInfo pdf;
 
   @override
   Widget build(BuildContext context) {
@@ -37,10 +42,31 @@ class EntryCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (hit.priority) _Badge(CardText.priority, color: cs.primary, onColor: cs.onPrimary),
-            if (e.deleted) _Badge(CardText.deleted, color: cs.surfaceContainerHighest, onColor: cs.onSurfaceVariant),
-            Text(e.ko, style: theme.textTheme.titleMedium),
-            if (e.en.isNotEmpty) Text(e.en, style: theme.textTheme.bodyMedium?.copyWith(color: cs.onSurfaceVariant)),
+            // 오른쪽 위 공유 버튼은 이름 줄까지만 옆에 둔다 — 수량 표는 카드 폭을 다 쓴다.
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (hit.priority) _Badge(CardText.priority, color: cs.primary, onColor: cs.onPrimary),
+                      if (e.deleted)
+                        _Badge(CardText.deleted, color: cs.surfaceContainerHighest, onColor: cs.onSurfaceVariant),
+                      Text(e.ko, style: theme.textTheme.titleMedium),
+                      if (e.en.isNotEmpty)
+                        Text(e.en, style: theme.textTheme.bodyMedium?.copyWith(color: cs.onSurfaceVariant)),
+                    ],
+                  ),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.share_outlined),
+                  tooltip: ShareText.tooltip,
+                  visualDensity: VisualDensity.compact,
+                  onPressed: () => shareOrCopy(context, shareText(hit, pdf)),
+                ),
+              ],
+            ),
             const SizedBox(height: 4),
             Text(sourceLine, style: theme.textTheme.bodySmall),
             Text(

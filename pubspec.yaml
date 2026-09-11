@@ -40,6 +40,7 @@ dependencies:
   pdf_graphics: 4.4.0
   pdf_document: 4.4.0
   pdf_cos: 4.4.0 # 위 둘의 하위 계층(메타데이터 /Info 읽기에 직접 import)
+  share_plus: ^12.0.2
 
 dev_dependencies:
   flutter_test:
