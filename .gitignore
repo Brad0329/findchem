@@ -9,4 +9,21 @@
 __pycache__/
 .pytest_cache/
 
-# <초기화 때 추가: 빌드 산출물, 원본 데이터 등 이 스택의 재생성 가능물>
+# Flutter/Dart 재생성 가능물 (flutter create 3.35.6 기본 .gitignore에서 이 스택 해당분만)
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+/build/
+app.*.symbols
+app.*.map.json
+/android/app/debug
+/android/app/profile
+/android/app/release
+
+# IDE (flutter create가 만드는 IntelliJ 파일)
+*.iml
+*.ipr
+*.iws
+.idea/
