@@ -75,7 +75,8 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def _repo_cd_pattern(root: Path) -> str:
-    comps = [c for c in re.split(r"[\\/]+", str(root)) if c]
+    raw = str(root)
+    comps = [c for c in re.split(r"[\\/]+", raw) if c]
     first = comps[0]
     if re.fullmatch(r"[A-Za-z]:", first):  # Windows 드라이브 문자 — 대소문자 모두 받는다
         d = first[0]
@@ -83,6 +84,12 @@ def _repo_cd_pattern(root: Path) -> str:
         head = f"(?:[{d.upper()}{d.lower()}]:|/[{d.upper()}{d.lower()}])"
     else:
         head = re.escape(first)
+        # ★ POSIX 절대경로(`/home/user/…`)는 쪼개면 선두 구분자가 빈 조각으로 버려진다. 그대로 두면
+        #   패턴이 `cd home/user/…`가 되어 **절대경로를 하나도 못 잡는다** — 리눅스·macOS에서 이
+        #   훅이 통째로 죽는다(2026-09-11 클라우드 세션 실측: 13건 실패). 드라이브 문자 경로만
+        #   상정한 코드였다. 상대경로(`findchem/…`)에는 붙이지 않는다.
+        if raw[:1] in ("/", "\\"):
+            head = "[\\\\/]" + head
     body = "[\\\\/]".join(re.escape(c) for c in comps[1:])
     return rf"""^\s*cd\s+["']?{head}[\\/]{body}[\\/]?["']?"""
 

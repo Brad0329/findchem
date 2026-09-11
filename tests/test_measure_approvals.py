@@ -18,6 +18,7 @@
 
 from __future__ import annotations
 
+import re
 import sys
 from pathlib import Path
 
@@ -61,7 +62,11 @@ def test_빈_조각은_버린다():
 
 # ── ② cd 패턴: 명령용과 조각용이 다르다 ─────────────────────────────────────
 
-REPO_MSYS = "/" + REPO[0].lower() + REPO[2:]   # Git Bash(MSYS) 경로: C:/Users/… → /c/Users/…
+# Git Bash(MSYS) 경로: C:/Users/… → /c/Users/…
+# ★ MSYS 형태는 **드라이브 문자 경로에만 있다.** 예전에는 무조건 `"/" + REPO[0].lower() + REPO[2:]`로
+#   만들어서, POSIX에서는 `/home/…`이 `//ome/…`라는 없는 경로가 됐다(2026-09-11 실측).
+_DRIVE = re.match(r"^([A-Za-z]):", REPO)
+REPO_MSYS = ("/" + _DRIVE.group(1).lower() + REPO[2:]) if _DRIVE else REPO
 
 
 @pytest.mark.parametrize("command", [
@@ -93,6 +98,16 @@ def test_명령_전체에서_불필요한_cd를_잡는다(command):
 ])
 def test_정당한_cd와_일반_명령은_안_잡는다(command):
     assert not REDUNDANT_CD_COMMAND.match(command)
+
+
+def test_절대경로의_선두_구분자를_잃지_않는다():
+    """★ 2026-09-11 클라우드 세션(리눅스) 실측 — 패턴이 `cd home/user/…`로 만들어져 **절대경로를
+    하나도 못 잡았다.** 훅이 조용히 무력화된 자리라 상대경로 쪽까지 못을 박는다."""
+    assert REDUNDANT_CD_COMMAND.match(f"cd {REPO} && ls")
+    if REPO.startswith("/"):   # POSIX에서만 의미가 있다 (Windows는 드라이브 문자가 선두다)
+        assert not REDUNDANT_CD_COMMAND.match(f"cd {REPO.lstrip('/')} && ls"), \
+            "선두 구분자를 흘리면 상대경로까지 잡힌다 — 패턴이 절대경로를 못 보고 있다는 신호"
+        assert not REDUNDANT_CD_SEGMENT.match(f"cd {REPO.lstrip('/')}")
 
 
 def test_조각용_패턴도_리다이렉트_변형과_MSYS_경로를_잡는다():
