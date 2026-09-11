@@ -29,11 +29,11 @@
 - [x] Phase 002: 프로젝트 세팅 — 완료 2026-09-11 (Flutter 3.35.6 저장소 루트·Android+웹, applicationId
   `io.github.brad0329.findchem`, 아이콘은 `scripts/make_icons.py`, 뼈대·작업 트랙 ②·테스트·배포 절을 CLAUDE.md에,
   `settings.local.json` 허용 규칙, 템플릿 초기화 블록·README·안 쓰는 팩 2개 정리. 시행착오는 `Phase_002.md`)
-- [ ] Phase 003: **Dart PDF 파서** — 구현·웹 확인 완료 2026-09-11, **Android 실기기 확인 대기**(아래 '사용자 실테스트
-  대기'; 통과하면 이 줄과 CLAUDE.md '현재 단계'를 완료로). 결과: pdf_graphics 4.4.0(순수 Dart) 추출 층 + 정규화 층이
-  pdfplumber 정답지와 2,517행 전수 일치, 번들 JSON 1,657건, 테스트 51건. 시행착오·버린 대안은 `Phase_003.md`
+- [x] Phase 003: **Dart PDF 파서** — 완료 2026-09-11 (pdf_graphics 4.4.0(순수 Dart) 추출 층 + 정규화 층이 pdfplumber
+  정답지와 2,517행 전수 일치, 번들 JSON 1,657건, 테스트 51건. 웹(Chrome) 2.6초·Android 실기기(SM, AOT) 284ms 모두
+  "일치 1657/1657". 시행착오·버린 대안은 `Phase_003.md`)
   - ~~먼저 조사한다(`researcher`)~~ 완료 — 조사 결론은 `Phase_003.md`
-  - 실측 기준 `Phase_001.md` 불변식 — 전부 테스트로 걸었다(수치 정정 3건은 `Phase_003.md`). 웹 통과, Android 대기
+  - 실측 기준 `Phase_001.md` 불변식 — 전부 테스트로 걸었다(수치 정정 3건은 `Phase_003.md`). 웹·Android 통과
   - 데이터 검증 테스트(`test/data/bundled_data_test.dart`)에 원문 오류 예외(괄호 4건·체크디지트 2건)를 넣었다
   - ~~Phase 종료 QA 게이트 뒤: 그 서브에이전트 트랜스크립트에서 `git -C` 호출이 사라졌는지 본다~~ 확인 2026-09-11:
     qa-tester 트랜스크립트의 실행 명령에 `git -C` 0건(git은 status·ls-files·check-ignore·ls-tree만). [H16] 처방 유효
@@ -68,7 +68,7 @@
     같은 규칙이 두 곳에 생긴다.
   - 결과 2: ~~가장 위험한 항목은 "Dart(Android·웹)에서 이 PDF의 표를 pdfplumber만큼 추출할 수 있는가"이고, 아직
     모른다~~ → **해소(2026-09-11, Phase 003)**: pdf_graphics 4.4.0(순수 Dart)로 pdfplumber와 셀 단위 전수 일치.
-    VM·웹(Chrome)에서 확인, Android는 실기기 대기. 라이브러리 선택은 사용자 결정, 근거는 `Phase_003.md`.
+    VM·웹(Chrome)·Android 실기기에서 확인. 라이브러리 선택은 사용자 결정, 근거는 `Phase_003.md`.
   - 결과 3: 올린 PDF로 만든 원천자료는 기기에 저장한다. 앱에 번들한 데이터와는 따로 둔다(SCHEMA.md).
 - (2026-09-11, 사용자 결정) 앱 이름은 **FindChem**이다. 화면 용어는 별표2 → "인체·생태 유해성", 별표3 → "사고대비물질"이다.
 - (2026-09-11, 사용자 결정) 검색 결과 화면은 목업대로 확정했다. 이름은 부분 일치로 찾는다. 두 표에 모두 있으면
@@ -86,9 +86,8 @@
 ## 사용자 실테스트 대기
 - (Phase 002, Phase 006 설치 때 함께) 실기기 런처에 이름 FindChem과 아이콘이 뜨는가 — 적응형 아이콘이 원형 마스크에서
   잘리지 않는가. 웹은 탭 제목·파비콘·PWA 설치 아이콘(maskable)이 맞게 보이는가
-- **(Phase 003 완료 조건) Android 실기기에서 파서 결과가 번들과 같은가** — 2026-09-11 빌드한 확인용 APK
-  `build/app/outputs/flutter-apk/app-arm64-v8a-release.apk`(개발 진입점 `lib/dev/parse_check_main.dart`)를 설치해
-  화면에 "일치 1657/1657"이 뜨면 통과. 별표2 추출 시간도 적어 둔다(웹 2.6초). 다시 빌드하려면 그 파일 머리 주석의 절차.
+- ~~(Phase 003 완료 조건) Android 실기기에서 파서 결과가 번들과 같은가~~ **통과 2026-09-11 21:08** — 실기기(R5KL70B792J)에
+  확인용 APK 설치, 화면 "일치 1657/1657", 별표2 56쪽 284ms·별표3 17ms. 재확인 절차는 `lib/dev/parse_check_main.dart` 머리 주석.
 
 ## 보류 항목 (나중에 할 것)
 

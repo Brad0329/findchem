@@ -1,4 +1,4 @@
-# Phase 003: Dart PDF 파서 (구현·웹 확인 2026-09-11, Android 실기기 확인 대기)
+# Phase 003: Dart PDF 파서 (완료일: 2026-09-11)
 
 ## 실패한 접근과 원인 ★
 - **정답지(pdfplumber)에서 셀의 `\n`을 지웠더니 정보가 사라졌다.** 별표3 98번 CAS 셀은 `95-47-6⏎106-42-3`처럼 쉼표
@@ -30,12 +30,11 @@
   원시 셀 격자라 "두 번째 파서"가 아니다. PDF가 바뀌면 정답지도 다시 만든다.
 - 괘선을 못 얻는 라이브러리로 바꿔야 할 때의 근거: 셀 글자의 세로 중심은 셀 중앙에서 최대 1.31pt(전수 2,517셀),
   줄 간격 8.4pt·글자 7pt로 균일 — 마지막 열 글자 중심으로 행 경계를 복원할 수 있다(실측 2026-09-11, 스크립트는 보존 안 함).
-- **실측 성능**: 별표2 56쪽 추출 VM 약 1.0초, 웹(dart2js, Chrome) 2.6초. 웹은 메인 스레드라 그동안 화면이 멈춘다 —
-  Phase 005 F-002 화면에 진행 표시가 필요하다.
+- **실측 성능**: 별표2 56쪽 추출 VM(JIT) 약 1.0초, Android 실기기(AOT) 284ms, 웹(dart2js, Chrome) 2.6초. 웹은 메인
+  스레드라 그동안 화면이 멈춘다 — Phase 005 F-002 화면에 진행 표시가 필요하다.
 - 이름 분리 한계: 원문이 `Maleichydrazide`처럼 붙어 있는 것은 원문 그대로다(줄바꿈이 아니라 원문). 별표3 33번은
   국문명에 단서가 이어 붙는다(`시안화나트륨(사이안화나트륨) 다만, 베를린청(…) … 제외`). 검색은 `name` 전체도 대상에 넣는 것이 안전하다.
-- **기기 확인 절차** = `lib/dev/parse_check_main.dart` 머리 주석. 웹은 2026-09-11 통과("일치 1657/1657"). Android는
-  실기기 미연결로 대기 — APK: `build/app/outputs/flutter-apk/app-arm64-v8a-release.apk`(개발 진입점으로 빌드한 것,
-  설치 전 LastWriteTime 확인). 통과하면 plan.md 체크박스와 CLAUDE.md '현재 단계'를 완료로.
+- **기기 확인 절차** = `lib/dev/parse_check_main.dart` 머리 주석. 웹·Android 모두 2026-09-11 통과("일치 1657/1657").
+  Android 화면은 `adb shell screencap` → `adb pull`로 읽었다(Flutter 화면은 uiautomator 텍스트로 안 잡힌다).
 - 번들 JSON은 `dart run scripts/build_data.dart`. entries가 같으면 파일을 건드리지 않는다(추출일만 바뀌는 diff 방지).
   낡은 번들은 `test/data/bundled_data_test.dart`가 잡는다.

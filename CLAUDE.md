@@ -4,8 +4,8 @@ Flutter(Android + 웹 한 벌), 서버 없음, 데이터는 JSON으로 번들해
 
 ## 현재 단계
 - 전체 Phase 체크리스트/아키텍처의 **단일 원본 = `work_log/plan.md`** (여기에 중복 기재 금지)
-- 현재: **Phase 003 — Dart PDF 파서** (구현·웹 확인 완료 2026-09-11, Android 실기기 확인 대기 — plan.md '사용자 실테스트
-  대기') (Phase 완료 시 이 줄과 plan.md 체크박스를 함께 갱신)
+- 현재: **Phase 004 — F-001 물질 검색** (미착수. 게이트: 첫 화면 전에 REQUIREMENTS '화면 방향' 2~4를 묻는다)
+  (Phase 완료 시 이 줄과 plan.md 체크박스를 함께 갱신)
 
 ## 새 세션 시작 시
 1. `work_log/plan.md` — 전체 현황·아키텍처·완료 Phase
