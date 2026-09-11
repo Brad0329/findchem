@@ -58,7 +58,7 @@ Flutter(Android + 웹 한 벌), 서버 없음, 데이터는 JSON으로 번들해
 
 ## 현재 단계
 - 전체 Phase 체크리스트/아키텍처의 **단일 원본 = `work_log/plan.md`** (여기에 중복 기재 금지)
-- 현재: **Phase 001 — 요구사항/설계 확정** (Phase 완료 시 이 줄과 plan.md 체크박스를 함께 갱신)
+- 현재: **Phase 002 — 프로젝트 세팅** (미착수) (Phase 완료 시 이 줄과 plan.md 체크박스를 함께 갱신)
 
 ## 새 세션 시작 시
 1. `work_log/plan.md` — 전체 현황·아키텍처·완료 Phase
