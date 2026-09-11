@@ -38,6 +38,15 @@ void main() {
     expect(keys(index.search('108173-90-6')), [('별표2', 5)]);
   });
 
+  test("하이픈 없이 '96297'로도 '96-29-7'(연번 1326)이 찾힌다. 앞부분 '9629'·'96-29'도", () {
+    for (final q in ['96-29-7', '96297']) {
+      expect(keys(index.search(q)), [('별표2', 1326)], reason: q);
+    }
+    for (final q in ['9629', '96-29']) {
+      expect(keys(index.search(q)), contains(('별표2', 1326)), reason: q);
+    }
+  });
+
   test("'50-00-0' → 2건. 사고대비물질 1이 위에 '우선 적용', 별표2 510이 아래에 참고 문구", () {
     final r = index.search('50-00-0');
     expect(keys(r), [('별표3', 1), ('별표2', 510)]);
@@ -57,9 +66,14 @@ void main() {
   });
 
   test('CAS 형식으로 넣어 0건이면 casQueryNoHit. 이름 0건이나 CAS 1건이면 아니다', () {
-    final none = index.search('99999-99-9');
-    expect(none.total, 0);
-    expect(none.casQueryNoHit, isTrue);
+    for (final q in ['99999-99-9', '9999999']) {
+      final none = index.search(q);
+      expect(none.total, 0, reason: q);
+      expect(none.casQueryNoHit, isTrue, reason: q);
+    }
+    // 숫자 4자리 이하는 CAS로 보지 않는다(이름의 숫자일 수 있다) → 0건이어도 안내 없음
+    final short = index.search('9999');
+    expect(short.casQueryNoHit, isFalse);
 
     final deleted = index.search('123-33-1');
     expect(keys(deleted), [('별표2', 91)]);

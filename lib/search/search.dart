@@ -3,6 +3,7 @@
 /// - 이름: 부분 일치, 띄어쓰기 무시, 영문 대소문자 무시. 원문 `name` 전체를 대상으로 한다(ko·en을 모두 덮고,
 ///   별표3 33번처럼 국문명에 단서가 붙은 형식도 포함 — Phase_003.md).
 /// - CAS: 입력이 숫자·하이픈뿐이면 CAS 앞부분 일치도 함께 본다(입력 즉시 검색이라 타이핑 중에도 좁혀진다).
+///   비교는 양쪽 다 하이픈을 뺀 숫자로 한다 — `96297`로도 `96-29-7`이 찾힌다(2026-09-11 사용자 결정).
 /// - 순서: 사고대비물질(별표3) → 인체·생태 유해성(별표2) 살아있는 항목 → `(삭제)` 항목. 각 묶음 안은 연번 순.
 /// - 두 표에 같은 CAS가 있으면 별표3 항목에 '우선 적용', 별표2 항목에 참고 문구(별표2 일반기준 가).
 /// - 상한 [SearchIndex.cap]건. 넘으면 잘랐다는 사실과 전체 건수를 함께 돌려준다(조용한 절단 금지).
@@ -81,6 +82,9 @@ class SearchIndex {
         if (e.src == Source.byeolpyo2 && !e.deleted && e.cas.any(cas3.contains)) e,
     };
     _normalizedNames = [for (final e in _entries) normalize(e.name)];
+    _casDigits = [
+      for (final e in _entries) [for (final c in e.cas) casDigits(c)],
+    ];
   }
 
   /// 결과 상한. 넘으면 [SearchResult.truncated].
@@ -90,26 +94,32 @@ class SearchIndex {
   late final Set<Entry> _priority;
   late final Set<Entry> _referenceNote;
   late final List<String> _normalizedNames;
+  late final List<List<String>> _casDigits;
 
   /// 이름 비교용: 공백(전각 포함) 제거 + 소문자.
   static String normalize(String s) => s.replaceAll(RegExp(r'[\s　]+'), '').toLowerCase();
 
+  /// CAS 비교용: 하이픈 제거.
+  static String casDigits(String s) => s.replaceAll('-', '');
+
   static final _casLike = RegExp(r'^[0-9-]+$');
 
-  /// 완전한 CAS 형식(2~7자리-2자리-1자리). 0건 안내의 조건.
-  static final _casFull = RegExp(r'^\d{2,7}-\d{2}-\d$');
+  /// CAS로 볼 수 있는 입력(하이픈 뺀 숫자 5~10자리 — CAS는 2~7+2+1 자리). 0건 안내의 조건.
+  static final _casFull = RegExp(r'^\d{5,10}$');
 
   SearchResult search(String rawQuery) {
     final q = normalize(rawQuery);
     if (q.isEmpty) return SearchResult.empty;
 
-    final byCas = _casLike.hasMatch(q) && q.contains(RegExp(r'\d'));
+    final qDigits = casDigits(q);
+    final byCas = _casLike.hasMatch(q) && qDigits.isNotEmpty;
     final b3 = <Entry>[];
     final b2 = <Entry>[];
     final deleted = <Entry>[];
     for (var i = 0; i < _entries.length; i++) {
       final e = _entries[i];
-      final matched = _normalizedNames[i].contains(q) || (byCas && e.cas.any((c) => c.startsWith(q)));
+      final matched =
+          _normalizedNames[i].contains(q) || (byCas && _casDigits[i].any((c) => c.startsWith(qDigits)));
       if (!matched) continue;
       if (e.src == Source.byeolpyo3) {
         b3.add(e);
@@ -131,7 +141,7 @@ class SearchIndex {
       total: ordered.length,
       count2: b2.length + deleted.length,
       count3: b3.length,
-      casQueryNoHit: ordered.isEmpty && _casFull.hasMatch(q),
+      casQueryNoHit: ordered.isEmpty && byCas && _casFull.hasMatch(qDigits),
     );
   }
 }
