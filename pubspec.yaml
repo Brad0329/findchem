@@ -34,6 +34,13 @@ dependencies:
   # 쓰지 않아도 둔다 — 빼면 웹 빌드가 "CupertinoIcons 폰트 없음" 경고를 낸다(프레임워크 내부가 참조, 2026-09-11 실측).
   cupertino_icons: ^1.0.8
 
+  # PDF 추출 층(lib/parser/pdf_extractor.dart). 순수 Dart(Apache-2.0)라 웹·Android·`dart run` 빌드 스크립트가
+  # 같은 코드를 쓴다. 생긴 지 3개월·1인 유지·API 변경이 잦아 **정확한 버전으로 고정**한다(2026-09-11 사용자 결정,
+  # 조사 결과는 work_log/Phase_003.md). 올릴 때는 test/parser의 정답지 대조 테스트가 통과해야 한다.
+  pdf_graphics: 4.4.0
+  pdf_document: 4.4.0
+  pdf_cos: 4.4.0 # 위 둘의 하위 계층(메타데이터 /Info 읽기에 직접 import)
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
