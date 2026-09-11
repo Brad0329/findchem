@@ -22,9 +22,12 @@ abstract final class SearchText {
 const wideBreakpoint = 900.0;
 
 class SearchPage extends StatefulWidget {
-  const SearchPage({super.key, required this.dataset});
+  const SearchPage({super.key, required this.dataset, this.onMenu});
 
   final Dataset dataset;
+
+  /// 헤더 '⋮' 메뉴 항목을 골랐을 때(설정 화면 열기는 app.dart가 한다).
+  final ValueChanged<HeaderMenu>? onMenu;
 
   @override
   State<SearchPage> createState() => _SearchPageState();
@@ -55,7 +58,7 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const AppHeader(),
+      appBar: AppHeader(onMenu: widget.onMenu),
       body: Column(
         children: [
           Padding(

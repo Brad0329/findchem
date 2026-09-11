@@ -6,13 +6,13 @@ import 'package:flutter/material.dart';
 
 import 'brand_symbol.dart';
 
-/// 더보기 메뉴 항목. 설정 화면은 F-002(Phase 005)에서 붙는다.
+/// 더보기 메뉴 항목. '설정'은 app.dart가 설정 화면(F-002)을 push한다.
 enum HeaderMenu { settings }
 
 class AppHeader extends StatelessWidget implements PreferredSizeWidget {
   const AppHeader({super.key, this.onMenu});
 
-  /// 메뉴 항목을 골랐을 때. null이면 항목은 보이되 아무 일도 하지 않는다(설정 화면 미구현).
+  /// 메뉴 항목을 골랐을 때. null이면 항목은 보이되 아무 일도 하지 않는다(로딩·오류 화면의 헤더).
   final ValueChanged<HeaderMenu>? onMenu;
 
   @override
