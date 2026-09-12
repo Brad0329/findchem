@@ -115,7 +115,11 @@ class _HeaderRow extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: theme.colorScheme.surfaceContainerHighest,
-        border: Border(left: BorderSide(color: theme.dividerColor, width: _outerBorder)),
+        // 칸들은 오른쪽·아래 선만 그린다 — 표의 맨 위·맨 왼쪽 선은 여기서 그린다(2026-09-12 사용자 지적).
+        border: Border(
+          left: BorderSide(color: theme.dividerColor, width: _outerBorder),
+          top: BorderSide(color: theme.dividerColor, width: _outerBorder),
+        ),
       ),
       child: IntrinsicHeight(
         child: Row(

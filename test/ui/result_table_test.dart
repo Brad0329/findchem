@@ -141,6 +141,19 @@ void main() {
     expect(opacity.opacity, lessThan(1));
   });
 
+  testWidgets('표의 맨 윗 선이 그어져 있다(2026-09-12 사용자 지적)', (tester) async {
+    await pumpPage(tester);
+    await type(tester, '13516-27-3');
+
+    // 머리글 칸들은 오른쪽·아래 선만 그리므로, 맨 위 선은 머리글을 감싼 칸이 그려야 한다.
+    final withTop = tester
+        .widgetList<Container>(
+          find.descendant(of: find.byType(ResultTable), matching: find.byType(Container)),
+        )
+        .where((c) => ((c.decoration as BoxDecoration?)?.border?.top.width ?? 0) > 0);
+    expect(withTop, isNotEmpty);
+  });
+
   testWidgets('폭 375에서도 표가 잘리지 않고 가로로 스크롤된다', (tester) async {
     await pumpPage(tester, size: const Size(375, 700));
     await type(tester, '13516-27-3');
