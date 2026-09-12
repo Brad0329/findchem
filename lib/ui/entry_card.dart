@@ -149,21 +149,27 @@ class _QuantityTable extends StatelessWidget {
     final theme = Theme.of(context);
     final headStyle = theme.textTheme.labelSmall?.copyWith(color: theme.colorScheme.onSurfaceVariant);
     final cellStyle = theme.textTheme.bodyMedium;
-    // 머리글·값 모두 오른쪽 정렬(2026-09-12 사용자 요청) — 자릿수가 세로로 맞는다.
-    Widget cell(String s, TextStyle? style) => Padding(
+    // 수량 열은 오른쪽 정렬(자릿수를 세로로 맞춘다), 구분 열만 중앙 정렬 — 2026-09-12 사용자 요청.
+    Widget cell(String s, TextStyle? style, {TextAlign align = TextAlign.right}) => Padding(
       padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 3),
-      child: Text(s, style: style, softWrap: true, textAlign: TextAlign.right),
+      child: Text(s, style: style, softWrap: true, textAlign: align),
     );
+    Widget kindCell(String s, TextStyle? style) => cell(s, style, align: TextAlign.center);
     return Table(
       columnWidths: const {0: FlexColumnWidth(1.6)},
       defaultVerticalAlignment: TableCellVerticalAlignment.middle,
       border: TableBorder(horizontalInside: BorderSide(color: theme.dividerColor)),
       children: [
-        TableRow(children: [for (final h in headers) cell(h, headStyle)]),
+        TableRow(
+          children: [
+            kindCell(headers.first, headStyle),
+            for (final h in headers.skip(1)) cell(h, headStyle),
+          ],
+        ),
         for (final r in rows)
           TableRow(
             children: [
-              cell(r.kind, cellStyle),
+              kindCell(r.kind, cellStyle),
               cell(r.content, cellStyle),
               cell(r.min, cellStyle),
               cell(r.low, cellStyle),

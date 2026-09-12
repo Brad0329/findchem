@@ -109,11 +109,18 @@ void main() {
     expect(find.text('5'), findsNWidgets(2));
     expect(find.text('200'), findsNWidgets(2));
 
-    // 수량 표는 머리글·값 모두 오른쪽 정렬(2026-09-12 사용자 요청).
-    final cells = find.descendant(of: find.byType(Table), matching: find.byType(Text));
-    expect(tester.widgetList<Text>(cells), hasLength(15)); // 머리글 5 + 행 2 × 5
-    for (final t in tester.widgetList<Text>(cells)) {
-      expect(t.textAlign, TextAlign.right, reason: t.data);
+    // 수량 표 정렬(2026-09-12 사용자 요청): 구분 열만 중앙, 나머지 4열은 오른쪽. 머리글도 같다.
+    final cells = tester
+        .widgetList<Text>(find.descendant(of: find.byType(Table), matching: find.byType(Text)))
+        .toList();
+    expect(cells, hasLength(15)); // 머리글 5 + 행 2 × 5
+    expect([cells[0].data, cells[1].data], ['구분', '함량기준(%)']); // 행 우선 순서 확인(아래 % 5 판정의 전제)
+    for (var i = 0; i < cells.length; i++) {
+      expect(
+        cells[i].textAlign,
+        i % 5 == 0 ? TextAlign.center : TextAlign.right,
+        reason: '${i ~/ 5}행 ${i % 5}열 "${cells[i].data}"',
+      );
     }
   });
 
