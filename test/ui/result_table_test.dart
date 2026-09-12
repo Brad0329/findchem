@@ -101,8 +101,9 @@ void main() {
 
     expect(clipboard, isNotNull);
     final lines = clipboard!.split('\n');
-    expect(lines, hasLength(3));
-    expect(lines[1], startsWith('5\t구아자틴\t'));
+    expect(lines, hasLength(2)); // 머리글 없이 그 물질의 수량 줄만(2026-09-12 사용자 요청)
+    expect(lines[0], startsWith('5\t구아자틴\t'));
+    expect(clipboard, isNot(contains('연번\t화학물질명')));
     expect(clipboard, isNot(contains('Guazatine'))); // 영문명 열은 없다(2026-09-12 사용자 요청)
     expect(find.text(ShareText.copied), findsOneWidget);
   });

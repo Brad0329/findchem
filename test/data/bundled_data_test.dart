@@ -37,6 +37,11 @@ void main() {
     }
   });
 
+  test('모든 항목에 국문명이 있다(1,657건 전수) — TSV 복사의 화학물질명 칸이 비지 않는 근거', () {
+    final emptyKo = ds.entries.where((e) => e.ko.trim().isEmpty).toList();
+    expect(emptyKo, isEmpty, reason: '${emptyKo.length}건: ${emptyKo.take(3).map((e) => e.name)}');
+  });
+
   test('파일 머리: 원본 파일명·생성일·쪽수·추출일', () {
     expect(ds.byeolpyo2.file, startsWith('[별표 2]'));
     expect(ds.byeolpyo3.file, startsWith('[별표 3]'));
