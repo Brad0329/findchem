@@ -17,6 +17,18 @@
 - **Flutter 웹 빌드를 다시 띄우면 서비스워커가 옛 `main.dart.js`를 보여준다**(findchem 2026-09-11 실사례 — 새
   진입점으로 빌드했는데 이전 화면이 떴다). 확인 전에 서비스워커 해제 + `caches` 삭제 후 재로드.
 
+## 웹 플러그인 등록
+
+- **웹 지원이 있는 플러그인을 추가한 뒤 첫 `flutter build web`은 `flutter clean` 다음에 해야 한다**
+  (findchem 2026-09-12 실사례: file_picker 추가 → 증분 웹 빌드가 `.dart_tool/flutter_build/<해시>/
+  web_plugin_registrant.dart`를 **의존성 추가 이전 것 그대로 재사용** → `FilePickerWeb.registerWith`가 빠진 채
+  컴파일 → 버튼을 누르는 즉시 MissingPluginException). **Android는 등록 경로가 달라(GeneratedPluginRegistrant)
+  정상이었다 — 한쪽 플랫폼에서 됐다고 다른 쪽이 된 것이 아니다.**
+- 확인법 두 가지: ① 등록 파일에 그 플러그인의 `registerWith`가 있는가
+  ② `build/web/main.dart.js`에 그 플러그인의 **문자열 리터럴**이 있는가(file_picker면 `__file_picker_web-file-input`).
+  클래스명은 minify돼 사라지므로 클래스명으로 grep하면 있어도 안 잡힌다 — 반드시 남는 문자열
+  (`findchem_data.json` 등)로 grep이 동작하는지 먼저 재 보고 판단한다.
+
 ## Flutter 웹 자산
 
 - **한글·대괄호 파일명 asset은 Windows 웹 빌드가 실패한다** — URL 인코딩된 이름(`%5B%EB%B3%84…`)이 경로 길이를
