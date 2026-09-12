@@ -108,6 +108,13 @@ void main() {
     expect(find.text('0.125'), findsNWidgets(2));
     expect(find.text('5'), findsNWidgets(2));
     expect(find.text('200'), findsNWidgets(2));
+
+    // 수량 표는 머리글·값 모두 오른쪽 정렬(2026-09-12 사용자 요청).
+    final cells = find.descendant(of: find.byType(Table), matching: find.byType(Text));
+    expect(tester.widgetList<Text>(cells), hasLength(15)); // 머리글 5 + 행 2 × 5
+    for (final t in tester.widgetList<Text>(cells)) {
+      expect(t.textAlign, TextAlign.right, reason: t.data);
+    }
   });
 
   testWidgets("'구아자틴' → 2건, 연번 4(염류)에 '묶음 항목 · CAS 없음'", (tester) async {

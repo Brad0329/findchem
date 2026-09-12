@@ -149,9 +149,10 @@ class _QuantityTable extends StatelessWidget {
     final theme = Theme.of(context);
     final headStyle = theme.textTheme.labelSmall?.copyWith(color: theme.colorScheme.onSurfaceVariant);
     final cellStyle = theme.textTheme.bodyMedium;
+    // 머리글·값 모두 오른쪽 정렬(2026-09-12 사용자 요청) — 자릿수가 세로로 맞는다.
     Widget cell(String s, TextStyle? style) => Padding(
       padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 3),
-      child: Text(s, style: style, softWrap: true),
+      child: Text(s, style: style, softWrap: true, textAlign: TextAlign.right),
     );
     return Table(
       columnWidths: const {0: FlexColumnWidth(1.6)},
