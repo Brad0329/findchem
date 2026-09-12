@@ -4,9 +4,10 @@ Flutter(Android + 웹 한 벌), 서버 없음, 데이터는 JSON으로 번들해
 
 ## 현재 단계
 - 전체 Phase 체크리스트/아키텍처의 **단일 원본 = `work_log/plan.md`** (여기에 중복 기재 금지)
-- 현재: **Phase 006 — 배포** (미착수. 게이트: 첫 배포 전에 **릴리스 서명 키**를 정한다 — 지금은 PC마다 다른 debug 키라
-  키가 바뀌면 덮어 설치가 안 된다. 웹 호스팅 위치도 이 Phase에서 정한다. 상세는 plan.md)
+- 현재: **Phase 007 — 부채 정리** (미착수. 항목은 plan.md의 Phase 007 절 — `/debt-audit` 2026-09-12 결과)
   (Phase 완료 시 이 줄과 plan.md 체크박스를 함께 갱신)
+- 배포처: APK는 직접 설치(릴리스 키 필요 — `팩_Flutter_Android.md`), 웹은 master push → Actions →
+  https://brad0329.github.io/findchem/
 
 ## 새 세션 시작 시
 1. `work_log/plan.md` — 전체 현황·아키텍처·완료 Phase
