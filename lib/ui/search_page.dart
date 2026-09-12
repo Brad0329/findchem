@@ -1,12 +1,16 @@
 /// F-001 검색 화면 — 검색창 + 결과 목록. 화면 방향(REQUIREMENTS): 입력 즉시 검색, 휴대폰 1열 / 폭 900 이상 2열.
+///
+/// 결과를 **카드로 그릴지 표로 그릴지는 이 파일 한 곳에서** 정한다(웹=표 F-004, 앱=카드 F-001).
 library;
 
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 
 import '../parser/models.dart';
 import '../search/search.dart';
 import 'app_header.dart';
 import 'entry_card.dart';
+import 'result_table.dart';
 
 /// 화면 문구(테스트가 같은 상수를 본다).
 abstract final class SearchText {
@@ -22,9 +26,13 @@ abstract final class SearchText {
 const wideBreakpoint = 900.0;
 
 class SearchPage extends StatefulWidget {
-  const SearchPage({super.key, required this.dataset, this.onMenu});
+  const SearchPage({super.key, required this.dataset, this.onMenu, bool? useTable})
+    : useTable = useTable ?? kIsWeb;
 
   final Dataset dataset;
+
+  /// 결과를 표(F-004)로 그린다. 기본값은 웹이면 표, 앱이면 카드 — 테스트에서만 직접 넣는다.
+  final bool useTable;
 
   /// 헤더 '⋮' 메뉴 항목을 골랐을 때(설정 화면 열기는 app.dart가 한다).
   final ValueChanged<HeaderMenu>? onMenu;
@@ -85,7 +93,45 @@ class _SearchPageState extends State<SearchPage> {
               ),
             ),
           ),
-          Expanded(child: _ResultList(result: _result, dataset: widget.dataset)),
+          Expanded(
+            child: _ResultList(
+              result: _result,
+              dataset: widget.dataset,
+              useTable: widget.useTable,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// 결과 머리: 전체·표별 건수, 절단 안내, 0건 안내. 카드·표 양쪽이 같은 것을 쓴다.
+class _ResultHeader extends StatelessWidget {
+  const _ResultHeader({required this.result});
+
+  final SearchResult result;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final r = result;
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(SearchText.header(r), style: theme.textTheme.bodySmall),
+          if (r.truncated)
+            Text(
+              SearchText.truncated(r),
+              style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.error),
+            ),
+          if (r.total == 0)
+            Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: Text(r.casQueryNoHit ? SearchText.casNoHit : SearchText.noHit),
+            ),
         ],
       ),
     );
@@ -93,10 +139,11 @@ class _SearchPageState extends State<SearchPage> {
 }
 
 class _ResultList extends StatelessWidget {
-  const _ResultList({required this.result, required this.dataset});
+  const _ResultList({required this.result, required this.dataset, required this.useTable});
 
   final SearchResult result;
   final Dataset dataset;
+  final bool useTable;
 
   @override
   Widget build(BuildContext context) {
@@ -104,7 +151,17 @@ class _ResultList extends StatelessWidget {
     Widget card(Hit h) =>
         EntryCard(hit: h, pdf: h.entry.src == Source.byeolpyo3 ? dataset.byeolpyo3 : dataset.byeolpyo2);
     if (r.query.trim().isEmpty) return const SizedBox.shrink();
-    final theme = Theme.of(context);
+
+    if (useTable) {
+      // 표(F-004): 머리(건수·안내)는 표 위에 두고, 표만 가로로 스크롤한다.
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _ResultHeader(result: r),
+          if (r.hits.isNotEmpty) Expanded(child: ResultTable(hits: r.hits)),
+        ],
+      );
+    }
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -115,27 +172,7 @@ class _ResultList extends StatelessWidget {
           // 0: 머리(건수·안내), 1..rowCount: 카드 행
           itemCount: 1 + rowCount,
           itemBuilder: (context, i) {
-            if (i == 0) {
-              return Padding(
-                padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(SearchText.header(r), style: theme.textTheme.bodySmall),
-                    if (r.truncated)
-                      Text(
-                        SearchText.truncated(r),
-                        style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.error),
-                      ),
-                    if (r.total == 0)
-                      Padding(
-                        padding: const EdgeInsets.only(top: 8),
-                        child: Text(r.casQueryNoHit ? SearchText.casNoHit : SearchText.noHit),
-                      ),
-                  ],
-                ),
-              );
-            }
+            if (i == 0) return _ResultHeader(result: r);
             final start = (i - 1) * columns;
             final rowHits = r.hits.sublist(start, (start + columns).clamp(0, r.hits.length));
             if (columns == 1) return card(rowHits.first);
