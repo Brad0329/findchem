@@ -23,6 +23,49 @@
   허용 규칙도 그 리터럴 경로로 `settings.local.json`에 등록한다(`settings.json`의 allow는 무효) —
   `노하우_승인_대기_최소화.md` §5 스타터에 3종(devices/install/logcat)이 들어 있다.
 
+## 릴리스 서명 키 (2026-09-12, Phase 006에서 확정)
+
+- **debug 키로 배포하면 안 된다.** Flutter 기본 `build.gradle.kts`는 release를 debug 키로 서명한다.
+  debug 키는 PC마다 다르고 재생성되기도 해서, 키가 바뀌면 이미 설치된 앱 위에 업데이트가 안 되고
+  `INSTALL_FAILED_UPDATE_INCOMPATIBLE`로 막힌다 — 지우고 다시 깔아야 하고 저장본도 함께 날아간다.
+- **이 저장소의 구조**: `android/app/build.gradle.kts`가 `android/key.properties`를 읽는다.
+  그 파일이 없으면 릴리스 빌드를 **거부한다**(fail-closed) — debug 키로 조용히 서명하지 않는다.
+  디버그 빌드·테스트는 키 없이도 그대로 돈다.
+- **비밀정보라 저장소에 넣지 않는다**: `key.properties`와 `*.jks`는 `.gitignore`에 있다.
+  keystore 파일 자체는 저장소 **밖**(예: `C:\Users\user\keys\`)에 두고 절대경로로 가리킨다.
+- **keystore를 잃으면 그 앱은 다시 업데이트할 수 없다.** 파일과 비밀번호를 따로 백업한다.
+- 만들기(사용자가 직접 실행한다 — 비밀번호를 묻는 대화형 명령이다). **`-storetype PKCS12`로 만든다**:
+  ```
+  & "C:\Program Files\Android\Android Studio\jbr\bin\keytool.exe" -genkeypair -v -keystore C:\Users\user\keys\findchem-release.jks -storetype PKCS12 -keyalg RSA -keysize 2048 -validity 10000 -alias findchem
+  ```
+  (keytool은 PATH에 없다. Android Studio 번들 JDK 경로를 리터럴로 쓴다 — `flutter doctor -v`의 "Java binary at".
+  PowerShell에서는 경로에 공백이 있어 **호출 연산자 `&`가 없으면** `예기치 않은 '-genkeypair' 토큰`으로 죽는다.)
+- **★ 비밀번호는 ASCII여야 한다 — 한/영이 한글 상태면 한글이 들어간다**(findchem 2026-09-12, 두 시간 샌 진짜 원인).
+  비밀번호 입력은 화면에 찍히지 않아서 IME 상태를 눈으로 확인할 수 없다. `dmsw0114`를 한글 상태로 치면
+  `으뭐0114`가 들어가고, **JKS는 그대로 받아 준다**. 그러면 파일에 적은 ASCII 비밀번호와 영영 안 맞고,
+  Gradle은 `Keystore was tampered with, or password was incorrect`로만 실패해 원인을 가리킨다.
+  PKCS12는 생성 시점에 `Password is not ASCII`로 **거부해서 바로 드러난다** — PKCS12를 쓰는 두 번째 이유다.
+  `keytool -list`가 통과해도 안심할 수 없다: 그때도 IME가 같은 상태면 같은 한글이 들어가 통과한다.
+- **JKS로 만들면 키 비밀번호와 저장소 비밀번호가 갈릴 수 있다 — PKCS12는 그럴 수 없다**(findchem 2026-09-12 실측).
+  JKS는 마지막에 키 비밀번호를 따로 묻고(엔터 = 저장소와 동일), 거기서 다른 값이 들어가면
+  Gradle이 `Keystore was tampered with, or password was incorrect`로만 실패한다 — 어느 쪽 비밀번호가
+  틀렸는지 말해 주지 않는다. **가르는 법**: `keytool -list -v -keystore <파일> -alias <alias>`가
+  성공하면 저장소 비밀번호는 맞는 것이고, 남은 건 키 비밀번호다. PKCS12는 둘이 같아야 해서 이 갈림이 없다.
+- `android/key.properties` 형식 (`\`는 `\\`로, 또는 `/`로 쓴다):
+  ```
+  storePassword=<위에서 넣은 keystore 비밀번호>
+  keyPassword=<키 비밀번호 — 엔터만 쳤으면 storePassword와 같다>
+  keyAlias=findchem
+  storeFile=C:/Users/user/keys/findchem-release.jks
+  ```
+- **확인**: `flutter build apk --split-per-abi` 후 **`apksigner`로** 본다 —
+  ```
+  "C:/Users/user/AppData/Local/Android/Sdk/build-tools/36.1.0/apksigner.bat" verify --print-certs <APK>
+  ```
+  `Signer #1 certificate DN`이 debug 키(`CN=Android Debug`)가 아니라 위에서 넣은 값이어야 한다.
+  **`keytool -printcert -jarfile`은 쓸 수 없다** — "서명된 jar 파일이 아닙니다"가 뜬다.
+  그 명령은 v1(JAR) 서명만 읽는데, 요즘 Flutter APK는 v2/v3 서명만 붙기 때문이다(findchem 2026-09-12).
+
 ## 테스트
 
 - **`testWidgets` 안에서 진짜 파일 I/O를 `await`하면 타임아웃까지 매달린다.** FakeAsync가

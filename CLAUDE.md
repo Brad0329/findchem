@@ -72,6 +72,7 @@ Flutter(Android + 웹 한 벌), 서버 없음, 데이터는 JSON으로 번들해
   docs/                ← REQUIREMENTS.md, SCHEMA.md, design/, playbooks/
   work_log/            ← plan.md, Phase_XXX.md
   scripts/             ← 빌드·유틸 스크립트
+  .github/workflows/   ← GitHub Actions (웹을 GitHub Pages에 배포 — Phase 006)
   ```
   루트의 `pubspec.yaml`·`pubspec.lock`·`analysis_options.yaml`·`.metadata`는 Flutter 고정 파일이다.
   **이 트리 밖에 새 최상위 디렉토리/파일을 만들지 말 것.** 필요하면 사용자 확인 후 이 목록부터 갱신.
@@ -212,10 +213,12 @@ Flutter(Android + 웹 한 벌), 서버 없음, 데이터는 JSON으로 번들해
 1. 검증 — **트랙별로 다르다**: 저위험은 커밋 때 사다리대로 한 것 위에 **아무것도 더 얹지 않는다**
    (로직이 바뀐 커밋이면 전체 1회가 이미 돌았다). 일반 트랙은 사다리의 일반 트랙 갈래 전부
    (전체 테스트·구버전 데이터 마이그레이션 실측·되돌리기 경로·사용자 실테스트).
-2. APK `flutter build apk --split-per-abi` → `build/app/outputs/flutter-apk/app-arm64-v8a-release.apk` /
-   웹 `flutter build web` → `build/web/`
+2. APK `flutter build apk --split-per-abi` → `build/app/outputs/flutter-apk/app-arm64-v8a-release.apk`
+   (릴리스 서명 키는 `android/key.properties` — 없으면 빌드가 거부된다. `팩_Flutter_Android.md`)
 3. APK: USB 연결 후 `C:/Users/user/AppData/Local/Android/Sdk/platform-tools/adb.exe install -r <위 APK>` — 설치 전
-   APK의 LastWriteTime이 방금 빌드인지 본다(`팩_Flutter_Android.md`). 웹: 호스팅 위치 미정 — Phase 006에서
+   APK의 LastWriteTime이 방금 빌드인지 본다(`팩_Flutter_Android.md`).
+   **웹은 손으로 빌드·업로드하지 않는다** — master에 push하면 GitHub Actions가 빌드해
+   https://brad0329.github.io/findchem/ 에 올린다(`.github/workflows/deploy-web.yml`)
 4. **실제 동작 확인** — 실기기에서 앱 실행(런처 이름·아이콘, 검색 결과) / 웹은 배포 주소를 브라우저로 열어 같은 확인
 5. commit (+ 원격이 있으면 push)
 

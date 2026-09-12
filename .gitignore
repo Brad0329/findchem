@@ -2,6 +2,13 @@
 .claude/settings.local.json
 .env
 
+# 릴리스 서명 키 (비밀번호·keystore — 저장소에 절대 넣지 않는다).
+# key.properties는 flutter create가 만든 android/.gitignore에도 있다 — 비밀정보라 여기에도 적어 둔다
+# (그 파일은 재생성될 수 있다).
+/android/key.properties
+*.jks
+*.keystore
+
 # AI 커밋 메시지 파일 (고정 경로 — 노하우_승인_대기_최소화.md 참조)
 .commit_msg.txt
 

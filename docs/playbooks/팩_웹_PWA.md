@@ -34,6 +34,15 @@
 - **한글·대괄호 파일명 asset은 Windows 웹 빌드가 실패한다** — URL 인코딩된 이름(`%5B%EB%B3%84…`)이 경로 길이를
   넘겨 `PathNotFoundException`(errno 123). 번들할 자산은 ASCII 파일명으로(findchem 2026-09-11, 원천 PDF 임시 등록 때).
 
+## 하위 경로 호스팅 (GitHub Pages 등)
+
+- **저장소 이름 하위 경로로 서비스되면 `--base-href`를 줘야 한다**: `flutter build web --base-href /findchem/`.
+  빠뜨리면 `index.html`의 `<base href="/">` 때문에 `main.dart.js`·asset이 전부 404가 되고
+  화면은 흰 채로 뜬다(콘솔에만 404가 보인다). 빌드 산출물의 `<base href>`로 확인한다.
+- `web/manifest.json`의 `start_url`·`icons.src`는 **상대 경로**여야 한쪽 경로에서도 맞는다
+  (`"."`, `"icons/…"`). `/`로 시작하면 하위 경로 호스팅에서 깨진다.
+- **로컬에서 `build/web`을 루트로 띄우면 base-href를 준 산출물은 안 뜬다** — 확인은 배포된 주소에서 한다.
+
 ## 개발 서버·모듈
 
 - **python 기본 `http.server`는 `.wasm`·`.webmanifest` MIME을 모른다** — 브라우저가 wasm을
