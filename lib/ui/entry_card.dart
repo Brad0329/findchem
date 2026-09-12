@@ -8,8 +8,14 @@ import '../search/search.dart';
 import '../share/share_action.dart';
 import '../share/share_text.dart';
 
+/// 표 이름 뱃지 색 — 인체·생태 유해성(REQUIREMENTS '화면 방향' 3, 2026-09-12 사용자 결정).
+/// Material 3 시드(파랑)에서 붉은색이 나오지 않아 고정값을 쓴다. 라이트·다크 공용이고 글자는 흰색이다
+/// (흰 글자 대비 5.6:1). 사고대비물질 뱃지는 테마 강조색(`colorScheme.primary`)을 쓴다.
+const byeolpyo2BadgeColor = Color(0xFFC62828);
+
 /// 화면 문구(테스트가 같은 상수를 본다).
 abstract final class CardText {
+  /// 카드에는 쓰지 않는다(2026-09-12 사용자 결정으로 뱃지 삭제) — 공유 텍스트 첫 줄 라벨 전용(F-003 수용 기준).
   static const priority = '사고대비물질 · 우선 적용';
   static const referenceNote = '사고대비물질은 사고대비물질 규정수량을 적용합니다(별표2 일반기준 가)';
   static const noCas = '묶음 항목 · CAS 없음';
@@ -30,8 +36,10 @@ class EntryCard extends StatelessWidget {
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
 
-    final sourceLine = [
-      '${e.src.label} · ${e.src == Source.byeolpyo3 ? '번호' : '연번'} ${e.no}',
+    // 표 이름은 뱃지로, 번호·고유번호는 그 옆 한 줄로(2026-09-12 사용자 결정).
+    final isByeolpyo3 = e.src == Source.byeolpyo3;
+    final sourceDetail = [
+      '${isByeolpyo3 ? '번호' : '연번'} ${e.no}',
       if (e.uid != null) '고유번호 ${e.uid}',
     ].join(' · ');
 
@@ -50,9 +58,15 @@ class EntryCard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      if (hit.priority) _Badge(CardText.priority, color: cs.primary, onColor: cs.onPrimary),
                       if (e.deleted)
-                        _Badge(CardText.deleted, color: cs.surfaceContainerHighest, onColor: cs.onSurfaceVariant),
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 6),
+                          child: _Badge(
+                            CardText.deleted,
+                            color: cs.surfaceContainerHighest,
+                            onColor: cs.onSurfaceVariant,
+                          ),
+                        ),
                       Text(e.ko, style: theme.textTheme.titleMedium),
                       if (e.en.isNotEmpty)
                         Text(e.en, style: theme.textTheme.bodyMedium?.copyWith(color: cs.onSurfaceVariant)),
@@ -68,7 +82,20 @@ class EntryCard extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 4),
-            Text(sourceLine, style: theme.textTheme.bodySmall),
+            // 좁은 폭(360dp)에서 뱃지+번호가 한 줄에 안 들어가면 줄을 넘긴다.
+            Wrap(
+              crossAxisAlignment: WrapCrossAlignment.center,
+              spacing: 6,
+              runSpacing: 4,
+              children: [
+                _Badge(
+                  e.src.label,
+                  color: isByeolpyo3 ? cs.primary : byeolpyo2BadgeColor,
+                  onColor: isByeolpyo3 ? cs.onPrimary : Colors.white,
+                ),
+                Text(sourceDetail, style: theme.textTheme.bodySmall),
+              ],
+            ),
             Text(
               e.cas.isEmpty ? CardText.noCas : 'CAS ${e.cas.join(', ')}',
               style: theme.textTheme.bodySmall,
@@ -102,7 +129,6 @@ class _Badge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 6),
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
       decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(6)),
       child: Text(text, style: Theme.of(context).textTheme.labelMedium?.copyWith(color: onColor)),

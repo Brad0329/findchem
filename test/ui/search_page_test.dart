@@ -45,21 +45,47 @@ void main() {
 
   Finder cardOf(String ko) => find.ancestor(of: find.text(ko), matching: find.byType(EntryCard));
 
-  testWidgets("'50-00-0' → 머리 건수, 사고대비물질 카드가 위에 '우선 적용', 별표2 510이 아래에 참고 문구", (tester) async {
+  testWidgets("'50-00-0' → 머리 건수, 사고대비물질 카드가 위에(뱃지만, '우선 적용' 문구 없음), 별표2 510이 아래에 참고 문구",
+      (tester) async {
     await pumpPage(tester);
     await type(tester, '50-00-0');
 
     expect(find.text('전체 2건 · 사고대비물질 1건 · 인체·생태 유해성 1건'), findsOneWidget);
-    expect(find.text(CardText.priority), findsOneWidget);
+    // 2026-09-12 사용자 결정: 카드의 '우선 적용' 뱃지는 없앴다(공유 텍스트에는 남아 있다 — F-003).
+    expect(find.text(CardText.priority), findsNothing);
     expect(find.text(CardText.referenceNote), findsOneWidget);
 
     final top = cardOf('포르말린 또는 포름알데히드(폼알데하이드)');
     final below = cardOf('포르말린; 포름알데히드');
     expect(tester.getTopLeft(top).dy, lessThan(tester.getTopLeft(below).dy));
-    expect(find.descendant(of: top, matching: find.text(CardText.priority)), findsOneWidget);
     expect(find.descendant(of: below, matching: find.text(CardText.referenceNote)), findsOneWidget);
-    expect(find.text('사고대비물질 · 번호 1'), findsOneWidget);
-    expect(find.text('인체·생태 유해성 · 연번 510 · 고유번호 97-1-345'), findsOneWidget);
+    expect(find.descendant(of: top, matching: find.text('사고대비물질')), findsOneWidget);
+    expect(find.descendant(of: top, matching: find.text('번호 1')), findsOneWidget);
+    expect(find.descendant(of: below, matching: find.text('인체·생태 유해성')), findsOneWidget);
+    expect(find.descendant(of: below, matching: find.text('연번 510 · 고유번호 97-1-345')), findsOneWidget);
+  });
+
+  testWidgets('표 이름 뱃지 색: 사고대비물질은 테마 강조색, 인체·생태 유해성은 붉은색 + 흰 글자', (tester) async {
+    await pumpPage(tester);
+    await type(tester, '50-00-0');
+
+    ({Color background, Color? foreground}) badge(String label) {
+      final text = find.text(label);
+      final box = tester.widget<Container>(find.ancestor(of: text, matching: find.byType(Container)).first);
+      return (
+        background: (box.decoration! as BoxDecoration).color!,
+        foreground: tester.widget<Text>(text).style?.color,
+      );
+    }
+
+    final cs = Theme.of(tester.element(find.byType(EntryCard).first)).colorScheme;
+    final b3 = badge('사고대비물질');
+    final b2 = badge('인체·생태 유해성');
+    expect(b3.background, cs.primary);
+    expect(b3.foreground, cs.onPrimary);
+    expect(b2.background, byeolpyo2BadgeColor);
+    expect(b2.foreground, Colors.white);
+    expect(b2.background, isNot(b3.background));
   });
 
   testWidgets("'13516-27-3' 카드: 국문명·영문명·표·연번·고유번호·CAS 전부·구분별 수량 원문 그대로", (tester) async {
@@ -68,7 +94,8 @@ void main() {
 
     expect(find.text('구아자틴'), findsOneWidget);
     expect(find.text('Guazatine'), findsOneWidget);
-    expect(find.text('인체·생태 유해성 · 연번 5 · 고유번호 97-1-4'), findsOneWidget);
+    expect(find.text('인체·생태 유해성'), findsOneWidget); // 표 이름 뱃지
+    expect(find.text('연번 5 · 고유번호 97-1-4'), findsOneWidget);
     expect(find.text('CAS 13516-27-3, 108173-90-6'), findsOneWidget);
     for (final h in ['구분', '함량기준(%)', '최하위(톤)', '하위(톤)', '상위(톤)']) {
       expect(find.text(h), findsOneWidget, reason: h);
