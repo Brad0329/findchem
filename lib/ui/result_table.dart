@@ -162,13 +162,12 @@ class _EntryRow extends StatelessWidget {
           entryCell(1, _NameCell(hit: hit)),
           entryCell(2, Text(e.cas.isEmpty ? CardText.noCas : e.cas.join(', '), style: cellStyle)),
           entryCell(3, Text(e.uid ?? '', style: cellStyle)),
-          // 수량 행 묶음: 앞 칸 하나의 높이 안에서 줄이 나뉜다.
+          // 수량 행 묶음: 병합된 앞 칸의 높이를 줄 수만큼 나눠 갖는다.
+          // (줄이 제 높이만 쓰면 물질 칸보다 짧아져 아래쪽 선이 끊긴다 — 2026-09-12 사용자 지적)
           Column(
-            mainAxisSize: MainAxisSize.min,
             children: [
               for (var i = 0; i < e.rows.length; i++)
-                // 줄 안의 칸들끼리 높이를 맞춘다(칸 테두리가 끊기지 않게).
-                IntrinsicHeight(
+                Expanded(
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
@@ -176,8 +175,6 @@ class _EntryRow extends StatelessWidget {
                         _cell(
                           context,
                           width: rowColumns[c].width,
-                          // 줄 사이에만 선을 긋는다 — 마지막 줄 아래 선은 물질 칸(왼쪽)이 그린다.
-                          bottomBorder: i < e.rows.length - 1,
                           child: Text(
                             _rowValue(e.rows[i], c),
                             style: cellStyle,

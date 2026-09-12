@@ -34,6 +34,18 @@ void main() {
     expect(lines[2].split('\t').skip(4), ['생태', '25', '0.125', '5', '200']);
   });
 
+  test("'50-00-0' 두 행의 TSV: 화학물질명 칸이 비지 않는다(2026-09-12 사용자 지적으로 고정)", () {
+    final b3 = tsvText(entryOf(Source.byeolpyo3, 1));
+    final b2 = tsvText(entryOf(Source.byeolpyo2, 510));
+    expect(b3.split('\n')[1], '1\t포르말린 또는 포름알데히드(폼알데하이드)\t50-00-0\t\t\t1\t0.05\t2\t400');
+    expect(b2.split('\n')[2], '510\t포르말린; 포름알데히드\t50-00-0\t97-1-345\t만성\t0.1\t0.125\t5\t400');
+    expect(b3.split('\n')[1].split('\t')[1], '포르말린 또는 포름알데히드(폼알데하이드)');
+    expect(b2.split('\n')[1].split('\t')[1], '포르말린; 포름알데히드');
+    for (final line in [...b3.split('\n'), ...b2.split('\n')]) {
+      expect(line.split('\t')[1], isNotEmpty, reason: line);
+    }
+  });
+
   test('CAS 없는 항목(연번 4)은 CAS 칸이 빈칸이다(화면 문구를 넣지 않는다)', () {
     final lines = tsvText(entryOf(Source.byeolpyo2, 4)).split('\n');
     expect(lines[1].split('\t')[2], '');

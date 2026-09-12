@@ -76,6 +76,8 @@ void main() {
         .getSize(find.ancestor(of: find.text(text), matching: find.byType(Container)).first)
         .height;
     expect(cellHeight('97-1-4'), greaterThan(cellHeight('급성') * 1.5));
+    // 수량 줄들이 병합 칸의 높이를 빈틈없이 나눠 가진다 — 남으면 아래쪽 표 선이 끊긴다(2026-09-12 사용자 지적).
+    expect(cellHeight('급성') + cellHeight('생태'), closeTo(cellHeight('97-1-4'), 0.5));
     // 웹 표에는 공유 아이콘이 없다(F-003 — 복사가 대신한다)
     expect(find.byTooltip(ShareText.tooltip), findsNothing);
   });
