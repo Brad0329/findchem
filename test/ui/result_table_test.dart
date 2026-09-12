@@ -63,11 +63,19 @@ void main() {
     expect(find.text('Guazatine'), findsOneWidget);
     expect(find.text('13516-27-3, 108173-90-6'), findsOneWidget);
     expect(find.text('97-1-4'), findsOneWidget);
-    expect(find.text('인체·생태 유해성'), findsOneWidget); // 표 이름 뱃지도 첫 줄에만
     expect(find.byTooltip(ShareText.copyTooltip), findsOneWidget); // 복사 버튼도 물질당 하나
+    // '표' 열은 없다(2026-09-12 사용자 요청 — 어느 표인지는 '구분' 칸으로 안다).
+    expect(find.text('인체·생태 유해성'), findsNothing);
+    expect(find.text('표'), findsNothing);
     // 수량 줄은 둘 다 있다
     expect(find.text('급성'), findsOneWidget);
     expect(find.text('생태'), findsOneWidget);
+
+    // 앞 칸은 세로로 병합돼 보여야 한다(2026-09-12 사용자 요청) — 높이를 재서 확인한다.
+    double cellHeight(String text) => tester
+        .getSize(find.ancestor(of: find.text(text), matching: find.byType(Container)).first)
+        .height;
+    expect(cellHeight('97-1-4'), greaterThan(cellHeight('급성') * 1.5));
     // 웹 표에는 공유 아이콘이 없다(F-003 — 복사가 대신한다)
     expect(find.byTooltip(ShareText.tooltip), findsNothing);
   });
@@ -92,7 +100,8 @@ void main() {
     expect(clipboard, isNotNull);
     final lines = clipboard!.split('\n');
     expect(lines, hasLength(3));
-    expect(lines[1], contains('구아자틴\tGuazatine'));
+    expect(lines[1], startsWith('5\t구아자틴\t'));
+    expect(clipboard, isNot(contains('Guazatine'))); // 영문명 열은 없다(2026-09-12 사용자 요청)
     expect(find.text(ShareText.copied), findsOneWidget);
   });
 

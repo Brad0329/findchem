@@ -7,12 +7,11 @@ library;
 
 import '../parser/models.dart';
 
-/// TSV 열 이름(첫 줄). 화면 표와 달리 영문명이 따로 한 열이다 — Excel에서 쓰기 위해서.
+/// TSV 열 이름(첫 줄). 화면 표의 열과 같다(2026-09-12 사용자 요청: '표'·'영문명' 열은 넣지 않는다 —
+/// 어느 표인지는 '구분' 칸이 차 있는지로 안다).
 const tsvHeaders = [
-  '표',
   '연번',
   '화학물질명',
-  '영문명',
   'CAS번호',
   '고유번호',
   '구분',
@@ -22,17 +21,10 @@ const tsvHeaders = [
   '상위규정수량(톤)',
 ];
 
-/// [entry] 한 건의 TSV: 머리글 1줄 + 수량 행 수만큼. 앞 6칸(표~고유번호)은 매 줄 반복한다
+/// [entry] 한 건의 TSV: 머리글 1줄 + 수량 행 수만큼. 앞 4칸(연번~고유번호)은 매 줄 반복한다
 /// (2026-09-12 사용자 결정 — Excel에서 정렬·필터가 바로 되게).
 String tsvText(Entry entry) {
-  final head = [
-    entry.src.label,
-    '${entry.no}',
-    entry.ko,
-    entry.en,
-    entry.cas.join(', '),
-    entry.uid ?? '',
-  ];
+  final head = ['${entry.no}', entry.ko, entry.cas.join(', '), entry.uid ?? ''];
   return [
     tsvHeaders.join('\t'),
     for (final r in entry.rows) [...head, r.kind, r.content, r.min, r.low, r.high].join('\t'),

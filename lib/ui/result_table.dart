@@ -1,7 +1,11 @@
-/// F-004 웹 표 화면 — 검색 결과를 표로 그리고, 행마다 TSV 복사 버튼을 둔다(REQUIREMENTS F-004).
+/// F-004 웹 표 화면 — 검색 결과를 격자 표로 그리고, 물질마다 TSV 복사 버튼을 둔다(REQUIREMENTS F-004).
 ///
 /// 앱(Android)은 카드(`entry_card.dart`)를 쓴다. 어느 쪽을 그릴지는 `search_page.dart` 한 곳에서 정한다.
 /// 표는 폭이 좁아도 카드로 바뀌지 않는다 — 가로로 스크롤한다(REQUIREMENTS '화면 방향' 2).
+///
+/// 한 물질의 수량 행이 여러 개면 **앞 칸(연번·물질명·CAS·고유번호·복사)은 세로로 병합**한다(2026-09-12 사용자 요청:
+/// 원본 고시 표와 같은 모양). Flutter의 `Table`에는 rowspan이 없어서, 왼쪽 고정 칸들과 오른쪽 수량 칸 묶음을
+/// `IntrinsicHeight` 안의 `Row`로 놓아 높이를 맞춘다.
 library;
 
 import 'package:flutter/material.dart';
@@ -10,29 +14,35 @@ import '../parser/models.dart';
 import '../search/search.dart';
 import '../share/share_action.dart';
 import '../share/tsv_text.dart';
-import 'entry_card.dart' show CardText, byeolpyo2BadgeColor;
+import 'entry_card.dart' show CardText;
 
-/// 열 순서와 폭(논리 픽셀). 화면 표의 열이다 — TSV 열은 [tsvHeaders]로 따로 있다(영문명이 한 열 더 있다).
-const tableColumns = <({String label, double width, TextAlign align})>[
-  (label: '표', width: 128, align: TextAlign.left),
-  (label: '연번', width: 52, align: TextAlign.right),
-  (label: '화학물질명', width: 220, align: TextAlign.left),
-  (label: 'CAS번호', width: 160, align: TextAlign.left),
-  (label: '고유번호', width: 84, align: TextAlign.left),
-  (label: '구분', width: 72, align: TextAlign.center),
-  (label: '함량기준(% 이상)', width: 92, align: TextAlign.right),
-  (label: '최하위(톤)', width: 76, align: TextAlign.right),
-  (label: '하위(톤)', width: 76, align: TextAlign.right),
-  (label: '상위(톤)', width: 76, align: TextAlign.right),
-  (label: '복사', width: 52, align: TextAlign.center),
+/// 물질마다 한 번씩 나오는(세로 병합되는) 앞 칸.
+const entryColumns = <({String label, double width, TextAlign align})>[
+  (label: '연번', width: 56, align: TextAlign.right),
+  (label: '화학물질명', width: 260, align: TextAlign.left),
+  (label: 'CAS번호', width: 150, align: TextAlign.left),
+  (label: '고유번호', width: 88, align: TextAlign.left),
 ];
 
-/// 표 전체 폭. 화면이 이보다 좁으면 가로 스크롤이 생긴다.
-double get tableWidth => tableColumns.fold(0, (sum, c) => sum + c.width);
+/// 수량 행마다 나오는 칸.
+const rowColumns = <({String label, double width, TextAlign align})>[
+  (label: '구분', width: 72, align: TextAlign.center),
+  (label: '함량기준\n(% 이상)', width: 88, align: TextAlign.right),
+  (label: '최하위\n규정수량(톤)', width: 96, align: TextAlign.right),
+  (label: '하위\n규정수량(톤)', width: 96, align: TextAlign.right),
+  (label: '상위\n규정수량(톤)', width: 96, align: TextAlign.right),
+];
 
-Map<int, TableColumnWidth> get _columnWidths => {
-  for (var i = 0; i < tableColumns.length; i++) i: FixedColumnWidth(tableColumns[i].width),
-};
+const _copyColumn = (label: '복사', width: 52.0, align: TextAlign.center);
+
+/// 표 전체 폭(맨 왼쪽 테두리 1px 포함). 화면이 이보다 좁으면 가로 스크롤이 생긴다.
+double get tableWidth =>
+    entryColumns.fold<double>(0, (s, c) => s + c.width) +
+    rowColumns.fold<double>(0, (s, c) => s + c.width) +
+    _copyColumn.width +
+    _outerBorder;
+
+const _outerBorder = 1.0;
 
 class ResultTable extends StatelessWidget {
   const ResultTable({super.key, required this.hits});
@@ -52,7 +62,7 @@ class ResultTable extends StatelessWidget {
               child: ListView.builder(
                 padding: const EdgeInsets.only(bottom: 24),
                 itemCount: hits.length,
-                itemBuilder: (context, i) => _EntryRows(hit: hits[i]),
+                itemBuilder: (context, i) => _EntryRow(hit: hits[i]),
               ),
             ),
           ],
@@ -62,10 +72,26 @@ class ResultTable extends StatelessWidget {
   }
 }
 
-Widget _cell(String text, int column, TextStyle? style, {TextAlign? align}) => Padding(
-  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
-  child: Text(text, style: style, textAlign: align ?? tableColumns[column].align),
-);
+/// 격자 한 칸. 오른쪽·아래 선으로 표를 그린다(맨 왼쪽·맨 위 선은 표 바깥 테두리가 맡는다).
+Widget _cell(
+  BuildContext context, {
+  required double width,
+  required Widget child,
+  bool bottomBorder = true,
+}) {
+  final divider = Theme.of(context).dividerColor;
+  return Container(
+    width: width,
+    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 5),
+    decoration: BoxDecoration(
+      border: Border(
+        right: BorderSide(color: divider),
+        bottom: bottomBorder ? BorderSide(color: divider) : BorderSide.none,
+      ),
+    ),
+    child: child,
+  );
+}
 
 class _HeaderRow extends StatelessWidget {
   const _HeaderRow();
@@ -74,27 +100,40 @@ class _HeaderRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final style = theme.textTheme.labelSmall?.copyWith(color: theme.colorScheme.onSurfaceVariant);
+    Widget head(({String label, double width, TextAlign align}) c) => _cell(
+      context,
+      width: c.width,
+      child: Align(
+        alignment: switch (c.align) {
+          TextAlign.right => Alignment.centerRight,
+          TextAlign.center => Alignment.center,
+          _ => Alignment.centerLeft,
+        },
+        child: Text(c.label, style: style, textAlign: c.align),
+      ),
+    );
     return Container(
       decoration: BoxDecoration(
         color: theme.colorScheme.surfaceContainerHighest,
-        border: Border(bottom: BorderSide(color: theme.dividerColor)),
+        border: Border(left: BorderSide(color: theme.dividerColor, width: _outerBorder)),
       ),
-      child: Table(
-        columnWidths: _columnWidths,
-        defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-        children: [
-          TableRow(
-            children: [for (var i = 0; i < tableColumns.length; i++) _cell(tableColumns[i].label, i, style)],
-          ),
-        ],
+      child: IntrinsicHeight(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            for (final c in entryColumns) head(c),
+            for (final c in rowColumns) head(c),
+            head(_copyColumn),
+          ],
+        ),
       ),
     );
   }
 }
 
-/// 물질 한 건 = 수량 행 수만큼의 표 줄. 앞 열(표·연번·물질명·CAS·고유번호·복사)은 첫 줄에만 쓴다.
-class _EntryRows extends StatelessWidget {
-  const _EntryRows({required this.hit});
+/// 물질 한 건: 왼쪽 앞 칸(세로 병합) + 오른쪽 수량 행들 + 복사 버튼.
+class _EntryRow extends StatelessWidget {
+  const _EntryRow({required this.hit});
 
   final Hit hit;
 
@@ -102,62 +141,93 @@ class _EntryRows extends StatelessWidget {
   Widget build(BuildContext context) {
     final e = hit.entry;
     final theme = Theme.of(context);
-    final cs = theme.colorScheme;
     final cellStyle = theme.textTheme.bodySmall;
-    final isByeolpyo3 = e.src == Source.byeolpyo3;
 
-    final table = Table(
-      columnWidths: _columnWidths,
-      defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-      border: TableBorder(
-        horizontalInside: BorderSide(color: theme.dividerColor.withValues(alpha: 0.4)),
-        bottom: BorderSide(color: theme.dividerColor),
+    Widget entryCell(int i, Widget child) => _cell(
+      context,
+      width: entryColumns[i].width,
+      child: Align(
+        alignment: entryColumns[i].align == TextAlign.right
+            ? Alignment.topRight
+            : Alignment.topLeft,
+        child: child,
       ),
-      children: [
-        for (var i = 0; i < e.rows.length; i++)
-          TableRow(
+    );
+
+    final row = IntrinsicHeight(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          entryCell(0, Text('${e.no}', style: cellStyle, textAlign: TextAlign.right)),
+          entryCell(1, _NameCell(hit: hit)),
+          entryCell(2, Text(e.cas.isEmpty ? CardText.noCas : e.cas.join(', '), style: cellStyle)),
+          entryCell(3, Text(e.uid ?? '', style: cellStyle)),
+          // 수량 행 묶음: 앞 칸 하나의 높이 안에서 줄이 나뉜다.
+          Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              i == 0
-                  ? Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: _SourceBadge(
-                          label: e.src.label,
-                          color: isByeolpyo3 ? cs.primary : byeolpyo2BadgeColor,
-                          onColor: isByeolpyo3 ? cs.onPrimary : Colors.white,
+              for (var i = 0; i < e.rows.length; i++)
+                // 줄 안의 칸들끼리 높이를 맞춘다(칸 테두리가 끊기지 않게).
+                IntrinsicHeight(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      for (var c = 0; c < rowColumns.length; c++)
+                        _cell(
+                          context,
+                          width: rowColumns[c].width,
+                          // 줄 사이에만 선을 긋는다 — 마지막 줄 아래 선은 물질 칸(왼쪽)이 그린다.
+                          bottomBorder: i < e.rows.length - 1,
+                          child: Text(
+                            _rowValue(e.rows[i], c),
+                            style: cellStyle,
+                            textAlign: rowColumns[c].align,
+                          ),
                         ),
-                      ),
-                    )
-                  : const SizedBox.shrink(),
-              i == 0 ? _cell('${e.no}', 1, cellStyle) : const SizedBox.shrink(),
-              i == 0 ? _NameCell(hit: hit) : const SizedBox.shrink(),
-              i == 0
-                  ? _cell(e.cas.isEmpty ? CardText.noCas : e.cas.join(', '), 3, cellStyle)
-                  : const SizedBox.shrink(),
-              i == 0 ? _cell(e.uid ?? '', 4, cellStyle) : const SizedBox.shrink(),
-              _cell(e.rows[i].kind, 5, cellStyle),
-              _cell(e.rows[i].content, 6, cellStyle),
-              _cell(e.rows[i].min, 7, cellStyle),
-              _cell(e.rows[i].low, 8, cellStyle),
-              _cell(e.rows[i].high, 9, cellStyle),
-              i == 0
-                  ? IconButton(
-                      icon: const Icon(Icons.content_copy_outlined, size: 18),
-                      tooltip: ShareText.copyTooltip,
-                      visualDensity: VisualDensity.compact,
-                      onPressed: () => copyToClipboard(context, tsvText(e)),
-                    )
-                  : const SizedBox.shrink(),
+                    ],
+                  ),
+                ),
             ],
           ),
-      ],
+          _cell(
+            context,
+            width: _copyColumn.width,
+            child: Align(
+              alignment: Alignment.topCenter,
+              child: IconButton(
+                icon: const Icon(Icons.content_copy_outlined, size: 18),
+                tooltip: ShareText.copyTooltip,
+                visualDensity: VisualDensity.compact,
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(),
+                onPressed: () => copyToClipboard(context, tsvText(e)),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
-    return e.deleted ? Opacity(opacity: 0.55, child: table) : table;
+
+    final divider = Theme.of(context).dividerColor;
+    final bordered = Container(
+      decoration: BoxDecoration(
+        border: Border(left: BorderSide(color: divider, width: _outerBorder)),
+      ),
+      child: row,
+    );
+    return e.deleted ? Opacity(opacity: 0.55, child: bordered) : bordered;
   }
 }
 
-/// 국문명 + 영문명(+ 참고 문구). 카드와 같은 내용이다.
+String _rowValue(QuantityRow r, int column) => switch (column) {
+  0 => r.kind,
+  1 => r.content,
+  2 => r.min,
+  3 => r.low,
+  _ => r.high,
+};
+
+/// 국문명 + 영문명(+ 참고 문구). 화면에는 카드와 같은 내용을 보인다(TSV에는 국문명만 넣는다).
 class _NameCell extends StatelessWidget {
   const _NameCell({required this.hit});
 
@@ -167,44 +237,22 @@ class _NameCell extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final e = hit.entry;
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(e.ko, style: theme.textTheme.bodySmall),
-          if (e.en.isNotEmpty)
-            Text(
-              e.en,
-              style: theme.textTheme.labelSmall?.copyWith(color: theme.colorScheme.onSurfaceVariant),
-            ),
-          if (hit.referenceNote)
-            Text(
-              '※ ${CardText.referenceNote}',
-              style: theme.textTheme.labelSmall?.copyWith(color: theme.colorScheme.tertiary),
-            ),
-        ],
-      ),
-    );
-  }
-}
-
-class _SourceBadge extends StatelessWidget {
-  const _SourceBadge({required this.label, required this.color, required this.onColor});
-
-  final String label;
-  final Color color;
-  final Color onColor;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-      decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(6)),
-      child: Text(
-        label,
-        style: Theme.of(context).textTheme.labelSmall?.copyWith(color: onColor),
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(e.ko, style: theme.textTheme.bodySmall),
+        if (e.en.isNotEmpty)
+          Text(
+            e.en,
+            style: theme.textTheme.labelSmall?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+          ),
+        if (hit.referenceNote)
+          Text(
+            '※ ${CardText.referenceNote}',
+            style: theme.textTheme.labelSmall?.copyWith(color: theme.colorScheme.tertiary),
+          ),
+      ],
     );
   }
 }
