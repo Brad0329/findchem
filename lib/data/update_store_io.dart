@@ -9,17 +9,26 @@ import 'update_store.dart';
 
 UpdateStore createUpdateStore() => FileUpdateStore();
 
+UpdateStore createFavoritesStore() => FileUpdateStore(name: FileUpdateStore.favoritesFileName);
+
 class FileUpdateStore implements UpdateStore {
   /// [directory]를 주지 않으면 앱 지원 디렉토리(Android: 앱 내부 저장소 files/)를 쓴다.
-  FileUpdateStore({Directory? directory}) : _directory = directory;
+  FileUpdateStore({Directory? directory, this.name = fileName}) : _directory = directory;
 
+  /// F-002 저장본.
   static const fileName = 'findchem_update.json';
+
+  /// F-005 자주보는 Chem 목록.
+  static const favoritesFileName = 'findchem_favorites.json';
 
   final Directory? _directory;
 
+  /// 이 저장소의 파일 이름.
+  final String name;
+
   Future<File> _file() async {
     final dir = _directory ?? await getApplicationSupportDirectory();
-    return File('${dir.path}${Platform.pathSeparator}$fileName');
+    return File('${dir.path}${Platform.pathSeparator}$name');
   }
 
   @override

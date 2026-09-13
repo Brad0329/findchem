@@ -107,6 +107,9 @@ class SearchIndex {
   /// CAS로 볼 수 있는 입력(하이픈 뺀 숫자 5~10자리 — CAS는 2~7+2+1 자리). 0건 안내의 조건.
   static final _casFull = RegExp(r'^\d{5,10}$');
 
+  /// 이 데이터셋의 항목 [e]를 카드 한 건으로('우선 적용'·참고 문구 계산 포함). F-005 [update]도 이것으로 스냅샷을 만든다.
+  Hit hitOf(Entry e) => Hit(e, priority: _priority.contains(e), referenceNote: _referenceNote.contains(e));
+
   SearchResult search(String rawQuery) {
     final q = normalize(rawQuery);
     if (q.isEmpty) return SearchResult.empty;
@@ -131,10 +134,7 @@ class SearchIndex {
     }
     // 입력 순서(별표2 연번 순 → 별표3 번호 순)를 유지한 채 묶음만 재배열한다.
     final ordered = [...b3, ...b2, ...deleted];
-    final hits = [
-      for (final e in ordered.take(cap))
-        Hit(e, priority: _priority.contains(e), referenceNote: _referenceNote.contains(e)),
-    ];
+    final hits = [for (final e in ordered.take(cap)) hitOf(e)];
     return SearchResult(
       query: rawQuery,
       hits: hits,

@@ -6,10 +6,12 @@ library;
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 
+import '../data/favorites.dart';
 import '../parser/models.dart';
 import '../search/search.dart';
 import 'app_header.dart';
 import 'entry_card.dart';
+import 'favorites_page.dart';
 import 'result_table.dart';
 
 /// 화면 문구(테스트가 같은 상수를 본다).
@@ -26,13 +28,19 @@ abstract final class SearchText {
 const wideBreakpoint = 900.0;
 
 class SearchPage extends StatefulWidget {
-  const SearchPage({super.key, required this.dataset, this.onMenu, bool? useTable})
+  const SearchPage({super.key, required this.dataset, this.onMenu, this.favorites, bool? useTable})
     : useTable = useTable ?? kIsWeb;
 
   final Dataset dataset;
 
   /// 결과를 표(F-004)로 그린다. 기본값은 웹이면 표, 앱이면 카드 — 테스트에서만 직접 넣는다.
+  /// F-005(앱 전용)도 이 분기를 따른다: 카드일 때만 저장 아이콘과 메뉴의 '자주보는 Chem 목록'이 있다.
   final bool useTable;
+
+  /// F-005 저장 목록. null이면 저장 아이콘·메뉴 항목이 없다.
+  final FavoritesController? favorites;
+
+  bool get _favoritesEnabled => favorites != null && !useTable;
 
   /// 헤더 '⋮' 메뉴 항목을 골랐을 때(설정 화면 열기는 app.dart가 한다).
   final ValueChanged<HeaderMenu>? onMenu;
@@ -66,7 +74,7 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppHeader(onMenu: widget.onMenu),
+      appBar: AppHeader(onMenu: widget.onMenu, showFavorites: widget._favoritesEnabled),
       body: Column(
         children: [
           Padding(
@@ -98,6 +106,7 @@ class _SearchPageState extends State<SearchPage> {
               result: _result,
               dataset: widget.dataset,
               useTable: widget.useTable,
+              favorites: widget._favoritesEnabled ? widget.favorites : null,
             ),
           ),
         ],
@@ -139,17 +148,25 @@ class _ResultHeader extends StatelessWidget {
 }
 
 class _ResultList extends StatelessWidget {
-  const _ResultList({required this.result, required this.dataset, required this.useTable});
+  const _ResultList({required this.result, required this.dataset, required this.useTable, this.favorites});
 
   final SearchResult result;
   final Dataset dataset;
   final bool useTable;
+  final FavoritesController? favorites;
 
   @override
   Widget build(BuildContext context) {
     final r = result;
-    Widget card(Hit h) =>
-        EntryCard(hit: h, pdf: h.entry.src == Source.byeolpyo3 ? dataset.byeolpyo3 : dataset.byeolpyo2);
+    Widget card(Hit h) {
+      final pdf = h.entry.src == Source.byeolpyo3 ? dataset.byeolpyo3 : dataset.byeolpyo2;
+      final fav = favorites;
+      return EntryCard(
+        hit: h,
+        pdf: pdf,
+        action: fav == null ? null : SaveButton(favorites: fav, hit: h, pdf: pdf),
+      );
+    }
     if (r.query.trim().isEmpty) return const SizedBox.shrink();
 
     if (useTable) {

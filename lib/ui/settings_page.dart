@@ -6,8 +6,10 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
 import '../data/dataset_loader.dart';
+import '../data/favorites.dart';
 import '../data/source_update.dart';
 import '../parser/models.dart';
+import 'favorites_page.dart';
 
 /// 화면 문구(테스트가 같은 상수를 본다).
 abstract final class SettingsText {
@@ -68,9 +70,17 @@ Future<PickedPdf?> pickPdfWithFilePicker() async {
 }
 
 class SettingsPage extends StatefulWidget {
-  const SettingsPage({super.key, required this.controller, this.pickPdf = pickPdfWithFilePicker});
+  const SettingsPage({
+    super.key,
+    required this.controller,
+    required this.favorites,
+    this.pickPdf = pickPdfWithFilePicker,
+  });
 
   final DataController controller;
+
+  /// F-005 저장 목록 — 적용 직후 "저장 목록도 갱신할까요?"를 묻는다. '처음 데이터로 되돌리기'는 건드리지 않는다.
+  final FavoritesController favorites;
   final PdfPicker pickPdf;
 
   @override
@@ -123,9 +133,11 @@ class _SettingsPageState extends State<SettingsPage> {
     // (REQUIREMENTS 비기능 3: 멈춤 허용).
     await WidgetsBinding.instance.endOfFrame;
     await Future<void>.delayed(const Duration(milliseconds: 20));
+    Dataset? applied;
     try {
       final parsed = parseSourcePdfs(_picked);
       await widget.controller.apply(parsed.dataset);
+      applied = parsed.dataset;
       _picked.updateAll((_, _) => null);
       _report(SettingsText.applied(parsed.dataset, parsed.warnings.length), failed: false);
     } on UpdateFailure catch (e) {
@@ -137,6 +149,25 @@ class _SettingsPageState extends State<SettingsPage> {
     } finally {
       if (mounted) setState(() => _busyText = null);
     }
+    if (applied != null) await _askFavoritesUpdate(applied);
+  }
+
+  /// F-005: 적용 직후 저장 목록 갱신을 한 번 묻는다. 목록이 0건이면 묻지 않는다. '아니오'면 아무것도 하지 않는다
+  /// (목록 화면에 갱신 알림 줄이 남는다).
+  Future<void> _askFavoritesUpdate(Dataset ds) async {
+    if (!mounted || widget.favorites.items.isEmpty) return;
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        content: const Text(FavoritesText.askUpdate),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text(FavoritesText.no)),
+          FilledButton(onPressed: () => Navigator.pop(context, true), child: const Text(FavoritesText.yes)),
+        ],
+      ),
+    );
+    if (ok != true || !mounted) return;
+    await runFavoritesUpdate(context, widget.favorites, ds);
   }
 
   Future<void> _reset() async {

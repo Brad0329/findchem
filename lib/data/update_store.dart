@@ -19,3 +19,7 @@ abstract interface class UpdateStore {
 
 /// 이 플랫폼의 저장본 자리(Android·데스크톱 = 파일, 웹 = localStorage).
 UpdateStore platformUpdateStore() => platform.createUpdateStore();
+
+/// F-005 자주보는 Chem 목록 자리 — F-002 저장본과 **다른 파일**이다(되돌리기가 지우지 않는다, SCHEMA.md).
+/// 같은 "JSON 하나를 통째로" 인터페이스를 쓴다. 웹은 F-005가 앱 전용이라 저장소를 두지 않는다(늘 빈 목록, 쓰기 거부).
+UpdateStore platformFavoritesStore() => platform.createFavoritesStore();

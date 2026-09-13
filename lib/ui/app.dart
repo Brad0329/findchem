@@ -1,11 +1,15 @@
-/// 앱 뼈대: 테마(REQUIREMENTS '화면 방향' 3·4) + 데이터 로딩 → 검색 화면. 설정 화면은 헤더 메뉴에서 push.
+/// 앱 뼈대: 테마(REQUIREMENTS '화면 방향' 3·4) + 데이터 로딩 → 검색 화면. 저장 목록·설정 화면은 헤더 메뉴에서 push.
 library;
+
+import 'dart:async';
 
 import 'package:flutter/material.dart';
 
 import '../data/dataset_loader.dart';
+import '../data/favorites.dart';
 import '../data/update_store.dart';
 import 'app_header.dart';
+import 'favorites_page.dart';
 import 'search_page.dart';
 import 'settings_page.dart';
 
@@ -13,10 +17,13 @@ import 'settings_page.dart';
 const seedColor = Color(0xFF2E7FE0);
 
 class FindChemApp extends StatefulWidget {
-  const FindChemApp({super.key, this.controller, this.pickPdf = pickPdfWithFilePicker});
+  const FindChemApp({super.key, this.controller, this.favorites, this.pickPdf = pickPdfWithFilePicker});
 
   /// 테스트에서 저장소·번들을 바꿔 넣을 때. null이면 이 플랫폼의 저장본 자리 + 실제 번들.
   final DataController? controller;
+
+  /// 테스트에서 저장 목록 자리를 바꿔 넣을 때. null이면 이 플랫폼의 저장 목록 자리(F-005).
+  final FavoritesController? favorites;
   final PdfPicker pickPdf;
 
   @override
@@ -25,17 +32,23 @@ class FindChemApp extends StatefulWidget {
 
 class _FindChemAppState extends State<FindChemApp> {
   late final DataController _controller = widget.controller ?? DataController(store: platformUpdateStore());
+  late final FavoritesController _favorites =
+      widget.favorites ?? FavoritesController(store: platformFavoritesStore());
   late final Future<LoadedData> _loading = _controller.load();
 
+  @override
+  void initState() {
+    super.initState();
+    // 저장 목록은 검색을 막지 않게 따로 읽는다. load는 실패를 예외 대신 loadFailed로 남긴다(목록 화면에 사유).
+    unawaited(_favorites.load());
+  }
+
   void _onMenu(BuildContext context, HeaderMenu item) {
-    switch (item) {
-      case HeaderMenu.settings:
-        Navigator.of(context).push(
-          MaterialPageRoute<void>(
-            builder: (_) => SettingsPage(controller: _controller, pickPdf: widget.pickPdf),
-          ),
-        );
-    }
+    final page = switch (item) {
+      HeaderMenu.favorites => FavoritesPage(favorites: _favorites, data: _controller),
+      HeaderMenu.settings => SettingsPage(controller: _controller, favorites: _favorites, pickPdf: widget.pickPdf),
+    };
+    Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => page));
   }
 
   @override
@@ -69,6 +82,7 @@ class _FindChemAppState extends State<FindChemApp> {
             listenable: _controller,
             builder: (context, _) => SearchPage(
               dataset: _controller.data!.dataset,
+              favorites: _favorites,
               onMenu: (item) => _onMenu(context, item),
             ),
           );

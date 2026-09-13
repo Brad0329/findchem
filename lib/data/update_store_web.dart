@@ -7,6 +7,23 @@ import 'update_store.dart';
 
 UpdateStore createUpdateStore() => LocalStorageUpdateStore();
 
+UpdateStore createFavoritesStore() => const NoFavoritesStore();
+
+/// F-005는 앱 전용이다(2026-09-12 사용자 결정) — 웹에는 저장 목록이 없다. 화면이 저장 아이콘을 그리지 않으므로
+/// 쓰기가 들어오면 결함이라 조용히 삼키지 않고 예외를 던진다.
+class NoFavoritesStore implements UpdateStore {
+  const NoFavoritesStore();
+
+  @override
+  Future<String?> read() async => null;
+
+  @override
+  Future<void> write(String json) async => throw UnsupportedError('웹에는 자주보는 Chem 목록을 저장하지 않습니다');
+
+  @override
+  Future<void> delete() async {}
+}
+
 class LocalStorageUpdateStore implements UpdateStore {
   static const key = 'findchem_update';
 

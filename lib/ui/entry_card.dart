@@ -23,12 +23,15 @@ abstract final class CardText {
 }
 
 class EntryCard extends StatelessWidget {
-  const EntryCard({super.key, required this.hit, required this.pdf});
+  const EntryCard({super.key, required this.hit, required this.pdf, this.action});
 
   final Hit hit;
 
   /// 이 항목이 속한 표의 원본 PDF — 공유 텍스트 마지막 줄의 기준일(F-003).
   final PdfInfo pdf;
+
+  /// 공유 버튼 왼쪽에 놓을 버튼(F-005: 검색 카드는 저장, 저장 목록은 삭제). 없으면 공유 버튼만.
+  final Widget? action;
 
   @override
   Widget build(BuildContext context) {
@@ -73,6 +76,7 @@ class EntryCard extends StatelessWidget {
                     ],
                   ),
                 ),
+                if (action != null) action!,
                 IconButton(
                   icon: const Icon(Icons.share_outlined),
                   tooltip: ShareText.tooltip,
