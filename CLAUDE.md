@@ -4,8 +4,8 @@ Flutter(Android + 웹 한 벌), 서버 없음, 데이터는 JSON으로 번들해
 
 ## 현재 단계
 - 전체 Phase 체크리스트/아키텍처의 **단일 원본 = `work_log/plan.md`** (여기에 중복 기재 금지)
-- 현재: **Phase 007 — 부채 정리** (미착수. 항목은 plan.md의 Phase 007 절 — `/debt-audit` 2026-09-12 결과)
-  (Phase 완료 시 이 줄과 plan.md 체크박스를 함께 갱신)
+- 현재: **F-005 자주보는 Chem 목록** (스펙 확정 2026-09-13, 구현 미착수 — 수용 기준은 REQUIREMENTS F-005,
+  저장 형식은 SCHEMA). 그 다음이 Phase 007 부채 정리다. (완료 시 이 줄과 plan.md 체크박스를 함께 갱신)
 - 배포처: APK는 직접 설치(릴리스 키 필요 — `팩_Flutter_Android.md`), 웹은 master push → Actions →
   https://brad0329.github.io/findchem/
 
