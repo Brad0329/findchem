@@ -35,7 +35,8 @@ Flutter(Android + 웹 한 벌), 서버 없음, 데이터는 JSON으로 번들해
   | F-003 | 카드 공유 (평문, 공유 창 없으면 클립보드) | 완료(2026-09-11) |
   | F-004 | 웹 표 화면 + 행 복사(TSV) — 앱은 카드 유지 | 완료(2026-09-12) |
   | F-005 | 자주보는 Chem 목록 (카드 저장 — 앱만) | 완료(2026-09-13) |
-  | **다음 번호** | **F-006** | |
+  | F-006 | APK 받기 페이지(GitHub Releases) + 앱 버전 표시 | 진행 |
+  | **다음 번호** | **F-007** | |
 
 ## 데이터 모델/스키마 변경 게이트 ★스키마는 되돌리기 비싸다
 - 스키마 **결정의 기록 = `docs/SCHEMA.md`** (설계 의도, 관계, 제약, 변경 이력).
@@ -70,7 +71,7 @@ Flutter(Android + 웹 한 벌), 서버 없음, 데이터는 JSON으로 번들해
   test/                ← Dart 테스트 (flutter test 기본 위치)
   tests/               ← 동봉 파이썬 도구(훅·측정기) 테스트
   assets/              ← 원천 PDF 2개(번들 안 함) + data/(번들 JSON — pubspec에는 이 폴더만 등록)
-  android/  web/       ← 플랫폼 (flutter create 생성물. 아이콘은 scripts/make_icons.py가 굽는다)
+  android/  web/       ← 플랫폼 (flutter create 생성물. 아이콘은 scripts/make_icons.py가 굽는다. web/download/ = APK 받기 페이지 F-006)
   docs/                ← REQUIREMENTS.md, SCHEMA.md, design/, playbooks/
   work_log/            ← plan.md, Phase_XXX.md
   scripts/             ← 빌드·유틸 스크립트
@@ -217,6 +218,7 @@ Flutter(Android + 웹 한 벌), 서버 없음, 데이터는 JSON으로 번들해
    (전체 테스트·구버전 데이터 마이그레이션 실측·되돌리기 경로·사용자 실테스트).
 2. APK `flutter build apk --split-per-abi` → `build/app/outputs/flutter-apk/app-arm64-v8a-release.apk`
    (릴리스 서명 키는 `android/key.properties` — 없으면 빌드가 거부된다. `팩_Flutter_Android.md`)
+   친구 배포는 pubspec 버전을 올리고 통합 APK를 GitHub Releases에 올린다(F-006, 절차는 같은 플레이북 '친구 배포')
 3. APK: USB 연결 후 `C:/Users/user/AppData/Local/Android/Sdk/platform-tools/adb.exe install -r <위 APK>` — 설치 전
    APK의 LastWriteTime이 방금 빌드인지 본다(`팩_Flutter_Android.md`).
    **웹은 손으로 빌드·업로드하지 않는다** — master에 push하면 GitHub Actions가 빌드해

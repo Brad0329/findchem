@@ -66,6 +66,24 @@
   **`keytool -printcert -jarfile`은 쓸 수 없다** — "서명된 jar 파일이 아닙니다"가 뜬다.
   그 명령은 v1(JAR) 서명만 읽는데, 요즘 Flutter APK는 v2/v3 서명만 붙기 때문이다(findchem 2026-09-12).
 
+## 친구 배포 — GitHub Releases (F-006, 2026-09-13)
+받기 페이지: https://brad0329.github.io/findchem/download/ → 링크가 `releases/latest/download/findchem.apk`를 가리킨다.
+그래서 **파일 이름을 `findchem.apk`로 올리는 것**이 전부다(페이지는 릴리스마다 고치지 않는다).
+
+1. `pubspec.yaml` `version`을 올린다 — **빌드 번호(+ 뒤)는 반드시 +1**(더 낮은 번호는 덮어 설치가 안 된다).
+   `lib/app_version.dart`도 같이 고친다(안 고치면 `test/release_test.dart`가 실패한다)
+2. 전체 테스트 → 커밋·push
+3. **통합 APK**: `flutter build apk` → `build/app/outputs/flutter-apk/app-release.apk`
+   (ABI 분할본은 본인 폰 설치용. 친구 폰의 CPU는 모르므로 통합본을 올린다)
+4. 파일 이름을 `findchem.apk`로 바꾼 사본을 만들고 SHA-256을 잰다(`Get-FileHash`)
+5. GitHub 웹 → Releases → Draft a new release → 태그 `v<버전>`(예: `v1.1.0`, 대상 master) →
+   `findchem.apk` 끌어다 놓기 → 설명에 바뀐 내용 + SHA-256 → Publish.
+   **Pre-release로 올리면 `latest`가 가리키지 않는다** — 받기 링크가 옛 파일(또는 404)을 준다
+6. 받기 페이지에서 링크를 눌러 새 파일이 받아지는지 확인한다
+
+- 서명 키는 이 PC에만 둔다(위 '릴리스 서명 키'). 키를 잃으면 친구들은 앱을 지우고(저장 목록도 사라짐) 다시 깔아야 한다
+- `gh` CLI는 이 PC에 없다(2026-09-13 확인) — 업로드는 웹 화면으로 한다
+
 ## 테스트
 
 - **`testWidgets` 안에서 진짜 파일 I/O를 `await`하면 타임아웃까지 매달린다.** FakeAsync가

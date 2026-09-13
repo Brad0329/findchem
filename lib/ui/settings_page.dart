@@ -5,6 +5,7 @@ library;
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
+import '../app_version.dart';
 import '../data/dataset_loader.dart';
 import '../data/favorites.dart';
 import '../data/source_update.dart';
@@ -29,6 +30,9 @@ abstract final class SettingsText {
   static const resetting = '되돌리는 중…';
   static const cancel = '취소';
   static const keepExisting = '기존 원천자료를 그대로 씁니다.';
+
+  /// F-006: 받은 사람이 최신판인지 릴리스 태그와 비교한다.
+  static const version = '앱 버전 $appVersion (빌드 $appBuildNumber)';
 
   static String pdfLabel(Source src) => '${src.label} PDF';
   static String count(Source src, int n, String? created) =>
@@ -263,6 +267,8 @@ class _SettingsPageState extends State<SettingsPage> {
                   label: const Text(SettingsText.reset),
                 ),
               ),
+              const SizedBox(height: 32),
+              Text(SettingsText.version, style: theme.textTheme.bodySmall),
             ],
           );
         },

@@ -97,6 +97,9 @@ void main() {
     expect(find.text(SettingsText.builtAt(bundled.extractedAt)), findsOneWidget);
     expect(find.textContaining('적용한 날짜'), findsNothing);
     expect(tester.widget<OutlinedButton>(resetButton()).onPressed, isNull);
+    // F-006: 맨 아래 앱 버전(값이 pubspec과 같은지는 test/release_test.dart)
+    expect(find.text('앱 버전 1.1.0 (빌드 2)'), findsOneWidget);
+    expect(SettingsText.version, '앱 버전 1.1.0 (빌드 2)');
   });
 
   testWidgets('두 PDF를 골라 적용 → 읽는 중 표시, update 원천자료로 바뀌고 적용한 날짜가 나온다, 저장본이 생긴다', (tester) async {
