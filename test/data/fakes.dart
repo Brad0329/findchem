@@ -13,6 +13,9 @@ class MemoryUpdateStore implements UpdateStore {
   /// 설정하면 [write]가 이 예외를 던진다(저장 실패 흉내 — 용량 한도 등).
   Object? writeError;
 
+  /// 설정하면 [delete]가 이 예외를 던진다(지우기 실패 흉내).
+  Object? deleteError;
+
   @override
   Future<String?> read() async => value;
 
@@ -23,7 +26,10 @@ class MemoryUpdateStore implements UpdateStore {
   }
 
   @override
-  Future<void> delete() async => value = null;
+  Future<void> delete() async {
+    if (deleteError != null) throw deleteError!;
+    value = null;
+  }
 }
 
 /// 번들에 없는 이름·CAS로 된 1건짜리 원천자료. 검색에 이것이 잡히면 저장본을 쓰고 있다는 뜻.

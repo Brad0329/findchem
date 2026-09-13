@@ -26,7 +26,12 @@ abstract final class FavoritesText {
   static const update = 'update';
   static const stale = '원천자료가 바뀐 뒤 아직 갱신하지 않았습니다';
   static const notFound = '현재 원천자료에서 찾지 못했습니다';
-  static const loadFailed = '저장 목록 파일을 읽지 못했습니다. 파일은 지우지 않았고, 이 상태에서는 저장·삭제·update를 하지 않습니다';
+  static const loadFailed = '저장 목록 파일을 읽지 못했습니다. 파일은 저절로 지우지 않았고, 이 상태에서는 저장·삭제·update를 하지 않습니다';
+  static const discard = '깨진 저장 목록 지우기';
+  static const discardConfirm = '읽지 못한 저장 목록 파일을 지웁니다. 파일 안에 있던 저장은 되살릴 수 없습니다.';
+  static const cancel = '취소';
+  static const discarded = '저장 목록 파일을 지웠습니다';
+  static const discardFailed = '지우지 못했습니다';
   static const askUpdate = '저장 목록도 갱신할까요?';
   static const yes = '예';
   static const no = '아니오';
@@ -119,6 +124,31 @@ class FavoritesPage extends StatelessWidget {
     }
   }
 
+  /// 깨진 저장 파일 복구 — 되살릴 수 없는 삭제라 확인 창을 거친다.
+  Future<void> _discard(BuildContext context) async {
+    final messenger = ScaffoldMessenger.maybeOf(context);
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text(FavoritesText.discard),
+        content: const Text(FavoritesText.discardConfirm),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text(FavoritesText.cancel)),
+          FilledButton(onPressed: () => Navigator.pop(context, true), child: const Text(FavoritesText.discard)),
+        ],
+      ),
+    );
+    if (ok != true) return;
+    try {
+      await favorites.discardUnreadable();
+      _notify(messenger, FavoritesText.discarded);
+    } catch (e, st) {
+      // 원인(경로가 섞일 수 있다)은 로그에만. 깨진 상태 그대로다.
+      debugPrint('F-005 깨진 저장 목록 지우기 실패: $e\n$st');
+      _notify(messenger, FavoritesText.discardFailed);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -160,7 +190,18 @@ class FavoritesPage extends StatelessWidget {
               if (favorites.loadFailed)
                 Padding(
                   padding: const EdgeInsets.all(16),
-                  child: Text(FavoritesText.loadFailed, style: TextStyle(color: theme.colorScheme.error)),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(FavoritesText.loadFailed, style: TextStyle(color: theme.colorScheme.error)),
+                      const SizedBox(height: 12),
+                      OutlinedButton.icon(
+                        onPressed: () => _discard(context),
+                        icon: const Icon(Icons.delete_forever_outlined),
+                        label: const Text(FavoritesText.discard),
+                      ),
+                    ],
+                  ),
                 )
               else if (items.isEmpty)
                 const Padding(padding: EdgeInsets.all(16), child: Text(FavoritesText.empty)),

@@ -150,6 +150,24 @@ void main() {
 
       final unknownVersion = await loaded(MemoryUpdateStore('{"version": 2, "items": []}'));
       expect(unknownVersion.loadFailed, isTrue, reason: '모르는 형식 버전을 추측해 읽지 않는다');
+
+      // 복구: 지우면 빈 목록으로 돌아오고 다시 저장된다
+      await c.discardUnreadable();
+      expect(c.loadFailed, isFalse);
+      expect(c.items, isEmpty);
+      expect(store.value, isNull);
+      expect(await c.toggle(hit2(5), bundled.byeolpyo2, bundled.entries), isTrue);
+      expect(decodeFavorites(store.value!).single.entry.ko, '구아자틴');
+    });
+
+    test('복구(지우기)는 깨진 파일에만 — 정상 파일이면 예외, 파일 그대로', () async {
+      final store = MemoryUpdateStore();
+      final c = await loaded(store);
+      await save(c, [88]);
+      final before = store.value;
+      await expectLater(c.discardUnreadable(), throwsA(isA<StateError>()));
+      expect(store.value, before);
+      expect([for (final i in c.items) i.entry.ko], ['리누론']);
     });
   });
 

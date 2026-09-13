@@ -211,6 +211,18 @@ class FavoritesController extends ChangeNotifier {
     await _write([for (final i in _items) if (!identical(i, item)) i]);
   }
 
+  /// 깨진 저장 파일을 지운다 — 목록 화면의 복구 버튼(확인 창을 거친 뒤). 읽을 수 있는 파일이면 지우지 않고 예외.
+  /// 지우기가 실패하면 예외이고 깨진 상태 그대로다.
+  Future<void> discardUnreadable() async {
+    await load();
+    if (!_loadFailed) throw StateError('저장 목록 파일이 정상이라 지우지 않습니다');
+    await store.delete();
+    _loadFailed = false;
+    _items = const [];
+    _notFound.clear();
+    notifyListeners();
+  }
+
   /// 원천자료 [ds]가 저장본의 기준일과 다른가 — 날짜 문자열만 비교한다(항목 대조 없음).
   /// 마지막 [updateFrom]에서 못 찾은 항목은 빼고 본다(이미 update를 눌렀는데 알림이 남지 않게).
   bool isStale(Dataset ds) =>

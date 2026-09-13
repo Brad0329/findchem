@@ -292,12 +292,64 @@ void main() {
       expect(find.text(lastKo), findsOneWidget);
     });
 
-    testWidgets('저장 파일이 깨졌으면 빈 목록 안내 대신 사유를 보인다', (tester) async {
+    testWidgets('저장 파일이 깨졌으면 빈 목록 안내 대신 사유와 복구 버튼. 정상이면 버튼이 없다', (tester) async {
       final store = MemoryUpdateStore('{"version": 1, "items": [');
       await pumpList(tester, await favoritesWith(store), await bundledData());
       expect(find.text(FavoritesText.loadFailed), findsOneWidget);
+      expect(find.text(FavoritesText.discard), findsOneWidget);
       expect(find.text(FavoritesText.empty), findsNothing);
       expect(store.value, '{"version": 1, "items": [');
+
+      await pumpList(tester, await favoritesWith(MemoryUpdateStore(), [88]), await bundledData());
+      expect(find.text(FavoritesText.discard), findsNothing);
+      await pumpList(tester, await favoritesWith(MemoryUpdateStore()), await bundledData());
+      expect(find.text(FavoritesText.discard), findsNothing);
+    });
+
+    Future<void> tapDiscard(WidgetTester tester, {required bool confirm}) async {
+      await tester.tap(find.text(FavoritesText.discard));
+      await tester.pumpAndSettle();
+      expect(find.text(FavoritesText.discardConfirm), findsOneWidget);
+      await tester.tap(
+        confirm
+            ? find.descendant(of: find.byType(AlertDialog), matching: find.text(FavoritesText.discard)).last
+            : find.text(FavoritesText.cancel),
+      );
+      await tester.pumpAndSettle();
+    }
+
+    testWidgets("복구 버튼: 취소하면 그대로, 확인하면 파일을 지우고 '지웠습니다'·빈 목록 안내, 이후 저장이 된다", (tester) async {
+      const broken = '{"version": 1, "items": [';
+      final store = MemoryUpdateStore(broken);
+      final fav = await favoritesWith(store);
+      await pumpList(tester, fav, await bundledData());
+
+      await tapDiscard(tester, confirm: false);
+      expect(store.value, broken);
+      expect(find.text(FavoritesText.loadFailed), findsOneWidget);
+
+      await tapDiscard(tester, confirm: true);
+      expect(store.value, isNull);
+      expect(find.text(FavoritesText.discarded), findsOneWidget);
+      expect(find.text(FavoritesText.empty), findsOneWidget);
+      expect(find.text(FavoritesText.loadFailed), findsNothing);
+      expect(find.text(FavoritesText.discard), findsNothing);
+
+      expect(await fav.toggle(index.hitOf(entryOf(Source.byeolpyo2, 5)), bundled.byeolpyo2, bundled.entries), isTrue);
+      await tester.pump();
+      expect(find.text('구아자틴'), findsOneWidget);
+      expect(store.value, isNotNull);
+    });
+
+    testWidgets('복구 버튼: 지우기가 실패하면 "지우지 못했습니다", 파일·사유 그대로', (tester) async {
+      const broken = '{"version": 1, "items": [';
+      final store = MemoryUpdateStore(broken)..deleteError = const FileSystemException('권한 없음');
+      await pumpList(tester, await favoritesWith(store), await bundledData());
+      await tapDiscard(tester, confirm: true);
+      expect(find.text(FavoritesText.discardFailed), findsOneWidget);
+      expect(find.textContaining('권한 없음'), findsNothing, reason: '원인은 로그에만');
+      expect(store.value, broken);
+      expect(find.text(FavoritesText.loadFailed), findsOneWidget);
     });
 
     testWidgets('목록은 데이터셋 없이 그려진다: 원천자료를 바꿔도·못 읽어도 저장할 때 본 내용 그대로', (tester) async {
