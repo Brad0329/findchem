@@ -57,16 +57,25 @@ Future<void> runFavoritesUpdate(BuildContext context, FavoritesController favori
 
 /// 검색 결과 카드의 저장 아이콘(토글). 저장돼 있으면 채워진 별.
 class SaveButton extends StatelessWidget {
-  const SaveButton({super.key, required this.favorites, required this.hit, required this.pdf});
+  const SaveButton({
+    super.key,
+    required this.favorites,
+    required this.hit,
+    required this.pdf,
+    required this.entries,
+  });
 
   final FavoritesController favorites;
   final Hit hit;
   final PdfInfo pdf;
 
+  /// 카드가 속한 현재 데이터셋의 항목들 — 저장 여부 판정에 쓴다([FavoritesController.savedOf]).
+  final List<Entry> entries;
+
   Future<void> _toggle(BuildContext context) async {
     final messenger = ScaffoldMessenger.maybeOf(context);
     try {
-      final nowSaved = await favorites.toggle(hit, pdf);
+      final nowSaved = await favorites.toggle(hit, pdf, entries);
       _notify(messenger, nowSaved ? FavoritesText.saved : FavoritesText.removed);
     } catch (e, st) {
       debugPrint('F-005 저장 실패: $e\n$st');
@@ -79,7 +88,7 @@ class SaveButton extends StatelessWidget {
     return ListenableBuilder(
       listenable: favorites,
       builder: (context, _) {
-        final saved = favorites.savedOf(hit.entry) != null;
+        final saved = favorites.savedOf(hit.entry, entries) != null;
         return IconButton(
           icon: Icon(saved ? Icons.star : Icons.star_border),
           tooltip: saved ? FavoritesText.unsaveTooltip : FavoritesText.saveTooltip,

@@ -49,7 +49,7 @@ void main() {
     final c = FavoritesController(store: store);
     await c.load();
     for (final no in nos) {
-      await c.toggle(index.hitOf(entryOf(Source.byeolpyo2, no)), pdfOf(Source.byeolpyo2));
+      await c.toggle(index.hitOf(entryOf(Source.byeolpyo2, no)), pdfOf(Source.byeolpyo2), bundled.entries);
     }
     return c;
   }
@@ -180,6 +180,7 @@ void main() {
       await tester.pumpAndSettle();
       final card = find.byType(EntryCard);
       expect(card, findsOneWidget);
+      expect(find.text('구아자틴'), findsOneWidget, reason: '다른 행은 접힌 채');
       for (final t in [
         'Formalin; Formaldehyde',
         '인체·생태 유해성',
@@ -195,6 +196,29 @@ void main() {
       final searched = index.hitOf(entryOf(Source.byeolpyo2, 510));
       expect(jsonEncode(shown.entry.toJson()), jsonEncode(searched.entry.toJson()));
       expect((shown.priority, shown.referenceNote), (searched.priority, searched.referenceNote));
+
+      // CAS가 여러 개인 항목은 전부 나온다
+      await tester.tap(find.text('구아자틴'));
+      await tester.pumpAndSettle();
+      expect(find.text('CAS 13516-27-3, 108173-90-6'), findsOneWidget);
+    });
+
+    testWidgets('공유 텍스트 마지막 줄의 기준일은 저장본에 담긴 값이다(현재 원천자료의 날짜가 아니다)', (tester) async {
+      final shared = mockShare(tester);
+      final store = MemoryUpdateStore(encodeFavorites([
+        FavoriteItem(
+          entry: entryOf(Source.byeolpyo2, 510),
+          priority: false,
+          referenceNote: true,
+          pdfCreated: '2030-01-01T00:00:00+09:00',
+        ),
+      ]));
+      await pumpList(tester, await favoritesWith(store), await bundledData());
+      await tester.tap(find.text('포르말린; 포름알데히드'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byTooltip(ShareText.tooltip));
+      await settle(tester);
+      expect(shared.single.split('\n').last, 'FindChem · 「유해화학물질의 규정수량에 관한 규정」 (PDF 2030-01-01 기준)');
     });
 
     testWidgets('펼친 안의 공유 → F-003 수용 기준 예시와 한 글자도 다르지 않다(연번 510)', (tester) async {
@@ -252,6 +276,20 @@ void main() {
       // 화면에 그리는 순서도 정렬 순서
       final ys = [for (final ko in ['리누론', '말라티온', '2-에틸헥산산 납']) tester.getTopLeft(find.text(ko)).dy];
       expect(ys, orderedEquals([...ys]..sort()));
+
+      // 상한 없음: 120건을 넣어도 전체 건수 그대로, '더 있음' 없이 마지막 행까지 그려진다
+      final many = [
+        for (final e in bundled.entries.take(120)) FavoriteItem.fromHit(index.hitOf(e), pdfOf(e.src)),
+      ];
+      final manyFav = await favoritesWith(MemoryUpdateStore(encodeFavorites(many)));
+      await pumpList(tester, manyFav, await bundledData());
+      expect(manyFav.items, hasLength(120));
+      expect(find.text(FavoritesText.count(120)), findsOneWidget);
+      expect(find.textContaining('더 있음'), findsNothing);
+      final lastKo = manyFav.items.last.entry.ko;
+      expect(manyFav.items.where((i) => i.entry.ko == lastKo), hasLength(1), reason: '스크롤 대상이 하나여야 한다');
+      await tester.scrollUntilVisible(find.text(lastKo), 600);
+      expect(find.text(lastKo), findsOneWidget);
     });
 
     testWidgets('저장 파일이 깨졌으면 빈 목록 안내 대신 사유를 보인다', (tester) async {
@@ -299,8 +337,8 @@ void main() {
         src: Source.byeolpyo2, no: 9999, uid: '00-0-0', name: hcl3.name, ko: hcl3.ko, en: hcl3.en,
         cas: hcl3.cas, deleted: false, rows: hcl3.rows,
       );
-      await fav.toggle(index.hitOf(hcl3), bundled.byeolpyo3);
-      await fav.toggle(Hit(hcl2, priority: false, referenceNote: false), bundled.byeolpyo2);
+      await fav.toggle(index.hitOf(hcl3), bundled.byeolpyo3, bundled.entries);
+      await fav.toggle(Hit(hcl2, priority: false, referenceNote: false), bundled.byeolpyo2, bundled.entries);
       await pumpList(tester, fav, await bundledData());
       expect(find.text('리누론'), findsOneWidget);
       expect(find.text('염화수소 · 사고대비물질'), findsOneWidget);
@@ -335,6 +373,34 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.text('999'), findsNWidgets(2));
       expect(find.text('400'), findsNothing);
+    });
+
+    testWidgets('[update] ④: 연번이 밀린 원천자료로 갱신하면 펼친 카드에 새 연번이 보인다', (tester) async {
+      final fav = await favoritesWith(MemoryUpdateStore(), [510]);
+      final data = await bundledData();
+      await data.apply(Dataset(
+        byeolpyo2: bundled.byeolpyo2,
+        byeolpyo3: bundled.byeolpyo3,
+        extractedAt: bundled.extractedAt,
+        entries: [
+          for (final e in bundled.entries)
+            if (e.src == Source.byeolpyo2 && e.no == 510)
+              Entry(
+                src: e.src, no: 515, uid: e.uid, name: e.name, ko: e.ko, en: e.en, cas: e.cas, deleted: e.deleted,
+                rows: e.rows,
+              )
+            else
+              e,
+        ],
+      ));
+      await pumpList(tester, fav, data);
+      await tester.tap(find.text(FavoritesText.update));
+      await settle(tester);
+      expect(find.text('1건 갱신, 0건은 찾지 못했습니다'), findsOneWidget);
+      await tester.tap(find.text('포르말린; 포름알데히드'));
+      await tester.pumpAndSettle();
+      expect(find.text('연번 515 · 고유번호 97-1-345'), findsOneWidget);
+      expect(find.text('연번 510 · 고유번호 97-1-345'), findsNothing);
     });
 
     testWidgets('갱신 알림 줄: 기준일이 다르면 보이고, [update] ②로 못 찾은 항목은 덮지 않고 표시가 붙는다', (tester) async {

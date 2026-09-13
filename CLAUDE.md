@@ -4,8 +4,8 @@ Flutter(Android + 웹 한 벌), 서버 없음, 데이터는 JSON으로 번들해
 
 ## 현재 단계
 - 전체 Phase 체크리스트/아키텍처의 **단일 원본 = `work_log/plan.md`** (여기에 중복 기재 금지)
-- 현재: **F-005 자주보는 Chem 목록** (스펙 확정 2026-09-13, 구현 미착수 — 수용 기준은 REQUIREMENTS F-005,
-  저장 형식은 SCHEMA). 그 다음이 Phase 007 부채 정리다. (완료 시 이 줄과 plan.md 체크박스를 함께 갱신)
+- 현재: **F-005 자주보는 Chem 목록** (2026-09-13 구현·자동 수용 기준 통과, **사용자 실테스트 대기** — 수용 기준은
+  REQUIREMENTS F-005, 저장 형식은 SCHEMA). 그 다음이 Phase 007 부채 정리다. (완료 시 이 줄과 plan.md 체크박스를 함께 갱신)
 - 배포처: APK는 직접 설치(릴리스 키 필요 — `팩_Flutter_Android.md`), 웹은 master push → Actions →
   https://brad0329.github.io/findchem/
 
@@ -34,7 +34,7 @@ Flutter(Android + 웹 한 벌), 서버 없음, 데이터는 JSON으로 번들해
   | F-002 | 원천자료 update (PDF 업로드 → 앱 내 파싱) | 완료(2026-09-12) |
   | F-003 | 카드 공유 (평문, 공유 창 없으면 클립보드) | 완료(2026-09-11) |
   | F-004 | 웹 표 화면 + 행 복사(TSV) — 앱은 카드 유지 | 완료(2026-09-12) |
-  | F-005 | 자주보는 Chem 목록 (카드 저장 — 앱만) | 미착수 |
+  | F-005 | 자주보는 Chem 목록 (카드 저장 — 앱만) | 진행(사용자 실테스트 대기) |
   | **다음 번호** | **F-006** | |
 
 ## 데이터 모델/스키마 변경 게이트 ★스키마는 되돌리기 비싸다
@@ -165,7 +165,7 @@ Flutter(Android + 웹 한 벌), 서버 없음, 데이터는 JSON으로 번들해
   만드는 파이프라인), 기기 저장본 형식 ② 디렉토리 뼈대, 파서 공유 경계(Dart 파서 하나를 빌드 스크립트와 앱이 같이
   쓴다 — 두 번째 구현 금지), 데이터 로딩 경로(저장본 우선, 없으면 번들), Android applicationId
   `io.github.brad0329.findchem`(바꾸면 설치본과 다른 앱), 화면 전환 구조(2026-09-11 Phase 004: 화면은 검색 하나(`lib/ui/search_page.dart`),
-  헤더 `AppHeader`의 '⋮' 메뉴가 유일한 진입점 — 설정(`lib/ui/settings_page.dart`)은 이 메뉴에서 `Navigator.push`로 연다.
+  헤더 `AppHeader`의 '⋮' 메뉴가 유일한 진입점 — 자주보는 Chem 목록(`lib/ui/favorites_page.dart`, 앱만)과 설정(`lib/ui/settings_page.dart`)은 이 메뉴에서 `Navigator.push`로 연다.
   현재 데이터는 `lib/data/dataset_loader.dart`의 `DataController`가 들고(저장본 우선, 없으면 번들 — 분기는 이 파일 한 곳)
   `lib/ui/app.dart`가 검색·설정 화면에 넘긴다). 동결 경계는 아직 없다.
 - **저위험 실행**: 한 턴에 구현→검증(사다리대로)→**커밋**. **배포는 사용자 실테스트가 필요한 변경일 때만**

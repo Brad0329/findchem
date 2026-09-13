@@ -36,7 +36,7 @@ void main() {
 
   Future<void> save(FavoritesController c, List<int> nos) async {
     for (final no in nos) {
-      expect(await c.toggle(hit2(no), bundled.byeolpyo2), isTrue, reason: '연번 $no 저장');
+      expect(await c.toggle(hit2(no), bundled.byeolpyo2, bundled.entries), isTrue, reason: '연번 $no 저장');
     }
   }
 
@@ -66,23 +66,42 @@ void main() {
     test('연번 5(구아자틴) 저장 → 목록에 구아자틴 1건. 다시 누르면 빠진다. 같은 항목이 2건 생기지 않는다', () async {
       final store = MemoryUpdateStore();
       final c = await loaded(store);
-      expect(await c.toggle(hit2(5), bundled.byeolpyo2), isTrue);
+      expect(await c.toggle(hit2(5), bundled.byeolpyo2, bundled.entries), isTrue);
       expect(kos(c), ['구아자틴']);
-      expect(c.savedOf(entryOf(Source.byeolpyo2, 5)), isNotNull);
-      expect(c.savedOf(entryOf(Source.byeolpyo2, 4)), isNull, reason: '구아자틴 염류는 다른 물질');
+      expect(c.savedOf(entryOf(Source.byeolpyo2, 5), bundled.entries), isNotNull);
+      expect(c.savedOf(entryOf(Source.byeolpyo2, 4), bundled.entries), isNull, reason: '구아자틴 염류는 다른 물질');
 
-      expect(await c.toggle(hit2(5), bundled.byeolpyo2), isFalse);
+      expect(await c.toggle(hit2(5), bundled.byeolpyo2, bundled.entries), isFalse);
       expect(c.items, isEmpty);
       await save(c, [5]);
       await save(c, [4]);
-      expect(await c.toggle(hit2(5), bundled.byeolpyo2), isFalse);
+      expect(await c.toggle(hit2(5), bundled.byeolpyo2, bundled.entries), isFalse);
       expect(kos(c), ['구아자틴 염류']);
+    });
+
+    test('개정으로 uid·CAS가 바뀐 뒤(아직 update 안 함)에도 이름으로 같은 물질이면 저장된 것으로 본다 — 2건 생기지 않는다', () async {
+      // 옛 판에서 저장한 구아자틴: 연번·고유번호·CAS가 지금 번들과 다르다고 친다
+      final e5 = entryOf(Source.byeolpyo2, 5);
+      final old = FavoriteItem(
+        entry: Entry(
+          src: e5.src, no: 6, uid: '97-1-999', name: e5.name, ko: e5.ko, en: e5.en,
+          cas: const ['13516-27-3'], deleted: false, rows: e5.rows,
+        ),
+        priority: false,
+        referenceNote: false,
+        pdfCreated: '2020-01-01T00:00:00+09:00',
+      );
+      final c = await loaded(MemoryUpdateStore(encodeFavorites([old])));
+      expect(c.savedOf(e5, bundled.entries), same(c.items.single));
+      expect(c.savedOf(entryOf(Source.byeolpyo2, 4), bundled.entries), isNull);
+      expect(await c.toggle(hit2(5), bundled.byeolpyo2, bundled.entries), isFalse, reason: '누르면 빼기 — 두 번째 저장이 아니다');
+      expect(c.items, isEmpty);
     });
 
     test('저장 파일 = SCHEMA 형식: version 1, 항목은 번들 항목 그대로 + 우선 적용·참고 문구 + PDF 생성일', () async {
       final store = MemoryUpdateStore();
       final c = await loaded(store);
-      await c.toggle(hit2(510), bundled.byeolpyo2);
+      await c.toggle(hit2(510), bundled.byeolpyo2, bundled.entries);
       final j = jsonDecode(store.value!) as Map;
       expect(j['version'], 1);
       final item = (j['items'] as List).single as Map;
@@ -95,7 +114,7 @@ void main() {
 
     test('사고대비물질 번호 1은 우선 적용이 스냅샷에 담긴다', () async {
       final c = await loaded(MemoryUpdateStore());
-      await c.toggle(index.hitOf(entryOf(Source.byeolpyo3, 1)), bundled.byeolpyo3);
+      await c.toggle(index.hitOf(entryOf(Source.byeolpyo3, 1)), bundled.byeolpyo3, bundled.entries);
       expect(c.items.single.priority, isTrue);
       expect(c.items.single.referenceNote, isFalse);
     });
@@ -106,7 +125,7 @@ void main() {
       await save(c, [88]);
       final before = store.value;
       store.writeError = const FileSystemException('용량 부족');
-      await expectLater(c.toggle(hit2(90), bundled.byeolpyo2), throwsA(isA<FileSystemException>()));
+      await expectLater(c.toggle(hit2(90), bundled.byeolpyo2, bundled.entries), throwsA(isA<FileSystemException>()));
       expect(kos(c), ['리누론']);
       expect(store.value, before);
       await expectLater(c.remove(c.items.single), throwsA(isA<FileSystemException>()));
@@ -126,7 +145,7 @@ void main() {
       final store = MemoryUpdateStore('{"version": 1, "items": [');
       final c = await loaded(store);
       expect(c.loadFailed, isTrue);
-      await expectLater(c.toggle(hit2(5), bundled.byeolpyo2), throwsA(isA<FavoritesUnreadable>()));
+      await expectLater(c.toggle(hit2(5), bundled.byeolpyo2, bundled.entries), throwsA(isA<FavoritesUnreadable>()));
       expect(store.value, '{"version": 1, "items": [');
 
       final unknownVersion = await loaded(MemoryUpdateStore('{"version": 2, "items": []}'));
@@ -317,7 +336,7 @@ void main() {
     await update.write('{"u":1}');
     final c = FavoritesController(store: favorites);
     await c.load();
-    await c.toggle(hit2(5), bundled.byeolpyo2);
+    await c.toggle(hit2(5), bundled.byeolpyo2, bundled.entries);
     await update.delete(); // '처음 데이터로 되돌리기'
     expect(await update.read(), isNull);
     expect(decodeFavorites((await favorites.read())!).single.entry.ko, '구아자틴');

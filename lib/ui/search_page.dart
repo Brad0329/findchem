@@ -164,7 +164,7 @@ class _ResultList extends StatelessWidget {
       return EntryCard(
         hit: h,
         pdf: pdf,
-        action: fav == null ? null : SaveButton(favorites: fav, hit: h, pdf: pdf),
+        action: fav == null ? null : SaveButton(favorites: fav, hit: h, pdf: pdf, entries: dataset.entries),
       );
     }
     if (r.query.trim().isEmpty) return const SizedBox.shrink();

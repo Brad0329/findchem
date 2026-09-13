@@ -178,24 +178,31 @@ class FavoritesController extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// 검색 카드의 [e]와 같은 물질이 저장돼 있으면 그 항목.
-  FavoriteItem? savedOf(Entry e) {
+  /// 현재 데이터셋 [entries]의 카드 [e]와 같은 물질로 저장된 항목(저장 아이콘 채움·토글 판정). 없으면 null.
+  /// 표·정규화한 국문명·uid·CAS가 모두 같으면 바로 그 항목이다. 이름만 같고 uid·CAS가 달라진 항목(개정 뒤 아직
+  /// update 안 함)은 [update]와 같은 찾기 규칙([findSameSubstance])이 [e]를 가리킬 때 같은 물질로 본다 —
+  /// 그래야 같은 물질이 2건 저장되지 않는다. 이름이 다르면 [entries]를 훑지 않는다(카드마다 부르므로).
+  FavoriteItem? savedOf(Entry e, List<Entry> entries) {
+    final name = SearchIndex.normalize(e.ko);
+    FavoriteItem? byRule;
     for (final i in _items) {
+      if (i.entry.src != e.src || SearchIndex.normalize(i.entry.ko) != name) continue;
       if (i.sameSubstance(e)) return i;
+      if (byRule == null && identical(findSameSubstance(i, entries), e)) byRule = i;
     }
-    return null;
+    return byRule;
   }
 
-  /// 저장 아이콘: 없으면 넣고 true, 있으면 빼고 false. 쓰기 실패는 예외.
-  Future<bool> toggle(Hit hit, PdfInfo pdf) async {
+  /// 저장 아이콘: 없으면 넣고 true, 있으면 빼고 false. [entries]는 카드가 속한 현재 데이터셋. 쓰기 실패는 예외.
+  Future<bool> toggle(Hit hit, PdfInfo pdf, List<Entry> entries) async {
     await load();
-    final saved = savedOf(hit.entry) != null;
+    final saved = savedOf(hit.entry, entries);
     await _write(
-      saved
-          ? [for (final i in _items) if (!i.sameSubstance(hit.entry)) i]
-          : [..._items, FavoriteItem.fromHit(hit, pdf)],
+      saved == null
+          ? [..._items, FavoriteItem.fromHit(hit, pdf)]
+          : [for (final i in _items) if (!identical(i, saved)) i],
     );
-    return !saved;
+    return saved == null;
   }
 
   /// 목록의 삭제 버튼.
