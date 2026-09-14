@@ -62,11 +62,17 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("name", help="검색어 (기본은 CAS 번호)")
     parser.add_argument("--service", default="chem", choices=sorted(ENDPOINTS), help="호출할 서비스")
+    parser.add_argument(
+        "--endpoint",
+        help="호출 주소를 직접 지정(파라미터 형식은 --service를 따른다). 주소가 틀렸을 때의 오류와 비교하는 조사용",
+    )
     parser.add_argument("--gubun", default="2", choices=["1", "2", "3"], help="1=영문명, 2=CAS, 3=고유번호")
     parser.add_argument("--rows", type=int, default=10)
     args = parser.parse_args()
 
     key = read_key()
+    if args.endpoint:
+        ENDPOINTS[args.service] = args.endpoint
     url = build_url(args.service, key, args.gubun, args.name, args.rows)
     try:
         with urllib.request.urlopen(url, timeout=20) as resp:
