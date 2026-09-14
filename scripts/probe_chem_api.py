@@ -54,8 +54,8 @@ def build_url(service: str, key: str, gubun: str, name: str, rows: int) -> str:
     service_key = key if "%" in key else urllib.parse.quote(key, safe="")
     if service == "safety":
         # 이 서비스는 CAS로만 찾는다(searchGubun 없음). 명세 표기는 ServiceKey지만 다른 서비스와 같은 serviceKey로 보낸다
-        # (2026-09-14: 활용신청 뒤에도 ServiceKey·serviceKey 둘 다 403 SERVICE_KEY_IS_NOT_REGISTERED_ERROR —
-        #  파라미터 이름은 원인이 아니다. 같은 때 신청한 ghs는 200. 승인 상태·반영 지연을 확인할 것)
+        # (2026-09-14: 한동안 403 SERVICE_KEY_IS_NOT_REGISTERED_ERROR였던 원인은 이 서비스(15072442)가 아니라
+        #  파일데이터판(15024880)에만 승인돼 있었기 때문. 15072442도 활용신청한 뒤 serviceKey로 200·XML 정상)
         query = urllib.parse.urlencode({"pageNo": 1, "numOfRows": rows, "casNo": name})
         return f"{ENDPOINTS[service]}?serviceKey={service_key}&{query}"
     query = urllib.parse.urlencode(
