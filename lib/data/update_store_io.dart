@@ -11,6 +11,8 @@ UpdateStore createUpdateStore() => FileUpdateStore();
 
 UpdateStore createFavoritesStore() => FileUpdateStore(name: FileUpdateStore.favoritesFileName);
 
+UpdateStore createApiSettingsStore() => FileUpdateStore(name: FileUpdateStore.apiSettingsFileName);
+
 class FileUpdateStore implements UpdateStore {
   /// [directory]를 주지 않으면 앱 지원 디렉토리(Android: 앱 내부 저장소 files/)를 쓴다.
   FileUpdateStore({Directory? directory, this.name = fileName}) : _directory = directory;
@@ -20,6 +22,9 @@ class FileUpdateStore implements UpdateStore {
 
   /// F-005 자주보는 Chem 목록.
   static const favoritesFileName = 'findchem_favorites.json';
+
+  /// F-007 data.go.kr 키·연동 선택.
+  static const apiSettingsFileName = 'findchem_api.json';
 
   final Directory? _directory;
 

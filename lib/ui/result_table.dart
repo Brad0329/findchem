@@ -14,6 +14,7 @@ import '../parser/models.dart';
 import '../search/search.dart';
 import '../share/share_action.dart';
 import '../share/tsv_text.dart';
+import 'cas_lookup_panel.dart';
 import 'entry_card.dart' show CardText;
 
 /// 물질마다 한 번씩 나오는(세로 병합되는) 앞 칸.
@@ -44,13 +45,37 @@ double get tableWidth =>
 
 const _outerBorder = 1.0;
 
-class ResultTable extends StatelessWidget {
-  const ResultTable({super.key, required this.hits});
+class ResultTable extends StatefulWidget {
+  const ResultTable({super.key, required this.hits, this.lookup});
 
   final List<Hit> hits;
 
+  /// F-007 CAS 조회. null이면 CAS가 눌리지 않는다.
+  final CasLookup? lookup;
+
+  @override
+  State<ResultTable> createState() => _ResultTableState();
+}
+
+class _ResultTableState extends State<ResultTable> {
+  /// 행(표·연번) → 결과를 연 CAS. 행마다 결과 영역은 하나다(같은 행의 다른 CAS를 누르면 바뀐다).
+  /// 목록이 행을 재활용해도 열림 상태가 남게 행 밖(여기)에 둔다.
+  final Map<String, String> _open = {};
+
+  static String _rowKey(Entry e) => '${e.src.id}-${e.no}';
+
+  void _toggle(Entry e, String cas) => setState(() {
+    final k = _rowKey(e);
+    if (_open[k] == cas) {
+      _open.remove(k);
+    } else {
+      _open[k] = cas;
+    }
+  });
+
   @override
   Widget build(BuildContext context) {
+    final lookup = widget.lookup;
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: SizedBox(
@@ -61,8 +86,16 @@ class ResultTable extends StatelessWidget {
             Expanded(
               child: ListView.builder(
                 padding: const EdgeInsets.only(bottom: 24),
-                itemCount: hits.length,
-                itemBuilder: (context, i) => _EntryRow(hit: hits[i]),
+                itemCount: widget.hits.length,
+                itemBuilder: (context, i) {
+                  final e = widget.hits[i].entry;
+                  return _EntryRow(
+                    hit: widget.hits[i],
+                    lookup: lookup,
+                    openCas: _open[_rowKey(e)],
+                    onCas: lookup == null ? null : (cas) => _toggle(e, cas),
+                  );
+                },
               ),
             ),
           ],
@@ -137,9 +170,14 @@ class _HeaderRow extends StatelessWidget {
 
 /// 물질 한 건: 왼쪽 앞 칸(세로 병합) + 오른쪽 수량 행들 + 복사 버튼.
 class _EntryRow extends StatelessWidget {
-  const _EntryRow({required this.hit});
+  const _EntryRow({required this.hit, this.lookup, this.openCas, this.onCas});
 
   final Hit hit;
+  final CasLookup? lookup;
+
+  /// 이 행에서 결과를 연 CAS. null이면 닫혀 있다.
+  final String? openCas;
+  final ValueChanged<String>? onCas;
 
   @override
   Widget build(BuildContext context) {
@@ -164,7 +202,7 @@ class _EntryRow extends StatelessWidget {
         children: [
           entryCell(0, Text('${e.no}', style: cellStyle, textAlign: TextAlign.right)),
           entryCell(1, _NameCell(hit: hit)),
-          entryCell(2, Text(e.cas.isEmpty ? CardText.noCas : e.cas.join(', '), style: cellStyle)),
+          entryCell(2, _casCell(context, cellStyle)),
           entryCell(3, Text(e.uid ?? '', style: cellStyle)),
           // 수량 행 묶음: 병합된 앞 칸의 높이를 줄 수만큼 나눠 갖는다.
           // (줄이 제 높이만 쓰면 물질 칸보다 짧아져 아래쪽 선이 끊긴다 — 2026-09-12 사용자 지적)
@@ -216,7 +254,59 @@ class _EntryRow extends StatelessWidget {
       ),
       child: row,
     );
-    return e.deleted ? Opacity(opacity: 0.55, child: bordered) : bordered;
+    final shown = e.deleted ? Opacity(opacity: 0.55, child: bordered) : bordered;
+    final cas = openCas;
+    final look = lookup;
+    if (cas == null || look == null) return shown;
+    // F-007: 누른 행 바로 아래에 결과 영역(표 폭 전체)
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        shown,
+        Container(
+          key: ValueKey('lookup-panel-${e.src.id}-${e.no}'),
+          padding: const EdgeInsets.fromLTRB(12, 10, 12, 12),
+          decoration: BoxDecoration(
+            color: theme.colorScheme.surfaceContainerLow,
+            border: Border(
+              left: BorderSide(color: divider, width: _outerBorder),
+              right: BorderSide(color: divider),
+              bottom: BorderSide(color: divider),
+            ),
+          ),
+          child: CasLookupPanel(key: ValueKey('lookup-${e.src.id}-${e.no}-$cas'), cas: cas, lookup: look),
+        ),
+      ],
+    );
+  }
+
+  /// CAS 칸. 조회가 켜져 있으면 번호마다 따로 눌린다(링크 모양). CAS 없는 묶음 항목은 누를 것이 없다.
+  Widget _casCell(BuildContext context, TextStyle? style) {
+    final e = hit.entry;
+    if (e.cas.isEmpty) return Text(CardText.noCas, style: style);
+    final tap = onCas;
+    if (tap == null) return Text(e.cas.join(', '), style: style);
+    final color = Theme.of(context).colorScheme.primary;
+    return Wrap(
+      children: [
+        for (var i = 0; i < e.cas.length; i++) ...[
+          InkWell(
+            key: ValueKey('cas-${e.src.id}-${e.no}-${e.cas[i]}'),
+            onTap: () => tap(e.cas[i]),
+            child: Text(
+              e.cas[i],
+              style: style?.copyWith(
+                color: color,
+                decoration: TextDecoration.underline,
+                decorationColor: color,
+                fontWeight: openCas == e.cas[i] ? FontWeight.w600 : null,
+              ),
+            ),
+          ),
+          if (i < e.cas.length - 1) Text(', ', style: style),
+        ],
+      ],
+    );
   }
 }
 

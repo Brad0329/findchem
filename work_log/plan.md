@@ -104,7 +104,12 @@
 - [ ] (Phase 007 전 끼워 넣은 기능) **F-007 CAS 부가 정보 조회(공공데이터 API 3종) + 설정 카드 구성** — 2026-09-14 스펙화
   (사용자 결정: 부채 정리보다 먼저). 수용 기준 REQUIREMENTS F-007, 저장 형식 SCHEMA 'API 키·연동 선택'(확정 2026-09-14),
   명세·실측은 아래 보류 항목 '외부 원천 조사'. 저위험(화면·저장 파일 하나 추가) + **보안 3층 ②**(비밀정보·새 외부 호출)
-  - **나중에 사용자에게 다시 물을 것**: GHS H·P·그림문자 코드 → 국문 문구·그림 연결 여부(출처 조사는 보류 항목에 있다)
+  - **웹 단계 구현 2026-09-14**(사용자 결정: 오늘은 웹만, 앱은 나중에 개발 여부 확인). 코드: 설정·조회 `lib/lookup/`
+    (`api_settings.dart` — 켜는 분기 `apiLookupEnabledByDefault = kIsWeb` 한 곳, `chem_api.dart`), 화면 `lib/ui/cas_lookup_panel.dart`·
+    `api_settings_cards.dart`, 표의 CAS 링크 `result_table.dart`, 설정 카드 `settings_page.dart`. 응답 fixture `test/fixtures/api/`.
+    **남은 것**: 웹 사용자 실테스트(CORS 정상 응답 실측 겸함) / [앱 단계] 항목(앱 카드 CAS 누르기·INTERNET 권한·받기 페이지 문구·폰 실테스트)
+  - **나중에 사용자에게 다시 물을 것**: GHS H·P·그림문자 코드 → 국문 문구·그림 연결 여부(출처 조사는 보류 항목에 있다) /
+    앱 단계 개발 여부
   - 의존성(사용자 승인 2026-09-14): `http` 추가(Dart 팀 공식, 앱·웹 한 벌 + 테스트용 MockClient), 잠금 파일에 이미 있는
     전이 의존성 `xml` 6.6.1을 직접 의존으로. 버린 대안: HTTP를 조건부 import(dart:io / package:web)로 두 벌 직접 구현
   - 착수 전 확인: 웹 CORS는 키 넣은 정상 응답이 미확인(오류 응답 3건만 읽힘) — 웹 사용자 실테스트가 겸한다

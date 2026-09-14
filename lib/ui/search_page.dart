@@ -10,6 +10,7 @@ import '../data/favorites.dart';
 import '../parser/models.dart';
 import '../search/search.dart';
 import 'app_header.dart';
+import 'cas_lookup_panel.dart';
 import 'entry_card.dart';
 import 'favorites_page.dart';
 import 'result_table.dart';
@@ -28,8 +29,11 @@ abstract final class SearchText {
 const wideBreakpoint = 900.0;
 
 class SearchPage extends StatefulWidget {
-  const SearchPage({super.key, required this.dataset, this.onMenu, this.favorites, bool? useTable})
+  const SearchPage({super.key, required this.dataset, this.onMenu, this.favorites, this.lookup, bool? useTable})
     : useTable = useTable ?? kIsWeb;
+
+  /// F-007 CAS 조회. null이면 CAS가 눌리지 않는다. 지금은 표(웹)에만 붙는다 — 앱 카드는 앱 단계(REQUIREMENTS F-007 '단계').
+  final CasLookup? lookup;
 
   final Dataset dataset;
 
@@ -107,6 +111,7 @@ class _SearchPageState extends State<SearchPage> {
               dataset: widget.dataset,
               useTable: widget.useTable,
               favorites: widget._favoritesEnabled ? widget.favorites : null,
+              lookup: widget.lookup,
             ),
           ),
         ],
@@ -148,12 +153,19 @@ class _ResultHeader extends StatelessWidget {
 }
 
 class _ResultList extends StatelessWidget {
-  const _ResultList({required this.result, required this.dataset, required this.useTable, this.favorites});
+  const _ResultList({
+    required this.result,
+    required this.dataset,
+    required this.useTable,
+    this.favorites,
+    this.lookup,
+  });
 
   final SearchResult result;
   final Dataset dataset;
   final bool useTable;
   final FavoritesController? favorites;
+  final CasLookup? lookup;
 
   @override
   Widget build(BuildContext context) {
@@ -175,7 +187,7 @@ class _ResultList extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _ResultHeader(result: r),
-          if (r.hits.isNotEmpty) Expanded(child: ResultTable(hits: r.hits)),
+          if (r.hits.isNotEmpty) Expanded(child: ResultTable(hits: r.hits, lookup: lookup)),
         ],
       );
     }

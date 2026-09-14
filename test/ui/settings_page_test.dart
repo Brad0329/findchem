@@ -64,6 +64,9 @@ void main() {
     await tester.tap(find.text('설정'));
     await tester.pumpAndSettle();
     expect(find.byType(SettingsPage), findsOneWidget);
+    // F-007: F-002 내용은 '사고대비물질·인체·생태 유해성 정보' 카드 안에 있다(처음엔 접혀 있음)
+    await tester.tap(find.text(SettingsText.sourceCard));
+    await tester.pumpAndSettle();
   }
 
   Future<void> pick(WidgetTester tester, Source src) async {
@@ -97,7 +100,10 @@ void main() {
     expect(find.text(SettingsText.builtAt(bundled.extractedAt)), findsOneWidget);
     expect(find.textContaining('적용한 날짜'), findsNothing);
     expect(tester.widget<OutlinedButton>(resetButton()).onPressed, isNull);
-    // F-006: 맨 아래 앱 버전(값이 pubspec과 같은지는 test/release_test.dart)
+    // F-006: 앱 버전(값이 pubspec과 같은지는 test/release_test.dart) — F-007부터 '웹·앱 정보' 카드 안
+    await tester.ensureVisible(find.text(SettingsText.infoCard));
+    await tester.tap(find.text(SettingsText.infoCard));
+    await tester.pumpAndSettle();
     expect(find.text('앱 버전 1.1.0 (빌드 2)'), findsOneWidget);
     expect(SettingsText.version, '앱 버전 1.1.0 (빌드 2)');
   });

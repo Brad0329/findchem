@@ -1,0 +1,74 @@
+{
+  "header": {
+    "resultCode": "200",
+    "resultMsg": "NORMAL SERVICE."
+  },
+  "body": {
+    "items": [
+      {
+        "sbstnId": "18238",
+        "casNo": "50-00-0",
+        "korexst": "KE-17074",
+        "sbstnNmKor": "포르말린",
+        "sbstnNmEng": "Formaldehyde",
+        "sbstnNm2Kor": "폼알데하이드; 포름알데히드; 포름올; 메탄알; 포르말리트; 포름알데히드용액",
+        "sbstnNm2Eng": "Formaldehyde",
+        "mlcfrm": "CH2O",
+        "mlcwgt": "30.03",
+        "typeList": [
+          {
+            "sbstnClsfTypeNm": "기존화학물질",
+            "unqNo": "KE-17074",
+            "contInfo": "",
+            "excpInfo": "",
+            "ancmntYmd": "20141230",
+            "ancmntInfo": "환경부고시 제2014-237호"
+          },
+          {
+            "sbstnClsfTypeNm": "인체등유해성물질",
+            "unqNo": "97-1-345",
+            "contInfo": "인체급성유해성 : 1%, 인체만성유해성 : 0.1%",
+            "excpInfo": "",
+            "ancmntYmd": "20250807",
+            "ancmntInfo": "화학물질안전원고시 제2025-19호"
+          },
+          {
+            "sbstnClsfTypeNm": "제한물질",
+            "unqNo": "06-5-5",
+            "contInfo": "폼알데하이드 및 이를 1% 이상 함유한 혼합물",
+            "excpInfo": "가구용 무늬목, 직물, 3세이하 유아용제품, 도배용 풀, 피혁가공 유연제의 용도로 제조, 수입, 판매, 보관?저장, 운반, 사용을 금지",
+            "ancmntYmd": "20141230",
+            "ancmntInfo": "환경부고시 제2014-238호"
+          },
+          {
+            "sbstnClsfTypeNm": "사고대비물질",
+            "unqNo": "1",
+            "contInfo": "포르말린 또는 포름알데히드 및 이를 1% 이상 함유한 혼합물",
+            "excpInfo": "",
+            "ancmntYmd": "        ",
+            "ancmntInfo": ""
+          },
+          {
+            "sbstnClsfTypeNm": "등록대상기존화학물질",
+            "unqNo": "1",
+            "contInfo": "",
+            "excpInfo": "",
+            "ancmntYmd": "20150701",
+            "ancmntInfo": "고시일로부터 3년"
+          },
+          {
+            "sbstnClsfTypeNm": "중점관리물질",
+            "unqNo": "별표-1",
+            "contInfo": "",
+            "excpInfo": "CMR ",
+            "ancmntYmd": "20220427",
+            "ancmntInfo": "환경부고시 제2022-79호"
+          }
+        ]
+      }
+    ],
+    "numOfRows": 10,
+    "pageNo": 1,
+    "totalCount": 1
+  }
+}

@@ -8,7 +8,10 @@ import 'package:flutter/material.dart';
 import '../data/dataset_loader.dart';
 import '../data/favorites.dart';
 import '../data/update_store.dart';
+import '../lookup/api_settings.dart';
+import '../lookup/chem_api.dart';
 import 'app_header.dart';
+import 'cas_lookup_panel.dart';
 import 'favorites_page.dart';
 import 'search_page.dart';
 import 'settings_page.dart';
@@ -17,7 +20,15 @@ import 'settings_page.dart';
 const seedColor = Color(0xFF2E7FE0);
 
 class FindChemApp extends StatefulWidget {
-  const FindChemApp({super.key, this.controller, this.favorites, this.pickPdf = pickPdfWithFilePicker});
+  const FindChemApp({
+    super.key,
+    this.controller,
+    this.favorites,
+    this.pickPdf = pickPdfWithFilePicker,
+    this.apiSettings,
+    this.apiClient,
+    bool? lookupEnabled,
+  }) : lookupEnabled = lookupEnabled ?? apiLookupEnabledByDefault;
 
   /// 테스트에서 저장소·번들을 바꿔 넣을 때. null이면 이 플랫폼의 저장본 자리 + 실제 번들.
   final DataController? controller;
@@ -25,6 +36,13 @@ class FindChemApp extends StatefulWidget {
   /// 테스트에서 저장 목록 자리를 바꿔 넣을 때. null이면 이 플랫폼의 저장 목록 자리(F-005).
   final FavoritesController? favorites;
   final PdfPicker pickPdf;
+
+  /// F-007 CAS 조회를 켤지. 기본값은 웹만(`apiLookupEnabledByDefault`) — 테스트에서만 직접 넣는다.
+  final bool lookupEnabled;
+
+  /// 테스트에서 F-007 설정 자리·HTTP를 바꿔 넣을 때. null이면 이 플랫폼의 자리 + 실제 호출.
+  final ApiSettingsController? apiSettings;
+  final ChemApiClient? apiClient;
 
   @override
   State<FindChemApp> createState() => _FindChemAppState();
@@ -35,18 +53,32 @@ class _FindChemAppState extends State<FindChemApp> {
   late final FavoritesController _favorites =
       widget.favorites ?? FavoritesController(store: platformFavoritesStore());
   late final Future<LoadedData> _loading = _controller.load();
+  late final CasLookup? _lookup = widget.lookupEnabled
+      ? CasLookup(
+          settings: widget.apiSettings ?? ApiSettingsController(store: platformApiSettingsStore()),
+          client: widget.apiClient ?? ChemApiClient(),
+        )
+      : null;
 
   @override
   void initState() {
     super.initState();
     // 저장 목록은 검색을 막지 않게 따로 읽는다. load는 실패를 예외 대신 loadFailed로 남긴다(목록 화면에 사유).
     unawaited(_favorites.load());
+    // F-007 설정도 따로 읽는다. 깨진 파일은 loadError로 남는다(설정 카드 1에 사유).
+    final lookup = _lookup;
+    if (lookup != null) unawaited(lookup.settings.load());
   }
 
   void _onMenu(BuildContext context, HeaderMenu item) {
     final page = switch (item) {
       HeaderMenu.favorites => FavoritesPage(favorites: _favorites, data: _controller),
-      HeaderMenu.settings => SettingsPage(controller: _controller, favorites: _favorites, pickPdf: widget.pickPdf),
+      HeaderMenu.settings => SettingsPage(
+        controller: _controller,
+        favorites: _favorites,
+        pickPdf: widget.pickPdf,
+        lookup: _lookup,
+      ),
     };
     Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => page));
   }
@@ -83,6 +115,7 @@ class _FindChemAppState extends State<FindChemApp> {
             builder: (context, _) => SearchPage(
               dataset: _controller.data!.dataset,
               favorites: _favorites,
+              lookup: _lookup,
               onMenu: (item) => _onMenu(context, item),
             ),
           );

@@ -1,0 +1,80 @@
+{
+  "header": {
+    "resultCode": "200",
+    "resultMsg": "NORMAL SERVICE."
+  },
+  "body": {
+    "items": [
+      {
+        "sbstnId": "18238",
+        "casNo": "50-00-0",
+        "sbstnNmKor": "포르말린",
+        "sbstnNmEng": "Formaldehyde",
+        "sbstnTypeUnqno": "기존화학물질:V^인체등유해성물질:97-1-345^제한물질:06-5-5^사고대비물질:1^등록대상기존화학물질:1^중점관리물질:별표-1",
+        "sfsgwd": "위험",
+        "mfctrCn": "-",
+        "unnm": "1198^2209",
+        "pctgrmCd": "GHS02^GHS04^GHS05^GHS06^GHS08",
+        "hrmflnList": [
+          {
+            "hrmflnClsfArtclNm": "급성독성-경피",
+            "hrmDngrCd": "H311",
+            "clsfGrd": "3",
+            "hrmPrevntCd": "P280^P302+P352^P312^P321^P361+P364^P405^P501"
+          },
+          {
+            "hrmflnClsfArtclNm": "피부 부식성/자극성",
+            "hrmDngrCd": "H314",
+            "clsfGrd": "1",
+            "hrmPrevntCd": "P260^P264^P280^P301+P330+P331^P303+P361+P353^P304+P340^P305+P351+P338^P310^P321^P363^P405^P501"
+          },
+          {
+            "hrmflnClsfArtclNm": "급성독성-흡입",
+            "hrmDngrCd": "H330",
+            "clsfGrd": "2",
+            "hrmPrevntCd": "P260^P271^P284^P304+P340^P310^P320^P403+P233^P405^P501"
+          },
+          {
+            "hrmflnClsfArtclNm": "피부 과민성",
+            "hrmDngrCd": "H317",
+            "clsfGrd": "1A",
+            "hrmPrevntCd": "P261^P272^P280^P302+P352^P321^P333+P313^P362+P364^P501"
+          },
+          {
+            "hrmflnClsfArtclNm": "생식세포 변이원성",
+            "hrmDngrCd": "H341",
+            "clsfGrd": "2",
+            "hrmPrevntCd": "P201^P202^P280^P308+P313^P405^P501"
+          },
+          {
+            "hrmflnClsfArtclNm": "발암성",
+            "hrmDngrCd": "H350",
+            "clsfGrd": "1",
+            "hrmPrevntCd": "P201^P202^P280^P308+P313^P405^P501"
+          },
+          {
+            "hrmflnClsfArtclNm": "급성독성-경구",
+            "hrmDngrCd": "H301",
+            "clsfGrd": "3",
+            "hrmPrevntCd": "P264^P270^P301+P310^P321^P330^P405^P501"
+          },
+          {
+            "hrmflnClsfArtclNm": "고압가스",
+            "hrmDngrCd": "H280",
+            "clsfGrd": "2",
+            "hrmPrevntCd": "P410+P403"
+          },
+          {
+            "hrmflnClsfArtclNm": "인화성 가스",
+            "hrmDngrCd": "H220",
+            "clsfGrd": "1",
+            "hrmPrevntCd": "P210^P377^P381^P403"
+          }
+        ]
+      }
+    ],
+    "numOfRows": 10,
+    "pageNo": 1,
+    "totalCount": 1
+  }
+}

@@ -1,8 +1,10 @@
-/// F-002 설정 화면 — 현재 원천자료 정보, 원천자료 update(PDF 두 개), 처음 데이터로 되돌리기.
+/// 설정 화면 — 영역별 접히는 카드 4개(F-007, 2026-09-14): data.go.kr API 키 / 연동 데이터(둘은 조회가 켜졌을 때만) /
+/// 사고대비물질·인체·생태 유해성 정보(F-002: 현재 원천자료, 원천자료 update, 되돌리기) / 웹·앱 정보(F-006 버전).
 /// 헤더 '⋮' → '설정'에서 Navigator.push로 연다(CLAUDE.md 화면 전환 구조).
 library;
 
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 
 import '../app_version.dart';
@@ -10,11 +12,15 @@ import '../data/dataset_loader.dart';
 import '../data/favorites.dart';
 import '../data/source_update.dart';
 import '../parser/models.dart';
+import 'api_settings_cards.dart';
+import 'cas_lookup_panel.dart';
 import 'favorites_page.dart';
 
 /// 화면 문구(테스트가 같은 상수를 본다).
 abstract final class SettingsText {
   static const title = '설정';
+  static const sourceCard = '사고대비물질·인체·생태 유해성 정보';
+  static const infoCard = '웹·앱 정보';
   static const sourceSection = '현재 원천자료';
   static const bundled = '앱에 들어 있는 데이터';
   static const updated = 'update한 원천자료';
@@ -33,6 +39,9 @@ abstract final class SettingsText {
 
   /// F-006: 받은 사람이 최신판인지 릴리스 태그와 비교한다.
   static const version = '앱 버전 $appVersion (빌드 $appBuildNumber)';
+
+  /// F-007: 웹에서는 '웹 버전'(값은 같은 pubspec).
+  static const webVersion = '웹 버전 $appVersion (빌드 $appBuildNumber)';
 
   static String pdfLabel(Source src) => '${src.label} PDF';
   static String count(Source src, int n, String? created) =>
@@ -79,7 +88,15 @@ class SettingsPage extends StatefulWidget {
     required this.controller,
     required this.favorites,
     this.pickPdf = pickPdfWithFilePicker,
-  });
+    this.lookup,
+    bool? web,
+  }) : web = web ?? kIsWeb;
+
+  /// F-007. null이면 카드 1·2(API 키·연동 데이터)가 없다(앱 — REQUIREMENTS F-007 '단계').
+  final CasLookup? lookup;
+
+  /// 카드 4의 버전 문구를 '웹 버전'으로. 테스트에서만 직접 넣는다.
+  final bool web;
 
   final DataController controller;
 
@@ -208,9 +225,45 @@ class _SettingsPageState extends State<SettingsPage> {
         listenable: widget.controller,
         builder: (context, _) {
           final data = widget.controller.data;
+          final lookup = widget.lookup;
           return ListView(
             padding: const EdgeInsets.all(16),
             children: [
+              if (lookup != null) ...[
+                _SettingsCard(
+                  key: const ValueKey('card-api'),
+                  icon: Icons.key_outlined,
+                  title: ApiSettingsText.keyCard,
+                  children: [ApiKeyCardBody(lookup: lookup)],
+                ),
+                _SettingsCard(
+                  key: const ValueKey('card-linked'),
+                  icon: Icons.cable_outlined,
+                  title: ApiSettingsText.linkCard,
+                  children: [LinkedDataCardBody(settings: lookup.settings)],
+                ),
+              ],
+              _SettingsCard(
+                key: const ValueKey('card-source'),
+                icon: Icons.description_outlined,
+                title: SettingsText.sourceCard,
+                children: _sourceChildren(theme, data),
+              ),
+              _SettingsCard(
+                key: const ValueKey('card-info'),
+                icon: Icons.info_outline,
+                title: SettingsText.infoCard,
+                children: [Text(widget.web ? SettingsText.webVersion : SettingsText.version)],
+              ),
+            ],
+          );
+        },
+      ),
+    );
+  }
+
+  /// 카드 3 — F-002 내용 그대로.
+  List<Widget> _sourceChildren(ThemeData theme, LoadedData? data) => [
               Text(SettingsText.sourceSection, style: theme.textTheme.titleMedium),
               const SizedBox(height: 8),
               if (data != null) _SourceInfo(data: data),
@@ -267,11 +320,30 @@ class _SettingsPageState extends State<SettingsPage> {
                   label: const Text(SettingsText.reset),
                 ),
               ),
-              const SizedBox(height: 32),
-              Text(SettingsText.version, style: theme.textTheme.bodySmall),
-            ],
-          );
-        },
+            ];
+}
+
+/// 접히는 카드 하나. 처음엔 접혀 있다(REQUIREMENTS F-007 '설정 화면 구성').
+class _SettingsCard extends StatelessWidget {
+  const _SettingsCard({super.key, required this.icon, required this.title, required this.children});
+
+  final IconData icon;
+  final String title;
+  final List<Widget> children;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      margin: const EdgeInsets.only(bottom: 10),
+      clipBehavior: Clip.antiAlias,
+      child: ExpansionTile(
+        leading: Icon(icon),
+        title: Text(title),
+        shape: const Border(),
+        collapsedShape: const Border(),
+        expandedCrossAxisAlignment: CrossAxisAlignment.start,
+        childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+        children: children,
       ),
     );
   }

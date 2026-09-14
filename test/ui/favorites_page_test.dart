@@ -526,6 +526,11 @@ void main() {
       await tester.pumpAndSettle();
       await tester.tap(find.text(item));
       await tester.pumpAndSettle();
+      if (item == HeaderText.settings) {
+        // F-007: F-002 내용은 '사고대비물질·인체·생태 유해성 정보' 카드 안에 있다(처음엔 접혀 있음)
+        await tester.tap(find.text(SettingsText.sourceCard));
+        await tester.pumpAndSettle();
+      }
     }
 
     Future<void> applyPdfs(WidgetTester tester) async {
