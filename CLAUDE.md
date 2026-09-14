@@ -81,7 +81,9 @@ Flutter(Android + 웹 한 벌), 서버 없음, 데이터는 JSON으로 번들해
   ```
   루트의 `pubspec.yaml`·`pubspec.lock`·`analysis_options.yaml`·`.metadata`는 Flutter 고정 파일이다.
   **이 트리 밖에 새 최상위 디렉토리/파일을 만들지 말 것.** 필요하면 사용자 확인 후 이 목록부터 갱신.
-- 설정/환경: 환경별 설정이 없다 — 앱에 서버·비밀정보가 없다. `.env`는 개발 PC 조사용 키뿐이고 앱은 읽지 않는다.
+- 설정/환경: 환경별 설정이 없다 — 앱에 서버가 없다. `.env`는 개발 PC 조사용 키뿐이고 앱은 읽지 않는다.
+  **예외(F-007 기본 키, 2026-09-14 사용자 결정)**: 웹 배포 빌드가 Actions Secret `DATA_GO_KR_KEY`를 `--dart-define`으로 넣는다 —
+  배포된 JS에서 공개됨을 감수했다(REQUIREMENTS 비기능 4). 키를 저장소 파일로 두지 않는 규칙은 그대로다.
 - **클라우드 세션(claude.ai/code) 환경의 원본 = `scripts/cloud_setup.sh`** — 웹 화면 Setup script 칸은 그 사본이라
   고치면 다시 붙여 넣는다. 클라우드는 analyze·test·웹 빌드까지(Android SDK 없음), `settings.local.json`은 가지 않는다.
 - 새 기능 추가 위치 규칙: `lib/` 아래 도메인별 폴더(파서·검색·화면 등, 착수하는 Phase에서 만든다).

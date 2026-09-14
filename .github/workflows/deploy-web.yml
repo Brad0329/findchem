@@ -41,7 +41,12 @@ jobs:
       - run: flutter analyze
       - run: flutter test --reporter failures-only
 
-      - run: flutter build web --base-href /findchem/
+      # F-007 기본 키: Secret DATA_GO_KR_KEY를 빌드 상수로 넣는다(lib/lookup/api_settings.dart가 같은 이름을 읽는다 —
+      # 이름 대조는 test/lookup/api_settings_test.dart). 배포된 JS에서 공개됨을 감수한 결정이다(REQUIREMENTS 비기능 4).
+      # Secret이 없으면 빈 값 → 기본 키 없음(사용자가 설정에서 키를 넣는 종전 동작).
+      - run: flutter build web --base-href /findchem/ --dart-define=DATA_GO_KR_DEFAULT_KEY="$DATA_GO_KR_KEY"
+        env:
+          DATA_GO_KR_KEY: ${{ secrets.DATA_GO_KR_KEY }}
 
       - uses: actions/upload-pages-artifact@v3
         with:

@@ -24,6 +24,7 @@ void main() {
     bool web = true,
     FakeApi? api,
     MemoryUpdateStore? updateStore,
+    String defaultKey = '',
   }) async {
     tester.view.physicalSize = const Size(600, 2000);
     tester.view.devicePixelRatio = 1;
@@ -39,7 +40,10 @@ void main() {
           web: web,
           lookup: apiStore == null
               ? null
-              : CasLookup(settings: ApiSettingsController(store: apiStore), client: fake.client()),
+              : CasLookup(
+                  settings: ApiSettingsController(store: apiStore, defaultKey: defaultKey),
+                  client: fake.client(),
+                ),
         ),
       ),
     );
@@ -152,6 +156,31 @@ void main() {
       expect(u.queryParameters['searchNm'] ?? u.queryParameters['casNo'], '50-00-0');
     }
     expect(store.value, isNull);
+  });
+
+  testWidgets('기본 키: 카드 1에 기본 키 사용 중과 **** 표시, 입력칸 값은 비어 있다. 빈 칸 [키 인증]은 기본 키로. 내 키 저장·삭제로 전환', (tester) async {
+    final store = MemoryUpdateStore();
+    final (api, _) = await pumpSettings(tester, apiStore: store, defaultKey: 'DEFAULTKEY');
+    await expand(tester, ApiSettingsText.keyCard);
+    Finder field() => find.byKey(const ValueKey('api-key-field'));
+    expect(find.text(ApiSettingsText.usingDefault), findsOneWidget);
+    expect(tester.widget<TextField>(field()).decoration!.hintText, ApiSettingsText.defaultMask);
+    expect(tester.widget<TextField>(field()).controller!.text, isEmpty, reason: '기본 키 원문을 칸에 넣지 않는다');
+    expect(find.text('DEFAULTKEY'), findsNothing);
+
+    await tapButton(tester, ApiSettingsText.verify);
+    expect(find.text(ApiSettingsText.enterKey), findsNothing);
+    expect(find.text('화학물질 정보 — 확인됨'), findsOneWidget);
+    expect(api.calls.map((u) => u.queryParameters['serviceKey']).toSet(), {'DEFAULTKEY'});
+
+    await tester.enterText(field(), 'MINE');
+    await tapButton(tester, ApiSettingsText.save);
+    expect(find.text(ApiSettingsText.usingDefault), findsNothing);
+    expect(store.value, isNot(contains('DEFAULTKEY')));
+
+    await tapButton(tester, ApiSettingsText.delete);
+    expect(find.text(ApiSettingsText.usingDefault), findsOneWidget);
+    expect(tester.widget<TextField>(field()).controller!.text, isEmpty);
   });
 
   testWidgets('카드 2: 처음엔 3개 모두 체크, 바꾸면 바로 저장되고 다시 읽어도 유지', (tester) async {

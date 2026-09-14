@@ -182,6 +182,20 @@ void main() {
       expect((s as LookupBlocked).message, LookupText.settingsUnreadable);
       expect(api.calls, isEmpty);
     });
+    test('사용자 키가 없고 기본 키가 있으면 기본 키로 부른다. 사용자 키가 있으면 사용자 키', () async {
+      final api = FakeApi();
+      final withDefault = ApiSettingsController(store: MemoryUpdateStore(), defaultKey: 'DEFAULTKEY');
+      final s = await startLookup(withDefault, api.client(), '50-00-0') as LookupRunning;
+      await Future.wait(s.calls.values);
+      expect(api.calls.map((u) => u.queryParameters['serviceKey']).toSet(), {'DEFAULTKEY'});
+
+      api.calls.clear();
+      final mine = ApiSettingsController(store: MemoryUpdateStore(apiSettingsJson(key: 'MINE')), defaultKey: 'DEFAULTKEY');
+      final s2 = await startLookup(mine, api.client(), '50-00-0') as LookupRunning;
+      await Future.wait(s2.calls.values);
+      expect(api.calls.map((u) => u.queryParameters['serviceKey']).toSet(), {'MINE'});
+    });
+
     test('체크한 서비스만 부른다', () async {
       final (s, api) = await start(apiSettingsJson(services: {'chem': true, 'ghs': false, 'safety': true}));
       final running = s as LookupRunning;

@@ -344,7 +344,7 @@ final class LookupRunning extends LookupStart {
 Future<LookupStart> startLookup(ApiSettingsController settings, ChemApiClient client, String cas) async {
   await settings.load();
   if (settings.loadError != null) return const LookupBlocked(LookupText.settingsUnreadable);
-  final key = settings.serviceKey;
+  final key = settings.effectiveKey; // 사용자 키가 우선, 없으면 기본 키(F-007 '기본 키')
   if (key == null || key.isEmpty) return const LookupBlocked(LookupText.noKey);
   final services = settings.enabledServices;
   if (services.isEmpty) return const LookupBlocked(LookupText.noService);

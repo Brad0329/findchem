@@ -11,6 +11,11 @@ import '../data/update_store.dart';
 /// 앱은 개발 여부를 확인한 뒤 켠다. 켜고 끄는 분기는 이 값 한 곳이고, 테스트만 직접 넣는다.
 const bool apiLookupEnabledByDefault = kIsWeb;
 
+/// F-007 기본 키 — 웹 배포 빌드가 Actions Secret `DATA_GO_KR_KEY`를 `--dart-define=DATA_GO_KR_DEFAULT_KEY`로 넣는다
+/// (`.github/workflows/deploy-web.yml`, 이름 대조 테스트 있음). 없으면 빈 문자열 = 기본 키 없음.
+/// **배포된 JS에서 공개된다** — 사용자가 감수한 결정(2026-09-14, REQUIREMENTS 비기능 4). 로그·화면에 원문을 쓰지 않는다.
+const String bundledDefaultServiceKey = String.fromEnvironment('DATA_GO_KR_DEFAULT_KEY');
+
 /// 조회하는 공공데이터 서비스(화면 순서 = 선언 순서). 파일의 `services` 키는 [name].
 enum ChemService {
   chem('화학물질 정보', '규제 분류·고유번호'),
@@ -26,9 +31,21 @@ enum ChemService {
 }
 
 class ApiSettingsController extends ChangeNotifier {
-  ApiSettingsController({required this.store});
+  ApiSettingsController({required this.store, String? defaultKey})
+    : defaultKey = (defaultKey ?? bundledDefaultServiceKey).trim();
 
   final UpdateStore store;
+
+  /// 빌드에 들어간 기본 키(없으면 빈 문자열). 파일에 담지 않는다(SCHEMA.md).
+  final String defaultKey;
+
+  bool get hasDefaultKey => defaultKey.isNotEmpty;
+
+  /// 사용자가 저장한 키가 없어 기본 키를 쓰는 중.
+  bool get usingDefaultKey => _serviceKey == null && hasDefaultKey;
+
+  /// 조회에 쓸 키: 사용자 키가 우선, 없으면 기본 키, 둘 다 없으면 null.
+  String? get effectiveKey => _serviceKey ?? (hasDefaultKey ? defaultKey : null);
 
   static const formatVersion = 1;
 
@@ -40,7 +57,7 @@ class ApiSettingsController extends ChangeNotifier {
   String? _loadError;
   Future<void>? _loading;
 
-  /// 저장된 인증키. 없으면 null.
+  /// 사용자가 저장한 인증키. 없으면 null(기본 키는 [effectiveKey]).
   String? get serviceKey => _serviceKey;
 
   /// 파일이 깨졌으면 사유. 이때는 저장·체크 변경을 거부한다(덮으면 깨진 파일의 내용이 사라진다 — F-005 선례).
@@ -111,7 +128,7 @@ class ApiSettingsController extends ChangeNotifier {
   Future<void> setService(ChemService service, bool value) =>
       _write(key: _serviceKey, services: {for (final s in ChemService.values) s: s == service ? value : enabled(s)});
 
-  /// [삭제]: 파일을 지운다(깨진 파일의 복구 경로이기도 하다). 체크도 기본값으로 돌아간다.
+  /// [삭제]: 파일을 지운다(깨진 파일의 복구 경로이기도 하다). 체크도 기본값으로 돌아가고, 기본 키가 있으면 기본 키를 쓴다.
   Future<void> delete() async {
     await load();
     await store.delete();

@@ -84,6 +84,43 @@ void main() {
     expect(c.loadError, isNotNull);
   });
 
+  group('기본 키(F-007)', () {
+    test('기본 키가 있고 파일이 없으면 기본 키를 쓴다. 사용자 키는 null', () async {
+      final c = ApiSettingsController(store: MemoryUpdateStore(), defaultKey: ' DEFAULTKEY ');
+      await c.load();
+      expect(c.serviceKey, isNull);
+      expect(c.usingDefaultKey, isTrue);
+      expect(c.effectiveKey, 'DEFAULTKEY');
+    });
+
+    test('내 키를 저장하면 우선, 삭제하면 기본 키로 돌아간다. 기본 키는 파일에 쓰지 않는다', () async {
+      final store = MemoryUpdateStore();
+      final c = ApiSettingsController(store: store, defaultKey: 'DEFAULTKEY');
+      await c.load();
+      await c.setService(ChemService.ghs, false);
+      expect(store.value, isNot(contains('DEFAULTKEY')), reason: '체크만 바꿔도 기본 키가 파일로 새지 않는다');
+      await c.saveKey('MINE');
+      expect((c.effectiveKey, c.usingDefaultKey), ('MINE', false));
+      await c.delete();
+      expect((c.effectiveKey, c.usingDefaultKey), ('DEFAULTKEY', true));
+    });
+
+    test('기본 키가 없으면 종전과 같다(키 없음)', () async {
+      final c = ApiSettingsController(store: MemoryUpdateStore(), defaultKey: '');
+      await c.load();
+      expect((c.effectiveKey, c.usingDefaultKey), (null, false));
+    });
+
+    test('배포 워크플로가 Secret을 넣는 이름과 코드가 읽는 이름이 같다(어긋나면 기본 키가 조용히 사라진다)', () {
+      final workflow = File('.github/workflows/deploy-web.yml').readAsStringSync();
+      final code = File('lib/lookup/api_settings.dart').readAsStringSync();
+      final defined = RegExp(r'flutter build web[^\n]*--dart-define=(\w+)="\$(\w+)"').firstMatch(workflow);
+      expect(defined, isNotNull, reason: '빌드 줄에 --dart-define=NAME="\$ENV"가 있어야 한다');
+      expect(code, contains("String.fromEnvironment('${defined!.group(1)}')"));
+      expect(workflow, contains('${defined.group(2)}: \${{ secrets.DATA_GO_KR_KEY }}'));
+    });
+  });
+
   test('모르는 서비스 이름은 무시하고, 빠진 이름은 체크된 것으로 본다', () async {
     final c = await loaded(MemoryUpdateStore(jsonEncode({
       'version': 1,

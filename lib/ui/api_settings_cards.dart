@@ -23,6 +23,10 @@ abstract final class ApiSettingsText {
   static const deleteFailed = '삭제하지 못했습니다';
   static const verifying = '확인 중…';
   static const verified = '확인됨';
+
+  /// F-007 기본 키: 사용자 키가 없을 때 입력칸의 흐린 표시와 그 아래 안내. 기본 키 원문은 칸에 넣지 않는다.
+  static const defaultMask = '****';
+  static const usingDefault = '기본 키 사용 중 — 내 키를 넣고 [저장]하면 그 키를 씁니다';
   static String verifyLine(ChemService s, String result) => '${s.label} — $result';
 
   static const linkCard = '연동 데이터';
@@ -81,7 +85,14 @@ class _ApiKeyCardBodyState extends State<ApiKeyCardBody> {
   }
 
   Future<void> _verifyKey() async {
-    final key = _typedKey();
+    // 칸이 비어 있고 기본 키를 쓰는 중이면 기본 키를 확인한다(F-007 '기본 키')
+    final String? key;
+    if (_key.text.trim().isEmpty && _settings.usingDefaultKey) {
+      setState(() => _hint = null);
+      key = _settings.defaultKey;
+    } else {
+      key = _typedKey();
+    }
     if (key == null) {
       setState(() => _verify = null);
       return;
@@ -146,8 +157,17 @@ class _ApiKeyCardBodyState extends State<ApiKeyCardBody> {
             key: const ValueKey('api-key-field'),
             controller: _key,
             onChanged: (_) => _edited = true,
-            decoration: const InputDecoration(border: OutlineInputBorder(), isDense: true),
+            decoration: InputDecoration(
+              border: const OutlineInputBorder(),
+              isDense: true,
+              hintText: _settings.usingDefaultKey ? ApiSettingsText.defaultMask : null,
+            ),
           ),
+          if (_settings.usingDefaultKey)
+            Padding(
+              padding: const EdgeInsets.only(top: 4),
+              child: Text(ApiSettingsText.usingDefault, style: theme.textTheme.bodySmall),
+            ),
           if (_hint != null)
             Padding(
               padding: const EdgeInsets.only(top: 4),
