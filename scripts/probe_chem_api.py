@@ -47,9 +47,11 @@ def build_url(service: str, key: str, gubun: str, name: str, rows: int) -> str:
     # 포털 키는 '인코딩 키'(%가 들어 있음)와 '디코딩 키' 두 가지다. 인코딩 키를 다시 인코딩하면 인증 실패가 난다.
     service_key = key if "%" in key else urllib.parse.quote(key, safe="")
     if service == "safety":
-        # 이 서비스는 CAS로만 찾는다(searchGubun 없음). 키 파라미터 이름도 명세 표기대로 ServiceKey.
+        # 이 서비스는 CAS로만 찾는다(searchGubun 없음). 명세 표기는 ServiceKey지만 다른 서비스와 같은 serviceKey로 보낸다
+        # (2026-09-14: 활용신청 뒤에도 ServiceKey·serviceKey 둘 다 403 SERVICE_KEY_IS_NOT_REGISTERED_ERROR —
+        #  파라미터 이름은 원인이 아니다. 같은 때 신청한 ghs는 200. 승인 상태·반영 지연을 확인할 것)
         query = urllib.parse.urlencode({"pageNo": 1, "numOfRows": rows, "casNo": name})
-        return f"{ENDPOINTS[service]}?ServiceKey={service_key}&{query}"
+        return f"{ENDPOINTS[service]}?serviceKey={service_key}&{query}"
     query = urllib.parse.urlencode(
         {"pageNo": 1, "numOfRows": rows, "searchGubun": gubun, "searchNm": name, "returnType": "JSON"}
     )
