@@ -134,33 +134,91 @@ void main() {
     expect(p, findsNothing);
   });
 
-  testWidgets('펼친 결과를 마우스로 끌어 선택하고 Ctrl+C로 복사한다 — 한 항목 안의 줄바꿈이 산다', (tester) async {
-    String? clipboard;
-    tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(SystemChannels.platform, (call) async {
-      if (call.method == 'Clipboard.setData') clipboard = (call.arguments as Map)['text'] as String?;
-      return null;
+  group('선택 복사(2026-09-14 사용자 요청)', () {
+    /// [services]만 켜고 50-00-0 결과를 연 뒤, [from]의 왼쪽 위 → [to]의 오른쪽 아래로 마우스로 끌어 선택하고
+    /// Ctrl+C로 복사한 클립보드 문자열을 돌려준다.
+    Future<String?> dragCopy(
+      WidgetTester tester, {
+      required Map<String, bool> services,
+      required Finder Function() from,
+      required Finder Function() to,
+    }) async {
+      String? clipboard;
+      tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(SystemChannels.platform, (call) async {
+        if (call.method == 'Clipboard.setData') clipboard = (call.arguments as Map)['text'] as String?;
+        return null;
+      });
+      addTearDown(() => tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(SystemChannels.platform, null));
+
+      await pumpPage(tester, stored: apiSettingsJson(services: services));
+      await type(tester, '50-00-0');
+      await tester.tap(cas(Source.byeolpyo3, 1, '50-00-0'));
+      await tester.pumpAndSettle();
+
+      final gesture = await tester.startGesture(tester.getTopLeft(from()) + const Offset(1, 4), kind: PointerDeviceKind.mouse);
+      await tester.pump();
+      await gesture.moveTo(tester.getBottomRight(to()) - const Offset(1, 4));
+      await tester.pump();
+      await gesture.up();
+      await tester.pump();
+      await tester.sendKeyDownEvent(LogicalKeyboardKey.control);
+      await tester.sendKeyEvent(LogicalKeyboardKey.keyC);
+      await tester.sendKeyUpEvent(LogicalKeyboardKey.control);
+      await tester.pumpAndSettle();
+      return clipboard;
+    }
+
+    Finder inPanelText(String text) => find.descendant(of: panel(Source.byeolpyo3, 1), matching: find.text(text));
+    const chemOnly = {'chem': true, 'ghs': false, 'safety': false};
+
+    testWidgets('한 항목 안의 여러 줄 → 줄바꿈이 산다', (tester) async {
+      Finder inhale() =>
+          find.descendant(of: panel(Source.byeolpyo3, 1), matching: find.textContaining('·인후통, 기침'));
+      final clipboard = await dragCopy(
+        tester,
+        services: {'chem': false, 'ghs': false, 'safety': true},
+        from: inhale,
+        to: inhale,
+      );
+      expect(clipboard, isNotNull, reason: '선택·복사가 되지 않았다');
+      expect(clipboard, contains('·인후통, 기침, 숨참을 유발할 수 있음\n·호흡기의 과민성과 자극을 유발함'));
     });
-    addTearDown(() => tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(SystemChannels.platform, null));
 
-    await pumpPage(tester, stored: apiSettingsJson(services: {'chem': false, 'ghs': false, 'safety': true}));
-    await type(tester, '50-00-0');
-    await tester.tap(cas(Source.byeolpyo3, 1, '50-00-0'));
-    await tester.pumpAndSettle();
+    testWidgets('분류 표 머리글~2행 → 3줄, 칸은 탭, 빈 칸도 자리를 지킨다(Excel 열 분리)', (tester) async {
+      final clipboard = await dragCopy(
+        tester,
+        services: chemOnly,
+        from: () => inPanelText('분류'),
+        to: () => inPanelText('화학물질안전원고시 제2025-19호'),
+      );
+      expect(clipboard, isNotNull);
+      final lines = clipboard!.split('\n');
+      expect(lines, [
+        '분류\t고유번호\t함량정보\t예외정보\t고시일자\t고시정보',
+        '기존화학물질\tKE-17074\t\t\t20141230\t환경부고시 제2014-237호',
+        '인체등유해성물질\t97-1-345\t인체급성유해성 : 1%, 인체만성유해성 : 0.1%\t\t20250807\t화학물질안전원고시 제2025-19호',
+      ]);
+    });
 
-    final inhale = find.descendant(of: panel(Source.byeolpyo3, 1), matching: find.textContaining('·인후통, 기침'));
-    final gesture = await tester.startGesture(tester.getTopLeft(inhale) + const Offset(1, 4), kind: PointerDeviceKind.mouse);
-    await tester.pump();
-    await gesture.moveTo(tester.getBottomRight(inhale) - const Offset(1, 4));
-    await tester.pump();
-    await gesture.up();
-    await tester.pump();
-    await tester.sendKeyDownEvent(LogicalKeyboardKey.control);
-    await tester.sendKeyEvent(LogicalKeyboardKey.keyC);
-    await tester.sendKeyUpEvent(LogicalKeyboardKey.control);
-    await tester.pumpAndSettle();
+    testWidgets('이름–값 목록 두 줄 → 줄마다 이름⇥값', (tester) async {
+      final clipboard = await dragCopy(
+        tester,
+        services: chemOnly,
+        from: () => inPanelText('국문명'),
+        to: () => inPanelText('Formaldehyde').first,
+      );
+      expect(clipboard, '국문명\t포르말린\n영문명\tFormaldehyde');
+    });
 
-    expect(clipboard, isNotNull, reason: '선택·복사가 되지 않았다');
-    expect(clipboard, contains('·인후통, 기침, 숨참을 유발할 수 있음\n·호흡기의 과민성과 자극을 유발함'));
+    testWidgets('한 칸 안에서만 선택하면 그 글자만(행 전체가 아니다)', (tester) async {
+      final clipboard = await dragCopy(
+        tester,
+        services: chemOnly,
+        from: () => inPanelText('환경부고시 제2014-237호'),
+        to: () => inPanelText('환경부고시 제2014-237호'),
+      );
+      expect(clipboard, '환경부고시 제2014-237호');
+    });
   });
 
   testWidgets('빈 값은 그 줄을 뺀다(영문명이 비면 영문명 줄이 없다)', (tester) async {
