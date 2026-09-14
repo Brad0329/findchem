@@ -10,7 +10,9 @@ import 'package:findchem/parser/models.dart';
 import 'package:findchem/ui/cas_lookup_panel.dart';
 import 'package:findchem/ui/entry_card.dart';
 import 'package:findchem/ui/search_page.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../data/fakes.dart';
@@ -118,13 +120,47 @@ void main() {
     for (final label in ['일반증상', '흡입', '피부', '안구', '경구', '기타']) {
       expect(t(label), findsOneWidget, reason: label);
     }
-    expect(t('·반복 노출은 홍반, 부어오름, 수포 등의 접촉성 피부염을 유발시킬 수 있음'), findsNWidgets(2));
+    // 항목마다 Text 하나에 문장별 줄(선택 복사 때 줄바꿈이 살게) — 피부 16문장, 중복 문장 2번 그대로
+    final skin = tester
+        .widget<Text>(find.descendant(of: panel(Source.byeolpyo3, 1), matching: find.textContaining('·독성이 있음')))
+        .data!;
+    expect(skin.split('\n'), hasLength(16));
+    expect(skin.split('\n').where((l) => l == '·반복 노출은 홍반, 부어오름, 수포 등의 접촉성 피부염을 유발시킬 수 있음'), hasLength(2));
     expect(t('·자료없음'), findsOneWidget);
     expect(api.calls, hasLength(3));
 
     await tester.tap(cas(Source.byeolpyo3, 1, '50-00-0'));
     await tester.pumpAndSettle();
     expect(p, findsNothing);
+  });
+
+  testWidgets('펼친 결과를 마우스로 끌어 선택하고 Ctrl+C로 복사한다 — 한 항목 안의 줄바꿈이 산다', (tester) async {
+    String? clipboard;
+    tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(SystemChannels.platform, (call) async {
+      if (call.method == 'Clipboard.setData') clipboard = (call.arguments as Map)['text'] as String?;
+      return null;
+    });
+    addTearDown(() => tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(SystemChannels.platform, null));
+
+    await pumpPage(tester, stored: apiSettingsJson(services: {'chem': false, 'ghs': false, 'safety': true}));
+    await type(tester, '50-00-0');
+    await tester.tap(cas(Source.byeolpyo3, 1, '50-00-0'));
+    await tester.pumpAndSettle();
+
+    final inhale = find.descendant(of: panel(Source.byeolpyo3, 1), matching: find.textContaining('·인후통, 기침'));
+    final gesture = await tester.startGesture(tester.getTopLeft(inhale) + const Offset(1, 4), kind: PointerDeviceKind.mouse);
+    await tester.pump();
+    await gesture.moveTo(tester.getBottomRight(inhale) - const Offset(1, 4));
+    await tester.pump();
+    await gesture.up();
+    await tester.pump();
+    await tester.sendKeyDownEvent(LogicalKeyboardKey.control);
+    await tester.sendKeyEvent(LogicalKeyboardKey.keyC);
+    await tester.sendKeyUpEvent(LogicalKeyboardKey.control);
+    await tester.pumpAndSettle();
+
+    expect(clipboard, isNotNull, reason: '선택·복사가 되지 않았다');
+    expect(clipboard, contains('·인후통, 기침, 숨참을 유발할 수 있음\n·호흡기의 과민성과 자극을 유발함'));
   });
 
   testWidgets('빈 값은 그 줄을 뺀다(영문명이 비면 영문명 줄이 없다)', (tester) async {

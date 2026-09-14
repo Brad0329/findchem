@@ -31,7 +31,10 @@ class _CasLookupPanelState extends State<CasLookupPanel> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Column(
+    // 결과를 마우스로 선택·복사할 수 있게(2026-09-14 사용자 요청). 여러 Text에 걸친 선택은 구분자 없이 이어 붙는다
+    // (selection_copy_probe_test 실측) — 줄바꿈이 필요한 묶음은 Text 하나에 '\n'으로 넣는다(_SafetyView).
+    return SelectionArea(
+      child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(LookupText.title(widget.cas), style: theme.textTheme.labelMedium),
@@ -56,6 +59,7 @@ class _CasLookupPanelState extends State<CasLookupPanel> {
           },
         ),
       ],
+      ),
     );
   }
 }
@@ -289,12 +293,8 @@ class _SafetyView extends StatelessWidget {
       for (final (label, lines) in r.items)
         (
           label,
-          lines.isEmpty
-              ? null
-              : Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [for (final l in lines) Text(l, style: style)],
-                ),
+          // 한 항목의 문장들은 Text 하나에 줄바꿈으로 — 여러 줄을 끌어 복사해도 줄이 나뉘어 들어간다
+          lines.isEmpty ? null : Text(lines.join('\n'), style: style),
         ),
     ]);
   }
