@@ -107,7 +107,9 @@
   - **웹 단계 구현 2026-09-14**(사용자 결정: 오늘은 웹만, 앱은 나중에 개발 여부 확인). 코드: 설정·조회 `lib/lookup/`
     (`api_settings.dart` — 켜는 분기 `apiLookupEnabledByDefault = kIsWeb` 한 곳, `chem_api.dart`), 화면 `lib/ui/cas_lookup_panel.dart`·
     `api_settings_cards.dart`, 표의 CAS 링크 `result_table.dart`, 설정 카드 `settings_page.dart`. 응답 fixture `test/fixtures/api/`.
-    **남은 것**: 웹 사용자 실테스트(CORS 정상 응답 실측 겸함) / [앱 단계] 항목(앱 카드 CAS 누르기·INTERNET 권한·받기 페이지 문구·폰 실테스트)
+    **웹 배포 2026-09-14**(91ca652, Actions). **웹 실테스트 정상 흐름 통과**(사용자 확인: 키 인증 세 줄 '확인됨'·저장·CAS 조회) —
+    브라우저 CORS 문제 없음 확정. 키는 브라우저마다 따로 저장(다른 브라우저에서 다시 입력 — 스펙대로).
+    **남은 것**: 웹 고장 상태 실테스트 2건(체크 끄기·틀린 키 인증) / [앱 단계] 항목(앱 카드 CAS 누르기·INTERNET 권한·받기 페이지 문구·폰 실테스트)
   - **나중에 사용자에게 다시 물을 것**: GHS H·P·그림문자 코드 → 국문 문구·그림 연결 여부(출처 조사는 보류 항목에 있다) /
     앱 단계 개발 여부
   - 의존성(사용자 승인 2026-09-14): `http` 추가(Dart 팀 공식, 앱·웹 한 벌 + 테스트용 MockClient), 잠금 파일에 이미 있는
