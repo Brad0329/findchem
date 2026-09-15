@@ -9,6 +9,7 @@ import 'package:flutter/rendering.dart' show SelectedContent;
 
 import '../lookup/api_settings.dart';
 import '../lookup/chem_api.dart';
+import '../lookup/ghs_pictogram_data.dart';
 
 /// 조회에 필요한 것 묶음. null이면 CAS가 눌리지 않는다(앱 — REQUIREMENTS F-007 '단계').
 class CasLookup {
@@ -356,6 +357,9 @@ class _GhsView extends StatelessWidget {
           _KeyValues([
             _pair('신호어', r.signal, color: Theme.of(context).colorScheme.error),
             _pair('그림문자', r.pictograms.join(', ')),
+          ]),
+          if (r.pictograms.isNotEmpty) _PictogramTable(r.pictograms),
+          _KeyValues([
             _pair('UN번호', r.unNumbers.join(', ')),
             _pair('M계수', r.mFactor),
             _pair('분류·고유번호', r.classNumbers.join(', ')),
@@ -370,6 +374,96 @@ class _GhsView extends StatelessWidget {
               ],
             ),
         ],
+      ),
+    );
+  }
+}
+
+/// 그림문자 표(안 A — 2026-09-15 사용자 선택): 응답의 코드마다 한 칸, 위에서 코드·그림·유해성 분류.
+/// 그림·분류는 assets/유해성 분류.xlsx에서 뽑은 [ghsPictogramLabels]. 폭이 모자라면 가로로 민다.
+/// 복사하면 코드 줄·분류 줄이 칸마다 탭이고, 분류의 여러 줄은 `, `로 잇는다(칸 안 줄바꿈은 Excel 칸을 깬다). 그림 줄은 글자가 없어 빠진다.
+class _PictogramTable extends StatelessWidget {
+  const _PictogramTable(this.codes) : super(key: const ValueKey('ghs-pictogram-table'));
+
+  final List<String> codes;
+
+  static const _cellWidth = 110.0, _imageSize = 72.0, _indent = 120.0;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final side = BorderSide(color: theme.dividerColor);
+    final small = theme.textTheme.bodySmall;
+
+    Widget row(List<Widget> children, {Color? color, bool top = false}) => Container(
+      decoration: BoxDecoration(border: top ? Border(top: side) : null),
+      child: IntrinsicHeight(
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            for (var i = 0; i < children.length; i++)
+              Container(
+                width: _cellWidth,
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+                alignment: Alignment.topCenter,
+                decoration: BoxDecoration(
+                  color: color,
+                  border: Border(left: i == 0 ? side : BorderSide.none, right: side, bottom: side),
+                ),
+                child: children[i],
+              ),
+          ],
+        ),
+      ),
+    );
+
+    Widget missing() => Text(LookupText.noPictogram, style: small?.copyWith(color: theme.colorScheme.error));
+
+    Widget picture(String code) {
+      if (!ghsPictogramLabels.containsKey(code)) {
+        debugPrint('F-007 그림문자 $code: 대응표에 없음(assets/유해성 분류.xlsx에 없는 코드) — 그림 없음으로 표시');
+        return missing();
+      }
+      return Image.asset(
+        ghsPictogramAsset(code),
+        key: ValueKey('ghs-pictogram-$code'),
+        width: _imageSize,
+        height: _imageSize,
+        errorBuilder: (context, error, stack) {
+          debugPrint('F-007 그림문자 $code 그림을 읽지 못함: $error');
+          return missing();
+        },
+      );
+    }
+
+    final labels = [for (final c in codes) ghsPictogramLabels[c] ?? const <String>[]];
+    return Padding(
+      padding: const EdgeInsets.only(left: _indent, top: 4, bottom: 6),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: _CopyJoin.lines(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _CopyJoin.row(
+                cells: codes,
+                child: row(
+                  [for (final c in codes) Text(c, style: theme.textTheme.labelSmall)],
+                  color: theme.colorScheme.surfaceContainerHighest,
+                  top: true,
+                ),
+              ),
+              row([for (final c in codes) picture(c)]),
+              _CopyJoin.row(
+                cells: [for (final l in labels) l.join(', ')],
+                child: row([
+                  for (final l in labels) Text(l.join('\n'), style: small, textAlign: TextAlign.center),
+                ]),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

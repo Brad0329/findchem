@@ -210,6 +210,20 @@ void main() {
       expect(clipboard, '국문명\t포르말린\n영문명\tFormaldehyde');
     });
 
+    testWidgets('그림문자 표 코드 줄~분류 줄 → 2줄, 칸은 탭·분류 여러 줄은 `, `(그림 줄은 글자가 없어 빠진다)', (tester) async {
+      final clipboard = await dragCopy(
+        tester,
+        services: {'chem': false, 'ghs': true, 'safety': false},
+        from: () => inPanelText('GHS02'),
+        to: () => inPanelText('호흡기,피부과민성\n발암성\n생식독성\n표적장기독성'),
+      );
+      expect(
+        clipboard,
+        'GHS02\tGHS04\tGHS05\tGHS06\tGHS08\n'
+        '인화성, 물반응성, 자연발화성\t고압가스\t금속부식성, 피부부식성, 심한눈손상성\t급성독성\t호흡기,피부과민성, 발암성, 생식독성, 표적장기독성',
+      );
+    });
+
     testWidgets('한 칸 안에서만 선택하면 그 글자만(행 전체가 아니다)', (tester) async {
       final clipboard = await dragCopy(
         tester,
@@ -218,6 +232,72 @@ void main() {
         to: () => inPanelText('환경부고시 제2014-237호'),
       );
       expect(clipboard, '환경부고시 제2014-237호');
+    });
+  });
+
+  group('그림문자 표(안 A — 2026-09-15 사용자 선택)', () {
+    /// 유독물 GHS 정보만 켜고 50-00-0 결과를 연다. [pictograms]가 있으면 응답의 그림문자 코드를 바꾼다.
+    Future<void> openGhs(WidgetTester tester, {String? pictograms}) async {
+      final api = FakeApi();
+      if (pictograms != null) {
+        final body = (jsonDecode(fixtures[ChemService.ghs]!) as Map)..['body']['items'][0]['pctgrmCd'] = pictograms;
+        api.overrides[ChemService.ghs] = () async => utf8Response(jsonEncode(body), 200);
+      }
+      await pumpPage(tester, api: api, stored: apiSettingsJson(services: {'chem': false, 'ghs': true, 'safety': false}));
+      await type(tester, '50-00-0');
+      await tester.tap(cas(Source.byeolpyo3, 1, '50-00-0'));
+      await tester.pumpAndSettle();
+    }
+
+    Finder t(String text) => find.descendant(of: panel(Source.byeolpyo3, 1), matching: find.text(text));
+    // 분류 이름은 아래 유해성 분류 표에도 나온다(`고압가스`) — 그림문자 표 안에서만 찾는다
+    Finder inTable(String text) =>
+        find.descendant(of: find.byKey(const ValueKey('ghs-pictogram-table')), matching: find.text(text));
+
+    testWidgets('응답 코드마다 한 칸: 코드 → 그림 → 유해성 분류가 같은 열에, 응답 순서대로', (tester) async {
+      await openGhs(tester);
+      const codes = ['GHS02', 'GHS04', 'GHS05', 'GHS06', 'GHS08'];
+      const labels = ['인화성\n물반응성\n자연발화성', '고압가스', '금속부식성\n피부부식성\n심한눈손상성', '급성독성', '호흡기,피부과민성\n발암성\n생식독성\n표적장기독성'];
+
+      final images = tester.widgetList<Image>(find.descendant(of: panel(Source.byeolpyo3, 1), matching: find.byType(Image)));
+      expect([for (final i in images) (i.image as AssetImage).assetName], [for (final c in codes) 'assets/data/ghs/$c.png']);
+
+      double centerX(Finder f) => tester.getCenter(f).dx;
+      double? prevX;
+      for (var i = 0; i < codes.length; i++) {
+        final code = inTable(codes[i]), image = find.byKey(ValueKey('ghs-pictogram-${codes[i]}'));
+        final label = inTable(labels[i]);
+        expect(code, findsOneWidget, reason: codes[i]);
+        expect(label, findsOneWidget, reason: codes[i]);
+        expect(centerX(image), moreOrLessEquals(centerX(code), epsilon: 1), reason: codes[i]);
+        expect(centerX(label), moreOrLessEquals(centerX(code), epsilon: 1), reason: codes[i]);
+        expect(tester.getTopLeft(code).dy, lessThan(tester.getTopLeft(image).dy));
+        expect(tester.getBottomLeft(image).dy, lessThanOrEqualTo(tester.getTopLeft(label).dy));
+        if (prevX != null) expect(centerX(code), greaterThan(prevX), reason: '응답 순서대로 왼쪽부터');
+        prevX = centerX(code);
+      }
+      // 표는 '그림문자' 줄 아래, 'UN번호' 줄 위
+      expect(tester.getTopLeft(inTable(codes.first)).dy, greaterThan(tester.getTopLeft(t(codes.join(', '))).dy));
+      expect(tester.getBottomLeft(inTable(labels.last)).dy, lessThan(tester.getTopLeft(t('UN번호')).dy));
+      expect(t(LookupText.noPictogram), findsNothing);
+    });
+
+    testWidgets('대응표에 없는 코드는 그 칸에 그림 없음, 나머지 칸은 그대로', (tester) async {
+      await openGhs(tester, pictograms: 'GHS07^GHS99');
+      expect(find.byKey(const ValueKey('ghs-pictogram-GHS07')), findsOneWidget);
+      expect(inTable('특정표적 장기독성 1회노출'), findsOneWidget);
+      expect(inTable('GHS99'), findsOneWidget);
+      expect(inTable(LookupText.noPictogram), findsOneWidget);
+      expect(
+        tester.getCenter(inTable(LookupText.noPictogram)).dx,
+        moreOrLessEquals(tester.getCenter(inTable('GHS99')).dx, epsilon: 1),
+      );
+    });
+
+    testWidgets('그림문자가 없으면 표가 없다', (tester) async {
+      await openGhs(tester, pictograms: '');
+      expect(find.descendant(of: panel(Source.byeolpyo3, 1), matching: find.byType(Image)), findsNothing);
+      expect(t('UN번호'), findsOneWidget);
     });
   });
 

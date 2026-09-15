@@ -72,6 +72,8 @@ flutter:
   # 번들 데이터(scripts/build_data.dart가 만든다). assets/의 원천 PDF 2개는 번들하지 않는다 — 이 폴더만 등록.
   assets:
     - assets/data/
+    # F-007 GHS 그림문자(scripts/extract_ghs_pictograms.py가 만든다). 폴더 등록은 하위 폴더를 포함하지 않아 따로 적는다
+    - assets/data/ghs/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

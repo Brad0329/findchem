@@ -27,6 +27,7 @@ abstract final class LookupText {
 
   static const loading = '조회 중…';
   static const noResult = '조회 결과 없음';
+  static const noPictogram = '그림 없음';
   static String title(String cas) => 'CAS $cas 공공데이터 조회';
   static String truncated(int total, int shown) => '$total건 중 $shown건 표시 · 더 있음';
 }
