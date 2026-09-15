@@ -58,8 +58,28 @@ def _label(name: str, payload: dict) -> str:
 
 def measure(paths: list[Path]) -> list[tuple[float, str, str]]:
     """[(초, 도구, 명령)] — tool_use와 짝 tool_result의 간격."""
+    return [
+        ((t1 - t0).total_seconds(), tool, cmd)
+        for t0, t1, tool, cmd in measure_spans(paths)
+    ]
+
+
+def overlapping(spans: list[tuple[datetime, datetime, str, str]], i: int) -> list[int]:
+    """spans[i]와 시간이 겹치는 다른 호출의 번호.
+
+    ★ 허용된 호출이 느리면 먼저 이것을 본다 — 한 메시지로 낸 호출들은 **차례로** 돌아서, 뒤 호출의
+    간격에는 앞 호출의 실행·승인 시간이 통째로 들어간다(findchem 2026-09-15: `Write` 137초는 같은
+    묶음 앞의 `flutter analyze` 131초를 기다린 것이었다 — 승인 창이 아니었다). 끝과 시작이 딱 맞닿은
+    것은 겹침이 아니다.
+    """
+    t0, t1 = spans[i][0], spans[i][1]
+    return [j for j, s in enumerate(spans) if j != i and s[0] < t1 and t0 < s[1]]
+
+
+def measure_spans(paths: list[Path]) -> list[tuple[datetime, datetime, str, str]]:
+    """[(시작, 끝, 도구, 명령)] — tool_use와 짝 tool_result의 시각."""
     pending: dict[str, tuple[str, str, str]] = {}
-    rows: list[tuple[float, str, str]] = []
+    rows: list[tuple[datetime, datetime, str, str]] = []
     for path in paths:
         for line in path.read_text(encoding="utf-8", errors="replace").splitlines():
             if not line.strip():
@@ -88,10 +108,12 @@ def measure(paths: list[Path]) -> list[tuple[float, str, str]]:
                     if hit is None or not (hit[0] and ts):
                         continue
                     t0, tool, cmd = hit
-                    delta = datetime.fromisoformat(
-                        ts.replace("Z", "+00:00")
-                    ) - datetime.fromisoformat(t0.replace("Z", "+00:00"))
-                    rows.append((delta.total_seconds(), tool, cmd))
+                    rows.append((
+                        datetime.fromisoformat(t0.replace("Z", "+00:00")),
+                        datetime.fromisoformat(ts.replace("Z", "+00:00")),
+                        tool,
+                        cmd,
+                    ))
     return rows
 
 
@@ -111,20 +133,25 @@ def main() -> int:
     for p in paths:
         print(f"  {p.name}  ({p.stat().st_size / 1_000_000:.1f} MB)")
 
-    rows = measure(paths)
+    spans = measure_spans(paths)
     # **하나도 못 찾으면 '깨끗함'이 아니라 실패다.** 초록색으로 보이면서 아무것도 안 재는
     # 상태를 만들지 않는다(measure_approvals와 같은 규칙).
-    if not rows:
+    if not spans:
         print("\n호출을 하나도 찾지 못했다. 세션이 맞는지 확인해라.", file=sys.stderr)
         return 1
 
+    def sec(j: int) -> float:
+        return (spans[j][1] - spans[j][0]).total_seconds()
+
+    idx = list(range(len(spans)))
     if args.grep:
-        rows = [r for r in rows if args.grep in r[2]]
-        if not rows:
+        # 겹침은 거르기 **전** 전체에서 찾는다 — 옆 호출이 --grep에 안 걸려도 원인일 수 있다.
+        idx = [j for j in idx if args.grep in spans[j][3]]
+        if not idx:
             print(f"\n'{args.grep}'가 든 호출이 없다.", file=sys.stderr)
             return 1
 
-    rows.sort(reverse=True)
+    rows = sorted(((sec(j), spans[j][2], spans[j][3], j) for j in idx), reverse=True)
     slow = [r for r in rows if r[0] > args.slow]
     total = sum(r[0] for r in rows)
     print(
@@ -136,9 +163,15 @@ def main() -> int:
               f"— 전체의 {sum(r[0] for r in slow) / total * 100:.0f}%")
 
     print("\n[느린 순]")
-    for sec, tool, cmd in rows[: args.top]:
-        mark = "  <-- 확인 대기 의심" if sec > args.slow else ""
-        print(f"  {sec:7.1f}s  {tool:<10} {cmd[:70]}{mark}")
+    for s, tool, cmd, j in rows[: args.top]:
+        mark = "  <-- 확인 대기 의심" if s > args.slow else ""
+        print(f"  {s:7.1f}s  {tool:<10} {cmd[:70]}{mark}")
+        if s > args.slow:
+            others = sorted(overlapping(spans, j), key=sec, reverse=True)
+            if others:
+                k = others[0]
+                print(f"             ↳ 동시 호출 {len(others)}건과 겹침 — 가장 긴 것 "
+                      f"{sec(k):.1f}s {spans[k][2]} {spans[k][3][:45]}")
     if len(rows) > args.top:
         print(f"  … {len(rows) - args.top}건 더 (--top 으로 늘린다)")
 

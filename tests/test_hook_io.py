@@ -32,6 +32,7 @@ CASES = [
     ("no_redundant_cd.py", f"cd {ROOT.as_posix()} && git log --oneline -1", "cd app"),
     ("no_output_filter.py", "flutter test 2>&1 | Select-Object -Last 12", "flutter test"),
     ("no_inline_python.py", 'python -c "print(1)"', "python scripts/measure_wait.py"),
+    ("no_commit_m.py", 'git commit -m "x"', "git commit -F .commit_msg.txt"),
 ]
 
 # 선택형 훅 — 초기화 때 Flutter가 아니면 파일째 지운다(CLAUDE.md 초기화 5번). 지웠으면 여기서도

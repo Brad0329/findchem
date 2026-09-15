@@ -75,6 +75,11 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def _repo_cd_pattern(root: Path) -> str:
+    return rf"""^\s*cd\s+["']?{_repo_path(root)}[\\/]?["']?"""
+
+
+def _repo_path(root: Path) -> str:
+    """저장소 루트 경로 자체의 패턴(`C:\\…`·`C:/…`·`/c/…`). cd와 `git -C`가 같이 쓴다."""
     raw = str(root)
     comps = [c for c in re.split(r"[\\/]+", raw) if c]
     first = comps[0]
@@ -91,7 +96,7 @@ def _repo_cd_pattern(root: Path) -> str:
         if raw[:1] in ("/", "\\"):
             head = "[\\\\/]" + head
     body = "[\\\\/]".join(re.escape(c) for c in comps[1:])
-    return rf"""^\s*cd\s+["']?{head}[\\/]{body}[\\/]?["']?"""
+    return rf"{head}[\\/]{body}"
 
 
 _REPO_CD = _repo_cd_pattern(ROOT)
@@ -101,6 +106,10 @@ REDUNDANT_CD_SEGMENT = re.compile(_REPO_CD + _REDIRECTS + r"\s*$")
 # 뒤에 `&&`·`;`가 오거나, **구분자 없이 바로 다른 낱말**이 오는 형태(`cd <루트> ls` — bash는
 # "too many arguments"로 죽어 ls는 돌지도 않는다. vanasso.kr 2026-09-06: 99건 통과).
 REDUNDANT_CD_COMMAND = re.compile(_REPO_CD + _REDIRECTS + r"(?:\s*(?:&&|;)|\s+\S)")
+# `git -C <루트> …` — cd와 같은 이유로 하는 일이 없는데 규칙은 `git add *` 같은 맨몸 형태를 전제해 묻는다.
+# 규칙으로 열지 않는다: deny의 `git reset --hard*` 등이 맨몸만 막아 `-C` 형태가 빠져나간다
+# (플레이북 [H16]. findchem 2026-09-15: '항상 허용'으로 이 형태 규칙 3줄이 다시 쌓여 있었다).
+REDUNDANT_GIT_C_COMMAND = re.compile(rf"""^\s*git\s+-C\s+["']?{_repo_path(ROOT)}[\\/]?["']?\s""")
 
 # ── 원인 ② 읽기 전용 ────────────────────────────────────────────────────────
 # 상태를 바꾸지 않는 명령만. **여기 없는 것은 자동 제안하지 않는다**(모르면 안 여는 쪽).

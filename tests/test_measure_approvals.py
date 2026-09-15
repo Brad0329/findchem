@@ -26,7 +26,8 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 from measure_approvals import (  # noqa: E402
-    REDUNDANT_CD_COMMAND, REDUNDANT_CD_SEGMENT, ROOT, allowed, classify, head_command,
+    REDUNDANT_CD_COMMAND, REDUNDANT_CD_SEGMENT, REDUNDANT_GIT_C_COMMAND, ROOT, allowed, classify,
+    head_command,
     is_readonly, split_segments,
 )
 
@@ -123,6 +124,30 @@ def test_조각용_패턴은_연산자가_없는_형태를_잡는다():
     assert seg == f"cd {REPO}"
     assert REDUNDANT_CD_SEGMENT.match(seg), "조각용 패턴이 안 맞으면 cd 원인이 0건으로 보고된다"
     assert not REDUNDANT_CD_COMMAND.match(seg), "명령용 패턴은 조각에 맞으면 안 된다"
+
+
+@pytest.mark.parametrize("command", [
+    # ★ findchem 2026-09-15 실측 — '항상 허용'으로 이 세 형태가 settings.local.json에 쌓여 있었다
+    f"git -C {REPO_MSYS} status --short",
+    f"git -C {REPO_MSYS} commit -F .commit_msg.txt",
+    f"git -C {REPO_MSYS} push origin master",
+    f'git -C "{REPO_BS}" add -A',             # [H14] hanjadic 21건의 형태
+    f"git -C {REPO}/ log --oneline -1",
+])
+def test_루트를_가리키는_git_C를_잡는다(command):
+    assert REDUNDANT_GIT_C_COMMAND.match(command)
+
+
+@pytest.mark.parametrize("command", [
+    "git status --short",
+    "git -C app status",                      # 하위 디렉토리 — 대상이 아니다
+    f"git -C {REPO}/scripts log",             # 루트 아래 하위
+    f"git -C {REPO}-other status",            # 이름이 루트로 시작하는 다른 저장소
+    'git -C "C:/Users/user/Documents/template" status',
+    f"echo git -C {REPO} status",             # 맨 앞이 git이 아니다
+])
+def test_다른_곳의_git_C와_맨몸_git은_안_잡는다(command):
+    assert not REDUNDANT_GIT_C_COMMAND.match(command)
 
 
 # ── ③ 읽기 전용 판정: 모르면 '아니다' 쪽으로 ────────────────────────────────

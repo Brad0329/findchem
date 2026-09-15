@@ -45,6 +45,12 @@
             "command": "python \"$CLAUDE_PROJECT_DIR/.claude/hooks/no_inline_python.py\"",
             "timeout": 10,
             "statusMessage": "인라인 파이썬 검사"
+          },
+          {
+            "type": "command",
+            "command": "python \"$CLAUDE_PROJECT_DIR/.claude/hooks/no_commit_m.py\"",
+            "timeout": 10,
+            "statusMessage": "git commit -m 검사"
           }
         ]
       }

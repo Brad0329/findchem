@@ -43,6 +43,10 @@ python scripts/measure_approvals.py
 (호출 형태)"을 과소 계상한 실사례가 두 번 있다(hanjadic 2026-08-20·08-29: 분류가 "형태 5회"라
 할 때 실측 최대 원인이 전부 호출 형태였다).
 
+**느린 순 상위를 승인 대기로 판정하기 전에 두 가지를 본다** (findchem 2026-09-15 — "테스트·Write 승인"이라는
+사용자 기억이 실제로는 둘 다 아니었다): ① `↳ 겹침` 줄 — 한 메시지의 호출은 차례로 돌아 앞 호출 시간이 뒤에
+붙는다 ② 명령 자신의 실행 시간 보고(`flutter analyze`의 `ran in Ns` 등, 트랜스크립트 결과에 있다).
+
 보고서는 원인을 다섯 갈래로 나눈다. **처방이 서로 다르다**:
 
 | 분류 | 처방 | 규칙을 넣는가 |
@@ -75,7 +79,7 @@ python scripts/measure_approvals.py
 - 규칙: **`.claude/settings.local.json`의 `permissions.allow`에만** 넣는다 — `settings.json`의
   `allow`는 이 환경에서 효력이 없다(실측). 패턴에 역슬래시를 쓰지 않는다(슬래시 경로).
 - 훅: 동봉은 **최대 4종**(`no_redundant_cd`·`no_output_filter`·`no_inline_python` + 선택형
-  `no_targeted_flutter_test` — Flutter가 아니면 초기화 때 지운다). **개수를 외우지 말고
+  `no_targeted_flutter_test` — Flutter가 아니면 초기화 때 지운다). findchem은 `no_commit_m`을 더했다(2026-09-15). **개수를 외우지 말고
   `.claude/hooks/`의 실제 파일과 settings.json 등록 항목을 대조한다.** 등록은 **matcher
   `Bash|PowerShell` 한 블록**에 모아 둔다 — **한쪽 셸에만 걸면 반대쪽으로 그대로
   통과한다**(2026-08-22 실측). 경로의 `$CLAUDE_PROJECT_DIR`는 **환경에 따라 비기도 채워지기도

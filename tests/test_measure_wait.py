@@ -19,7 +19,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
-from measure_wait import measure  # noqa: E402
+from measure_wait import measure, measure_spans, overlapping  # noqa: E402
 
 
 def _use(tool_id: str, ts: str, name: str = "PowerShell", **payload) -> dict:
@@ -134,6 +134,29 @@ def test_명령의_줄바꿈을_한_줄로_눕힌다(tmp_path):
         )
     )
     assert "\n" not in rows[0][2]
+
+
+def test_겹친_호출을_찾고_맞닿은_것은_뺀다(tmp_path):
+    """★ 한 묶음 호출의 대기는 뒤 호출에 붙어 보인다 — 겹침을 못 찾으면 원인을 엉뚱한 명령에 돌린다.
+    반대로 끝과 시작이 맞닿은 순차 호출까지 겹침으로 세면 모든 호출이 서로 겹쳐 보인다."""
+    spans = measure_spans(
+        _session(
+            tmp_path,
+            [
+                _use("a", "2026-08-20T10:00:00.000Z", command="flutter analyze"),
+                _use("b", "2026-08-20T10:00:00.100Z", name="Write", file_path="x.dart"),
+                _result("b", "2026-08-20T10:02:00.000Z"),  # 앞 호출 또는 승인을 기다림
+                _result("a", "2026-08-20T10:02:10.000Z"),
+                _use("c", "2026-08-20T10:02:10.000Z", command="git status"),  # a 끝에 맞닿음
+                _result("c", "2026-08-20T10:02:11.000Z"),
+            ],
+        )
+    )
+    cmds = [s[3] for s in spans]
+    a, b, c = cmds.index("flutter analyze"), cmds.index("x.dart"), cmds.index("git status")
+    assert overlapping(spans, a) == [b]
+    assert overlapping(spans, b) == [a]
+    assert overlapping(spans, c) == []
 
 
 def test_깨진_줄이_있어도_나머지를_센다(tmp_path):
