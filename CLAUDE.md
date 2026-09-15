@@ -4,7 +4,7 @@ Flutter(Android + 웹 한 벌), 서버 없음, 데이터는 JSON으로 번들해
 
 ## 현재 단계
 - 전체 Phase 체크리스트/아키텍처의 **단일 원본 = `work_log/plan.md`** (여기에 중복 기재 금지)
-- 현재: **F-007 CAS 부가 정보 조회**(Phase 007 앞에 끼워 넣음 — 2026-09-14 사용자 결정. 웹 단계 완료·배포, GHS 그림문자 표 2026-09-15 완료, 앱 단계·GHS H·P 문구는 결정 대기) → 그 뒤
+- 현재: **F-007 CAS 부가 정보 조회**(Phase 007 앞에 끼워 넣음 — 2026-09-14 사용자 결정. 웹 단계 완료·배포, GHS 그림문자 표 2026-09-15 완료, GHS H·P 문구 2026-09-15 진행, 앱 단계는 결정 대기) → 그 뒤
   **Phase 007 — 부채 정리** (미착수. 항목은 plan.md의 Phase 007 절 — `/debt-audit` 2026-09-12 결과.
   직전에 끼워 넣은 F-005 자주보는 Chem 목록은 2026-09-13 완료). (완료 시 이 줄과 plan.md 체크박스를 함께 갱신)
 - 배포처: APK는 직접 설치(릴리스 키 필요 — `팩_Flutter_Android.md`), 웹은 master push → Actions →
@@ -72,7 +72,7 @@ Flutter(Android + 웹 한 벌), 서버 없음, 데이터는 JSON으로 번들해
   lib/                 ← 앱 소스(Dart)
   test/                ← Dart 테스트 (flutter test 기본 위치)
   tests/               ← 동봉 파이썬 도구(훅·측정기) 테스트
-  assets/              ← 원천 PDF 2개·유해성 분류.xlsx(번들 안 함) + data/(번들 JSON, data/ghs/ = GHS 그림문자 — pubspec에는 이 두 폴더만 등록)
+  assets/              ← 원천 PDF 3개·유해성 분류·HCODE·PCODE xlsx(번들 안 함) + data/(번들 JSON, data/ghs/ = GHS 그림문자 — pubspec에는 이 두 폴더만 등록)
   android/  web/       ← 플랫폼 (flutter create 생성물. 아이콘은 scripts/make_icons.py가 굽는다. web/download/ = APK 받기 페이지 F-006)
   docs/                ← REQUIREMENTS.md, SCHEMA.md, design/, playbooks/
   work_log/            ← plan.md, Phase_XXX.md

@@ -6,6 +6,7 @@ import 'dart:io';
 
 import 'package:findchem/lookup/api_settings.dart';
 import 'package:findchem/lookup/chem_api.dart';
+import 'package:findchem/lookup/ghs_phrase_data.dart';
 import 'package:findchem/parser/models.dart';
 import 'package:findchem/ui/cas_lookup_panel.dart';
 import 'package:findchem/ui/entry_card.dart';
@@ -115,7 +116,10 @@ void main() {
     expect(t('1198, 2209'), findsOneWidget);
     expect(t('GHS02, GHS04, GHS05, GHS06, GHS08'), findsOneWidget);
     expect(t('유해성 분류 9건'), findsOneWidget);
-    expect(t('P280, P302+P352, P312, P321, P361+P364, P405, P501'), findsOneWidget);
+    // H·P 칸: 코드마다 (코드)문구 한 줄 — 첫 행(급성독성-경피) H311 1줄, P 7줄 응답 순서
+    expect(t('(H311)${ghsHPhrases['H311']!}'), findsOneWidget);
+    const row1P = ['P280', 'P302+P352', 'P312', 'P321', 'P361+P364', 'P405', 'P501'];
+    expect(t([for (final c in row1P) '($c)${ghsPPhrases[c]!}'].join('\n')), findsOneWidget);
     // 안전관리정보: 6항목, 중복 문장 2번, 자료없음
     for (final label in ['일반증상', '흡입', '피부', '안구', '경구', '기타']) {
       expect(t(label), findsOneWidget, reason: label);
@@ -224,6 +228,21 @@ void main() {
       );
     });
 
+    testWidgets('유해성 분류 표 머리글~1행 → 2줄, H·P 칸의 여러 줄은 공백 하나로 한 칸에', (tester) async {
+      const row1P = ['P280', 'P302+P352', 'P312', 'P321', 'P361+P364', 'P405', 'P501'];
+      final clipboard = await dragCopy(
+        tester,
+        services: {'chem': false, 'ghs': true, 'safety': false},
+        from: () => inPanelText('분류항목'),
+        to: () => inPanelText([for (final c in row1P) '($c)${ghsPPhrases[c]!}'].join('\n')),
+      );
+      expect(clipboard, isNotNull);
+      expect(clipboard!.split('\n'), [
+        '분류항목\t구분\tH코드\tP코드',
+        '급성독성-경피\t3\t(H311)${ghsHPhrases['H311']!}\t${[for (final c in row1P) '($c)${ghsPPhrases[c]!}'].join(' ')}',
+      ]);
+    });
+
     testWidgets('한 칸 안에서만 선택하면 그 글자만(행 전체가 아니다)', (tester) async {
       final clipboard = await dragCopy(
         tester,
@@ -299,6 +318,22 @@ void main() {
       expect(find.descendant(of: panel(Source.byeolpyo3, 1), matching: find.byType(Image)), findsNothing);
       expect(t('UN번호'), findsOneWidget);
     });
+  });
+
+  testWidgets('H·P 문구: 문구표에 없는 코드는 문구없음, 없는 합성 코드는 낱개 문구를 이어 (문구표 없음)', (tester) async {
+    final api = FakeApi();
+    final body = (jsonDecode(fixtures[ChemService.ghs]!) as Map);
+    final first = (body['body']['items'][0]['hrmflnList'] as List)[0] as Map;
+    first['hrmDngrCd'] = 'H99';
+    first['hrmPrevntCd'] = 'P320+P321^P999';
+    api.overrides[ChemService.ghs] = () async => utf8Response(jsonEncode(body), 200);
+    await pumpPage(tester, api: api, stored: apiSettingsJson(services: {'chem': false, 'ghs': true, 'safety': false}));
+    await type(tester, '50-00-0');
+    await tester.tap(cas(Source.byeolpyo3, 1, '50-00-0'));
+    await tester.pumpAndSettle();
+    Finder t(String text) => find.descendant(of: panel(Source.byeolpyo3, 1), matching: find.text(text));
+    expect(t('(H99)문구없음'), findsOneWidget);
+    expect(t('(P320+P321)${ghsPPhrases['P320']!} ${ghsPPhrases['P321']!}(문구표 없음)\n(P999)문구없음'), findsOneWidget);
   });
 
   testWidgets('빈 값은 그 줄을 뺀다(영문명이 비면 영문명 줄이 없다)', (tester) async {
