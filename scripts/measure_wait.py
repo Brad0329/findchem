@@ -60,26 +60,30 @@ def measure(paths: list[Path]) -> list[tuple[float, str, str]]:
     """[(초, 도구, 명령)] — tool_use와 짝 tool_result의 간격."""
     return [
         ((t1 - t0).total_seconds(), tool, cmd)
-        for t0, t1, tool, cmd in measure_spans(paths)
+        for t0, t1, tool, cmd, _ in measure_spans(paths)
     ]
 
 
-def overlapping(spans: list[tuple[datetime, datetime, str, str]], i: int) -> list[int]:
+def overlapping(spans: list[tuple[datetime, datetime, str, str, str]], i: int) -> list[int]:
     """spans[i]와 시간이 겹치는 다른 호출의 번호.
 
     ★ 허용된 호출이 느리면 먼저 이것을 본다 — 한 메시지로 낸 호출들은 **차례로** 돌아서, 뒤 호출의
     간격에는 앞 호출의 실행·승인 시간이 통째로 들어간다(findchem 2026-09-15: `Write` 137초는 같은
     묶음 앞의 `flutter analyze` 131초를 기다린 것이었다 — 승인 창이 아니었다). 끝과 시작이 딱 맞닿은
-    것은 겹침이 아니다.
+    것은 겹침이 아니다. **다른 세션의 호출은 겹침이 아니다** — `--sessions N`으로 합치면 동시에 열린
+    세션끼리 시간이 겹치는데, 그건 차례 대기가 아니라 별개 프로세스다.
     """
-    t0, t1 = spans[i][0], spans[i][1]
-    return [j for j, s in enumerate(spans) if j != i and s[0] < t1 and t0 < s[1]]
+    t0, t1, session = spans[i][0], spans[i][1], spans[i][4]
+    return [
+        j for j, s in enumerate(spans)
+        if j != i and s[4] == session and s[0] < t1 and t0 < s[1]
+    ]
 
 
-def measure_spans(paths: list[Path]) -> list[tuple[datetime, datetime, str, str]]:
-    """[(시작, 끝, 도구, 명령)] — tool_use와 짝 tool_result의 시각."""
+def measure_spans(paths: list[Path]) -> list[tuple[datetime, datetime, str, str, str]]:
+    """[(시작, 끝, 도구, 명령, 세션 파일)] — tool_use와 짝 tool_result의 시각."""
     pending: dict[str, tuple[str, str, str]] = {}
-    rows: list[tuple[datetime, datetime, str, str]] = []
+    rows: list[tuple[datetime, datetime, str, str, str]] = []
     for path in paths:
         for line in path.read_text(encoding="utf-8", errors="replace").splitlines():
             if not line.strip():
@@ -113,6 +117,7 @@ def measure_spans(paths: list[Path]) -> list[tuple[datetime, datetime, str, str]
                         datetime.fromisoformat(ts.replace("Z", "+00:00")),
                         tool,
                         cmd,
+                        str(path),
                     ))
     return rows
 

@@ -25,11 +25,13 @@ import sys
 
 from hook_io import deny, read_command
 
-# `git [-C x] commit … -m` / `-am` / `--message`. 짧은 플래그는 대시 하나로 시작하는 묶음만 본다
-# (`--amend`의 m을 잡지 않도록).
+# `git [전역 옵션…] commit … -m` / `-am` / `--message`.
+# - 전역 옵션: `-C <경로>`·`-c k=v`·`--no-pager`처럼 대시로 시작하는 낱말(+값 하나)만 git과 commit 사이에 허용한다.
+# - 짧은 플래그는 대시 하나로 시작하는 묶음만 본다(`--amend`의 m을 잡지 않도록).
+# - 플래그 뒤에는 공백·`=`·끝 말고도 **따옴표·`@`가 바로 붙을 수 있다** — `-m"msg"`는 git이 `-m msg`와 똑같이 받는다.
 COMMIT_M = re.compile(
-    r"(?:^|[\s;&|])git\s+(?:-C\s+\S+\s+)?commit\b"
-    r"(?:\s+[^\s;&|]+)*?\s+(?:-(?!-)[A-Za-z]*m[A-Za-z]*|--message)(?:\s|=|$)"
+    r"(?:^|[\s;&|])git(?:\s+-{1,2}[^\s;&|]+(?:\s+[^\s;&|\-][^\s;&|]*)?)*?\s+commit\b"
+    r"(?:\s+[^\s;&|]+)*?\s+(?:-(?!-)[A-Za-z]*m[A-Za-z]*|--message)(?=[\s=\"'@]|$)"
 )
 
 REASON = (

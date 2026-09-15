@@ -34,6 +34,12 @@ from no_commit_m import blocked  # noqa: E402
     "git commit --message x",
     "git commit --no-verify -m x",           # 다른 인자가 앞에 있어도
     'git -C app commit -m "x"',
+    # 코드 리뷰 2026-09-15 — 붙여 쓴 따옴표형과 -C 외 전역 옵션
+    'git commit -m"한 줄"',
+    "git commit -m'x'",
+    'git commit -am"x"',
+    "git -c user.name=x commit -m x",
+    "git --no-pager commit -m x",
 ])
 def test_m_커밋을_막는다(command):
     assert blocked(command)
@@ -48,6 +54,8 @@ def test_m_커밋을_막는다(command):
     "git commit -F .commit_msg.txt; git log -m -1",    # 뒤 명령의 -m
     "git log -m --oneline",
     "git show -m HEAD",
+    "git -c core.pager=less log -m",                   # 전역 옵션 뒤라도 commit이 아니다
+    'git commit -F "-m.txt"',                          # -F 값 안의 -m은 따옴표 뒤라 플래그가 아니다
     "git add -A",
     "git status --short",
     "echo commit -m",                                  # git이 아니다

@@ -159,6 +159,24 @@ def test_겹친_호출을_찾고_맞닿은_것은_뺀다(tmp_path):
     assert overlapping(spans, c) == []
 
 
+def test_다른_세션의_호출은_겹침이_아니다(tmp_path):
+    """★ `--sessions N`으로 합치면 동시에 열린 세션끼리 시간이 겹친다 — 그걸 '같은 묶음 대기'로 읽으면 오진한다."""
+    a = tmp_path / "a.jsonl"
+    b = tmp_path / "b.jsonl"
+    a.write_text("\n".join(json.dumps(e) for e in [
+        _use("x", "2026-08-20T10:00:00.000Z", command="flutter test"),
+        _result("x", "2026-08-20T10:01:00.000Z"),
+    ]), encoding="utf-8")
+    b.write_text("\n".join(json.dumps(e) for e in [
+        _use("y", "2026-08-20T10:00:10.000Z", command="flutter build apk"),
+        _result("y", "2026-08-20T10:00:50.000Z"),
+    ]), encoding="utf-8")
+    spans = measure_spans([a, b])
+    assert len(spans) == 2
+    assert overlapping(spans, 0) == []
+    assert overlapping(spans, 1) == []
+
+
 def test_깨진_줄이_있어도_나머지를_센다(tmp_path):
     """트랜스크립트를 쓰는 중이면 마지막 줄이 잘려 있을 수 있다."""
     p = tmp_path / "s.jsonl"
