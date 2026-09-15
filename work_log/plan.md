@@ -114,7 +114,7 @@
     받기 페이지 문구·폰 실테스트) / GHS H·P 코드→국문 문구
   - **GHS 그림문자 표 2026-09-15**(사용자 결정 — 사용자가 `assets/유해성 분류.xlsx` 제공, 목업 2안 중 안 A 가로 칸): 엑셀 → 그림 9장·대응표는
     `scripts/extract_ghs_pictograms.py`(엑셀 그림은 파일 번호가 열 순서와 달라 x 좌표로 짝짓는다 — 9장 눈으로 대조), 화면은
-    `cas_lookup_panel.dart`의 `_PictogramTable`. **웹 실테스트 대기**(그림 5장 표시)
+    `cas_lookup_panel.dart`의 `_PictogramTable`. **배포 00933af·웹 실테스트 통과 2026-09-15**(그림 5장 표시, 사용자 확인)
   - **기본 키 추가 2026-09-14**(사용자 결정 — 사용자 1명 단계, 공개 위험 감수): 개발자 키를 Actions Secret `DATA_GO_KR_KEY`에 두고
     웹 빌드가 `--dart-define=DATA_GO_KR_DEFAULT_KEY`로 넣는다. 사용자 키가 있으면 우선, [삭제]하면 기본 키로.
     사용자 첫 제안(저장소 파일 / 앱이 GitHub에 쓰기)은 버렸다 — 사유는 REQUIREMENTS F-007 '기본 키'의 버린 대안.
