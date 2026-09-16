@@ -60,6 +60,34 @@ void main() {
     expect(blank3, 3);
   });
 
+  test('숫자 함량기준이 있는 행은 "미만이면 이 행이 적용되지 않는다"까지 말한다(전수)', () {
+    // 1단계 재실행 B1: 함량기준만 적고 미만일 때를 안 적으면 그 빈칸을 모델이 못 채운다.
+    // 범위는 '이 행'으로 한정해야 한다 — 메틸알코올은 별표3 85% / 별표2 10%로 행마다 다르다.
+    final numeric = RegExp(r'^[0-9.]+$');
+    var checked = 0;
+    for (final e in ds.entries) {
+      for (final r in e.rows) {
+        if (!numeric.hasMatch(r.content)) continue;
+        checked++;
+        final s = conditionOf(e, r);
+        expect(s, contains('함량이 ${r.content}% 미만인 혼합물에는 이 행의 규정수량이 적용되지 않는다'),
+            reason: '${e.src.id} ${e.no} ${r.kind}');
+        expect(s, contains('별표 4 비고 제2호 가목'), reason: '${e.src.id} ${e.no} ${r.kind}');
+        expect(s, isNot(contains('이 물질')), reason: '${e.src.id} ${e.no}: 범위를 행이 아니라 물질로 넓히면 틀린다');
+      }
+    }
+    // 2,458행 − 빈 함량 261 − '-'(삭제) 19 − '70% 초과' 1 = 2,177
+    expect(checked, 2177);
+  });
+
+  test("'톨루엔'(별표3 28, 행 하나)은 선택지가 없는 대신 조건 문장이 함량 갈래를 진다", () {
+    final e = entry(Source.byeolpyo3, 28);
+    expect(selectionOf(e), isNull);
+    final s = conditions(e).single;
+    expect(s, contains('함량기준 85% 이상'));
+    expect(s, contains('함량이 85% 미만인 혼합물에는 이 행의 규정수량이 적용되지 않는다'));
+  });
+
   test('조건 문장은 지어내지 않는다 — 고시에 없는 "더 엄격한"·"작은 쪽" 류가 어느 행에도 없다', () {
     // spike ③ D3의 실패 모양(모델이 지어낸 규칙)이 자산 쪽에서 먼저 새어 나오지 않도록 건다.
     for (final e in ds.entries) {

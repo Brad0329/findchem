@@ -46,7 +46,16 @@ String? _lowest(List<String> contents) {
 String _contentClause(Entry e, QuantityRow r) {
   if (r.content == '-') return "함량기준이 '-'(해당 없음)이다.";
   if (r.content.isNotEmpty) {
-    if (_numeric.hasMatch(r.content)) return '함량기준 ${r.content}% 이상.';
+    if (_numeric.hasMatch(r.content)) {
+      // 함량기준을 적기만 하면 **미만일 때 어떻게 되는지**가 빈칸으로 남는다 — 1단계 재실행 B1에서
+      // Sonnet 5가 그 빈칸을 채우지 못했다(Opus 5는 스스로 채웠다. spike_mcp.md '1단계 재실행 기록').
+      // 열 이름이 '함량기준(% 이상)'이고 별표 4 비고 제2호 가목이 "규제대상 함량 이상을 모두 고려"라고
+      // 정하므로, 미만이 대상 밖이라는 것은 원문에서 바로 읽힌다(지어내지 않는다).
+      // 범위는 **이 행**으로 한정한다 — 같은 물질이 다른 표ㆍ다른 행에서는 더 낮은 함량기준을 가질 수 있다
+      // (메틸알코올: 별표3 85% / 별표2 10%).
+      return '함량기준 ${r.content}% 이상 — 함량이 ${r.content}% 미만인 혼합물에는 이 행의 규정수량이 '
+          '적용되지 않는다(별표 4 비고 제2호 가목).';
+    }
     return "함량기준 원문 표기: '${r.content}'.";
   }
   // ── 함량기준이 빈 칸인 행 ──────────────────────────────────────────────
