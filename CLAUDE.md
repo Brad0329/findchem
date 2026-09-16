@@ -4,7 +4,9 @@ Flutter(Android + 웹 한 벌), 서버 없음, 데이터는 JSON으로 번들해
 
 ## 현재 단계
 - 전체 Phase 체크리스트/아키텍처의 **단일 원본 = `work_log/plan.md`** (여기에 중복 기재 금지)
-- 현재: **F-007 CAS 부가 정보 조회**(Phase 007 앞에 끼워 넣음 — 2026-09-14 사용자 결정. 웹 단계 완료·배포, GHS 그림문자 표·H·P 문구 2026-09-15 완료, 앱 단계는 결정 대기) → 그 뒤
+- 현재: **F-008 규정수량 판정 도우미** — **1단계(자산화 `lib/assist/`) 완료·master 병합 2026-09-16, 앱 모델 Opus 5 확정.
+  다음은 2단계(앱·웹 화면 + LLM 루프, 모델 선택 설정 포함)** — 상세는 plan.md F-008 항목·REQUIREMENTS F-008 /
+  **F-007**(웹 단계 완료·배포, GHS 그림문자 표·H·P 문구 2026-09-15 완료, 앱 단계는 결정 대기) → 그 뒤
   **Phase 007 — 부채 정리** (미착수. 항목은 plan.md의 Phase 007 절 — `/debt-audit` 2026-09-12 결과.
   직전에 끼워 넣은 F-005 자주보는 Chem 목록은 2026-09-13 완료). (완료 시 이 줄과 plan.md 체크박스를 함께 갱신)
 - 배포처: APK는 직접 설치(릴리스 키 필요 — `팩_Flutter_Android.md`), 웹은 master push → Actions →
@@ -38,7 +40,8 @@ Flutter(Android + 웹 한 벌), 서버 없음, 데이터는 JSON으로 번들해
   | F-005 | 자주보는 Chem 목록 (카드 저장 — 앱만) | 완료(2026-09-13) |
   | F-006 | APK 받기 페이지(GitHub Releases) + 앱 버전 표시 | 진행 |
   | F-007 | CAS 부가 정보 조회(공공데이터 API 3종, 키는 설정에서) + 설정 카드 구성 | 진행(웹 완료 2026-09-14, 앱 단계 결정 대기) |
-  | **다음 번호** | **F-008** | |
+  | F-008 | 규정수량 판정 도우미 — 앱·웹에서 질문하면 LLM이 검색 도구를 불러 답(MCP spike 2026-09-16 → 정식화) | 진행(1단계 완료 2026-09-16·앱 모델 Opus 5 확정, 2단계 미착수) |
+  | **다음 번호** | **F-009** | |
 
 ## 데이터 모델/스키마 변경 게이트 ★스키마는 되돌리기 비싸다
 - 스키마 **결정의 기록 = `docs/SCHEMA.md`** (설계 의도, 관계, 제약, 변경 이력).
@@ -82,8 +85,8 @@ Flutter(Android + 웹 한 벌), 서버 없음, 데이터는 JSON으로 번들해
   루트의 `pubspec.yaml`·`pubspec.lock`·`analysis_options.yaml`·`.metadata`는 Flutter 고정 파일이다.
   **이 트리 밖에 새 최상위 디렉토리/파일을 만들지 말 것.** 필요하면 사용자 확인 후 이 목록부터 갱신.
 - 설정/환경: 환경별 설정이 없다 — 앱에 서버가 없다. `.env`는 개발 PC 조사용 키뿐이고 앱은 읽지 않는다.
-  **예외(F-007 기본 키, 2026-09-14 사용자 결정)**: 웹 배포 빌드가 Actions Secret `DATA_GO_KR_KEY`를 `--dart-define`으로 넣는다 —
-  배포된 JS에서 공개됨을 감수했다(REQUIREMENTS 비기능 4). 키를 저장소 파일로 두지 않는 규칙은 그대로다.
+  **예외(F-007 기본 키, 2026-09-14 사용자 결정 — F-008 Anthropic 키도 같은 방식, 2026-09-16)**: 웹 배포 빌드가 Actions Secret
+  `DATA_GO_KR_KEY`를 `--dart-define`으로 넣는다 — 배포된 JS에서 공개됨을 감수했다(REQUIREMENTS 비기능 4). 키를 저장소 파일로 두지 않는 규칙은 그대로다.
 - **클라우드 세션(claude.ai/code) 환경의 원본 = `scripts/cloud_setup.sh`** — 웹 화면 Setup script 칸은 그 사본이라
   고치면 다시 붙여 넣는다. 클라우드는 analyze·test·웹 빌드까지(Android SDK 없음), `settings.local.json`은 가지 않는다.
 - 새 기능 추가 위치 규칙: `lib/` 아래 도메인별 폴더(파서·검색·화면 등, 착수하는 Phase에서 만든다).
@@ -91,6 +94,8 @@ Flutter(Android + 웹 한 벌), 서버 없음, 데이터는 JSON으로 번들해
 - **같은 규칙이 두 곳 이상에 구현되면**(언어가 달라 이식이 불가피한 경우 등) 그 사실을 여기 적고,
   **두 구현을 대조하는 테스트를 반드시 만든다.** 실물: PDF 추출 층(`lib/parser/pdf_extractor.dart`) ↔ pdfplumber
   정답지(`scripts/oracle_pdf_cells.py` → `test/fixtures/`, 규칙 없는 원시 셀) — 대조는 `test/parser/pdf_extractor_test.dart`.
+  같은 기계로 **손으로 옮긴 규칙 원문**(`lib/assist/rules.dart`) ↔ PDF 표 밖 문단(`scripts/oracle_rule_text.py` →
+  `test/fixtures/rule_text.json`) — 대조는 `test/assist/rules_test.dart`.
 
 ## 불변 규칙
 - **Silent failure 절대 금지**: 모든 예외 상황을 명시적으로 로깅한다. 빈 except/catch 금지.
