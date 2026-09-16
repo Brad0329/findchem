@@ -5,21 +5,22 @@
 
 ## 등록
 
-PC 데스크톱 Claude의 `claude_desktop_config.json`(Windows: `%APPDATA%\Claude\`)에:
+**이 PC에는 2026-09-16에 등록해 두었다.** `%APPDATA%\Claude\claude_desktop_config.json`의 `mcpServers`에
+아래 항목을 더했다(기존 서버 2개는 그대로. 직전 파일은 같은 폴더에 `.bak-20260916`으로 남겼다).
 
 ```json
-{
-  "mcpServers": {
-    "findchem": {
-      "command": "python",
-      "args": ["C:/Users/user/Documents/findchem/scripts/mcp_server.py"]
-    }
-  }
+"findchem": {
+  "command": "C:\\Program Files\\Python311\\python.exe",
+  "args": ["C:\\Users\\user\\Documents\\findchem\\scripts\\mcp_server.py"],
+  "env": { "PYTHONUTF8": "1" }
 }
 ```
 
-등록 전 `python scripts/mcp_server.py --selftest`가 통과하는지 먼저 본다. 데스크톱 Claude는 설정을
-바꾼 뒤 **완전히 종료했다가 다시 켜야** 서버를 다시 읽는다.
+- `python`이 아니라 **인터프리터 절대경로**를 쓴다 — GUI 앱은 셸 PATH를 그대로 받지 않는다(기존 두 서버도 절대경로다).
+- `dart`는 머신 PATH의 `C:\flutter\bin`에 있어 데스크톱 앱이 물려받는다(확인 2026-09-16). 못 찾으면
+  `search_chemical`이 "dart 실행 파일을 PATH에서 찾지 못했습니다"로 **소리내어** 실패한다.
+- 등록 전후로 `python scripts/mcp_server.py --selftest`가 통과하는지 본다(설정에 적은 그 인터프리터로도 확인했다).
+- 데스크톱 Claude는 설정을 바꾼 뒤 **완전히 종료했다가 다시 켜야** 서버를 다시 읽는다.
 
 ## 보는 법 ★답만 보면 안 된다
 
