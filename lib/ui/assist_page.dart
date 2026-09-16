@@ -13,10 +13,24 @@ import '../assist/llm_client.dart';
 import '../assist/session.dart';
 import '../assist/tools.dart';
 
+/// 예시 질문 — 입력창 아래 버튼으로 두고, 누르면 **바로 보낸다**(2026-09-16 사용자 요청).
+///
+/// 네 개는 서로 다른 함정을 건드린다: 성상에 따라 갈리는 물질 / 함량기준을 빠뜨리기 쉬운 질문 /
+/// 여러 물질 합산(별표 4 제3호 다목) / 어느 표를 적용하는가(별표 2 일반기준 가).
+const assistExamples = <({String label, String question})>[
+  (label: '암모니아 0.3톤', question: '암모니아 0.3톤이면 규정수량 넘나요?'),
+  (label: '톨루엔 3톤', question: '톨루엔 3톤 있는데 규정수량 넘나요?'),
+  (
+    label: '3물질 합산',
+    question: '보관시설만 있는 창고에 톨루엔 0.01톤, 황산 0.05톤, 염화수소 0.004톤이 있습니다. 최하위 규정수량 미만인가요?',
+  ),
+  (label: '어느 표를 보나', question: '메틸알코올은 어느 표 기준으로 보나요?'),
+];
+
 /// 화면 문구(테스트가 같은 상수를 본다).
 abstract final class AssistPageText {
   static const title = '규정수량·최대보유량 판정(AI)';
-  static const hint = '예) 보관시설만 있는 창고에 톨루엔 0.01톤, 황산 0.05톤이면 최하위 규정수량 미만인가요?';
+  static const hint = '질문을 입력하세요 (아래 예시를 눌러도 됩니다)';
   static const send = '보내기';
   static const evidence = '근거 — 도구가 돌려준 값';
   static const evidenceCarried = '근거 — 이 답에서는 도구를 부르지 않았고, 앞선 질문에서 받은 값입니다';
@@ -69,12 +83,13 @@ class _AssistPageState extends State<AssistPage> {
     super.dispose();
   }
 
-  Future<void> _send() async {
-    final text = _controller.text;
+  Future<void> _sendText(String text) async {
     if (text.trim().isEmpty || widget.session.busy) return;
     _controller.clear();
     await widget.session.ask(text);
   }
+
+  Future<void> _send() => _sendText(_controller.text);
 
   @override
   Widget build(BuildContext context) {
@@ -140,6 +155,21 @@ class _AssistPageState extends State<AssistPage> {
                       onPressed: session.busy ? null : _send,
                       child: const Text(AssistPageText.send),
                     ),
+                  ],
+                ),
+              ),
+              // 예시 버튼 — 누르면 그 질문이 바로 나간다(입력창에 넣어 두고 기다리지 않는다).
+              Padding(
+                padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+                child: Wrap(
+                  spacing: 8,
+                  runSpacing: 4,
+                  children: [
+                    for (final example in assistExamples)
+                      ActionChip(
+                        label: Text(example.label),
+                        onPressed: session.busy ? null : () => _sendText(example.question),
+                      ),
                   ],
                 ),
               ),

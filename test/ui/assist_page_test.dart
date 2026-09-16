@@ -174,6 +174,25 @@ void main() {
       expect(find.text('답'), findsOneWidget);
     });
 
+    testWidgets('예시 버튼 4개가 있고, 누르면 그 질문이 바로 나간다', (tester) async {
+      final fake = FakeAnthropic(turns: const [FakeTurn(text: ['답'])]);
+      final session = await pumpPage(tester, fake);
+
+      expect(find.byType(ActionChip), findsNWidgets(4));
+      for (final example in assistExamples) {
+        expect(find.text(example.label), findsOneWidget);
+      }
+
+      await tester.tap(find.text(assistExamples[1].label)); // 톨루엔 3톤
+      await settle(tester, session);
+
+      // 입력창에 넣어 두고 기다리는 것이 아니라 바로 보낸다.
+      expect(fake.callCount, 1);
+      final sent = ((fake.bodies.single['messages']! as List).single as Map)['content']! as List;
+      expect((sent.single as Map)['text'], assistExamples[1].question);
+      expect(session.messages.first.text, assistExamples[1].question);
+    });
+
     testWidgets('도구 호출 0건이면 근거 칸에 그 사실이 보인다', (tester) async {
       final session = await pumpPage(tester, FakeAnthropic(turns: const [FakeTurn(text: ['0.05톤입니다'])]));
       await ask(tester, session, '톨루엔 규정수량?');
