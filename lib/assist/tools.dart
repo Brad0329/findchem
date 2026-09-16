@@ -120,6 +120,7 @@ class Evidence {
     required this.notice,
     required this.toolCalls,
     required this.failures,
+    this.carriedOver = false,
   });
 
   static const empty = Evidence(
@@ -128,6 +129,19 @@ class Evidence {
     notice: null,
     toolCalls: 0,
     failures: [],
+  );
+
+  /// 이번 답에서는 도구를 부르지 않았고 **앞선 질문에서 받은 값**을 보이는 중이다.
+  /// 대화가 이어지면(A1→A2→A3) 모델이 앞 결과로 답하는 것이 정상이라 근거를 지우지 않는다.
+  final bool carriedOver;
+
+  Evidence asCarriedOver() => Evidence(
+    substances: substances,
+    ruleTopics: ruleTopics,
+    notice: notice,
+    toolCalls: toolCalls,
+    failures: failures,
+    carriedOver: true,
   );
 
   final List<EvidenceSubstance> substances;

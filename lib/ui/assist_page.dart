@@ -19,6 +19,7 @@ abstract final class AssistPageText {
   static const hint = '예) 보관시설만 있는 창고에 톨루엔 0.01톤, 황산 0.05톤이면 최하위 규정수량 미만인가요?';
   static const send = '보내기';
   static const evidence = '근거 — 도구가 돌려준 값';
+  static const evidenceCarried = '근거 — 이 답에서는 도구를 부르지 않았고, 앞선 질문에서 받은 값입니다';
   static const rulesUsed = '쓰인 규칙';
   static const empty = '규정수량·최대보유량을 물어보세요. 답과 함께 근거(도구가 돌려준 값)가 나옵니다.';
   static const online = '이 기능은 온라인에서만 됩니다. 검색·목록은 그대로 쓸 수 있습니다.';
@@ -235,7 +236,10 @@ class _EvidencePanel extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(AssistPageText.evidence, style: theme.textTheme.labelMedium),
+          Text(
+            e.carriedOver ? AssistPageText.evidenceCarried : AssistPageText.evidence,
+            style: theme.textTheme.labelMedium,
+          ),
           const SizedBox(height: 6),
           if (e.isEmpty)
             Text(AssistText.noToolCall, style: TextStyle(color: theme.colorScheme.error))

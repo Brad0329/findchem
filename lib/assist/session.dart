@@ -54,6 +54,9 @@ class AssistSession extends ChangeNotifier {
   /// API에 보내는 대화(도구 결과까지 들어 있다). 화면에는 보이지 않는다.
   final List<Map<String, Object?>> _api = [];
 
+  /// 이 대화에서 부른 도구 전부. 이어지는 질문이 앞 결과로 답할 때 근거를 되살린다.
+  final List<ToolOutcome> _allOutcomes = [];
+
   bool _busy = false;
   bool get busy => _busy;
 
@@ -114,7 +117,7 @@ class AssistSession extends ChangeNotifier {
 
         final calls = turn.toolUses;
         if (calls.isEmpty) {
-          answer.evidence = evidenceOf(outcomes);
+          answer.evidence = _evidenceFor(outcomes);
           return; // finally가 busy를 내린다
         }
 
@@ -127,6 +130,7 @@ class AssistSession extends ChangeNotifier {
               : <String, Object?>{};
           final outcome = tools.run(name, input);
           outcomes.add(outcome);
+          _allOutcomes.add(outcome);
           results.add({
             'type': 'tool_result',
             'tool_use_id': call['id'],
@@ -135,7 +139,7 @@ class AssistSession extends ChangeNotifier {
           });
         }
         _api.add({'role': 'user', 'content': results});
-        answer.evidence = evidenceOf(outcomes);
+        answer.evidence = _evidenceFor(outcomes);
         notifyListeners();
       }
       // 상한까지 갔다 — 지금까지의 근거는 남긴다(조용히 비우지 않는다).
@@ -147,10 +151,17 @@ class AssistSession extends ChangeNotifier {
       debugPrint('F-008 판정 루프 실패: ${e.runtimeType}\n$st');
       answer.error = AssistText.failed(0);
     } finally {
-      answer.evidence = evidenceOf(outcomes);
+      answer.evidence = _evidenceFor(outcomes);
       _busy = false;
       notifyListeners();
     }
+  }
+
+  /// 이번 답의 근거. 이번에 부른 것이 없고 **앞선 질문에서 부른 것이 있으면** 그것을 보인다
+  /// (대화가 이어지면 모델이 앞 결과로 답하는 것이 정상이다 — 근거를 지우면 멀쩡한 답이 근거 없는 답으로 보인다).
+  Evidence _evidenceFor(List<ToolOutcome> outcomes) {
+    if (outcomes.isNotEmpty || _allOutcomes.isEmpty) return evidenceOf(outcomes);
+    return evidenceOf(_allOutcomes).asCarriedOver();
   }
 
   /// 도구 응답을 모델에 보낼 문자열로. 들여쓰기 없이 보낸다 — 프리픽스 캐시가 흔들리지 않게 같은 내용은 같은 문자열이다.

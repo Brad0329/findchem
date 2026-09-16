@@ -132,6 +132,25 @@ void main() {
     expect(session.messages.last.evidence.isEmpty, true);
   });
 
+  test('이어지는 질문이 앞 결과로 답하면 근거를 되살린다(빈 근거로 보이지 않는다)', () async {
+    // 2026-09-16 사용자 실테스트에서 걸렸다: 이어서 물으면 멀쩡한 답이 "도구를 부르지 않은 답"으로 보였다.
+    final fake = FakeAnthropic(
+      turns: const [
+        FakeTurn(toolUses: [FakeToolUse('toolu_1', ToolName.search, {'query': '7664-41-7'})]),
+        FakeTurn(text: ['첫 답']),
+        FakeTurn(text: ['이어지는 답']), // 도구를 다시 부르지 않는다
+      ],
+    );
+    final session = sessionOf(fake);
+    await session.ask('암모니아 0.3톤?');
+    await session.ask('그럼 용액이면요?');
+
+    final second = session.messages.last.evidence;
+    expect(second.isEmpty, false, reason: '앞 질문에서 받은 값이 남아 있어야 한다');
+    expect(second.carriedOver, true);
+    expect(second.substances.any((s) => s.no == 44), true);
+  });
+
   test('키가 없으면 호출하지 않고 안내만 남긴다(호출 0회)', () async {
     final fake = FakeAnthropic(turns: const [FakeTurn(text: ['답'])]);
     final session = sessionOf(fake, key: '');
