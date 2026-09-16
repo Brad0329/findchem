@@ -87,6 +87,26 @@ void main() {
     expect(thinking['signature'], 'sig-abc');
   });
 
+  test('본문이 빈 thinking 블록은 대화에서 빠진다 — 되돌려 보내면 400이 난다', () async {
+    // 요약을 켜 두어도 모델이 아주 짧게 생각하면 요약이 비어 올 수 있다.
+    final fake = FakeAnthropic(
+      turns: const [
+        FakeTurn(
+          thinking: (text: '', signature: 'sig-abc'),
+          toolUses: [FakeToolUse('toolu_1', ToolName.search, {'query': '108-88-3'})],
+        ),
+        FakeTurn(text: ['답']),
+      ],
+    );
+    final session = sessionOf(fake);
+    await session.ask('톨루엔?');
+
+    final assistant = (fake.bodies[1]['messages']! as List)[1] as Map;
+    final blocks = (assistant['content']! as List).cast<Map<String, Object?>>();
+    expect(blocks.any((b) => b['type'] == 'thinking'), false, reason: '빈 thinking은 실으면 안 된다');
+    expect(blocks.single['type'], 'tool_use', reason: '도구 호출은 그대로 남는다');
+  });
+
   test('도구 호출 앞뒤 문장 사이에 빈 줄이 들어간다(그대로 이으면 "…합니다.## 결론"처럼 붙는다)', () async {
     final fake = FakeAnthropic(
       turns: const [

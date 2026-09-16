@@ -44,10 +44,27 @@ class _AssistPageState extends State<AssistPage> {
   final _controller = TextEditingController();
   final _scroll = ScrollController();
 
+  /// Enter=보내기, Shift+Enter=줄바꿈.
+  ///
+  /// **입력칸을 감싸는 `Focus`로는 안 된다** — 여러 줄 TextField가 Enter를 먼저 먹어서 바깥 Focus까지 오지 않는다
+  /// (2026-09-16 브라우저 실테스트에서 확인. 위젯 테스트는 통과해서 실물로만 드러났다).
+  /// TextField가 쓰는 FocusNode 자신의 `onKeyEvent`는 그보다 먼저 불린다.
+  late final FocusNode _inputFocus = FocusNode(
+    onKeyEvent: (node, event) {
+      if (event is! KeyDownEvent || event.logicalKey != LogicalKeyboardKey.enter) {
+        return KeyEventResult.ignored;
+      }
+      if (HardwareKeyboard.instance.isShiftPressed) return KeyEventResult.ignored;
+      _send();
+      return KeyEventResult.handled;
+    },
+  );
+
   @override
   void dispose() {
     _controller.dispose();
     _scroll.dispose();
+    _inputFocus.dispose();
     super.dispose();
   }
 
@@ -104,27 +121,16 @@ class _AssistPageState extends State<AssistPage> {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Expanded(
-                      // 여러 줄 입력칸이라 `onSubmitted`가 불리지 않는다(Enter가 줄바꿈이 된다 — 실호출에서 확인).
-                      // Enter로 보내고 Shift+Enter로 줄을 바꾼다.
-                      child: Focus(
-                        onKeyEvent: (node, event) {
-                          if (event is KeyDownEvent &&
-                              event.logicalKey == LogicalKeyboardKey.enter &&
-                              !HardwareKeyboard.instance.isShiftPressed) {
-                            _send();
-                            return KeyEventResult.handled;
-                          }
-                          return KeyEventResult.ignored;
-                        },
-                        child: TextField(
-                          controller: _controller,
-                          minLines: 1,
-                          maxLines: 4,
-                          decoration: const InputDecoration(
-                            hintText: AssistPageText.hint,
-                            border: OutlineInputBorder(),
-                            isDense: true,
-                          ),
+                      // 여러 줄 입력칸이라 `onSubmitted`는 불리지 않는다 — Enter는 [_inputFocus]가 가로챈다.
+                      child: TextField(
+                        controller: _controller,
+                        focusNode: _inputFocus,
+                        minLines: 1,
+                        maxLines: 4,
+                        decoration: const InputDecoration(
+                          hintText: AssistPageText.hint,
+                          border: OutlineInputBorder(),
+                          isDense: true,
                         ),
                       ),
                     ),

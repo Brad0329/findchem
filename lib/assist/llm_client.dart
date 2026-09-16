@@ -325,6 +325,13 @@ class _TurnAssembler {
     final content = <Map<String, Object?>>[];
     for (final i in indexes) {
       final block = _blocks[i]!;
+      // **본문이 빈 thinking 블록은 버린다.** 되돌려 보내면 API가 400을 준다
+      // (`each thinking block must contain thinking`). 요약을 켜 두어도 모델이 아주 짧게 생각하면
+      // 요약이 비어 올 수 있다 — 빈 블록에는 보존할 내용도 없으므로 싣지 않는다.
+      if (block['type'] == 'thinking' && (block['thinking'] as String? ?? '').isEmpty) {
+        debugPrint('F-008 본문이 빈 thinking 블록을 대화에서 뺐습니다');
+        continue;
+      }
       if (block['type'] == 'tool_use') {
         final raw = _partialJson[i]?.toString() ?? '';
         Object? input;
