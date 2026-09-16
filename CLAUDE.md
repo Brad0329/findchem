@@ -39,7 +39,7 @@ Flutter(Android + 웹 한 벌), 서버 없음, 데이터는 JSON으로 번들해
   | F-005 | 자주보는 Chem 목록 (카드 저장 — 앱만) | 완료(2026-09-13) |
   | F-006 | APK 받기 페이지(GitHub Releases) + 앱 버전 표시 | 진행 |
   | F-007 | CAS 부가 정보 조회(공공데이터 API 3종, 키는 설정에서) + 설정 카드 구성 | 진행(웹 완료 2026-09-14, 앱 단계 결정 대기) |
-  | F-008 | 규정수량 판정 도우미 — 앱·웹에서 질문하면 LLM이 검색 도구를 불러 답(MCP spike 2026-09-16 → 정식화) | 진행(2026-09-16 스펙화, 1단계 자산화 미착수) |
+  | F-008 | 규정수량 판정 도우미 — 앱·웹에서 질문하면 LLM이 검색 도구를 불러 답(MCP spike 2026-09-16 → 정식화) | 진행(1단계 자산화 완료 2026-09-16, 실테스트 대기) |
   | **다음 번호** | **F-009** | |
 
 ## 데이터 모델/스키마 변경 게이트 ★스키마는 되돌리기 비싸다
@@ -93,6 +93,8 @@ Flutter(Android + 웹 한 벌), 서버 없음, 데이터는 JSON으로 번들해
 - **같은 규칙이 두 곳 이상에 구현되면**(언어가 달라 이식이 불가피한 경우 등) 그 사실을 여기 적고,
   **두 구현을 대조하는 테스트를 반드시 만든다.** 실물: PDF 추출 층(`lib/parser/pdf_extractor.dart`) ↔ pdfplumber
   정답지(`scripts/oracle_pdf_cells.py` → `test/fixtures/`, 규칙 없는 원시 셀) — 대조는 `test/parser/pdf_extractor_test.dart`.
+  같은 기계로 **손으로 옮긴 규칙 원문**(`lib/assist/rules.dart`) ↔ PDF 표 밖 문단(`scripts/oracle_rule_text.py` →
+  `test/fixtures/rule_text.json`) — 대조는 `test/assist/rules_test.dart`.
 
 ## 불변 규칙
 - **Silent failure 절대 금지**: 모든 예외 상황을 명시적으로 로깅한다. 빈 except/catch 금지.
