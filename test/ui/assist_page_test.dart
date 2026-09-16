@@ -141,6 +141,14 @@ void main() {
 
       expect(find.text('성상에 따라 갈립니다.'), findsOneWidget);
       expect(find.text(AssistPageText.evidence), findsOneWidget);
+
+      // 기본은 접혀 있다 — 접힌 줄에 건수만 보인다(2026-09-16 사용자 요청: 너무 길다).
+      expect(find.text('사고대비물질 제44호 암모니아'), findsNothing);
+      expect(find.textContaining('규칙 1건'), findsOneWidget);
+
+      await tester.tap(find.text(AssistPageText.evidence));
+      await tester.pumpAndSettle();
+
       // 표 이름(화면 용어)·연번·물질명, 그리고 수량 문자열이 별표(*)까지 그대로 보인다.
       expect(find.text('사고대비물질 제44호 암모니아'), findsOneWidget);
       expect(find.textContaining('최하위 0.5* / 하위 20* / 상위 400*'), findsOneWidget);
@@ -198,7 +206,9 @@ void main() {
       await ask(tester, session, '톨루엔 규정수량?');
 
       expect(find.text('0.05톤입니다'), findsOneWidget);
+      // 경고는 접지 않는다 — 펼치지 않아도 바로 보인다.
       expect(find.text(AssistText.noToolCall), findsOneWidget);
+      expect(find.text(AssistPageText.evidence), findsNothing, reason: '접는 줄 자체가 없다');
     });
 
     testWidgets('키가 없는 빌드는 안내를 보이고 질문을 보내지 않는다', (tester) async {

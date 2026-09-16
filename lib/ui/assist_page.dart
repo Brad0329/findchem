@@ -38,6 +38,12 @@ abstract final class AssistPageText {
   static const empty = '규정수량·최대보유량을 물어보세요. 답과 함께 근거(도구가 돌려준 값)가 나옵니다.';
   static const online = '이 기능은 온라인에서만 됩니다. 검색·목록은 그대로 쓸 수 있습니다.';
 
+  /// 접힌 줄에 붙는 건수 — 접은 채로도 근거의 규모가 보이게 한다.
+  static String evidenceCount(Evidence e) {
+    final rules = e.ruleTopics.length;
+    return rules == 0 ? '물질 ${e.substances.length}건' : '물질 ${e.substances.length}건 · 규칙 $rules건';
+  }
+
   static String substance(EvidenceSubstance s) => '${s.srcLabel} 제${s.no}호 ${s.name}';
   static String row(EvidenceRow r) {
     final kind = r.kind.isEmpty ? '' : '[${r.kind}] ';
@@ -246,15 +252,26 @@ class _Bubble extends StatelessWidget {
 }
 
 /// 근거 칸. **앱이 도구 결과에서 직접 그린다** — 모델이 인용을 빠뜨려도 근거는 남는다.
-class _EvidencePanel extends StatelessWidget {
+///
+/// 기본은 접어 둔다(2026-09-16 사용자 요청 — 물질이 여럿이면 너무 길어 읽히지 않는다).
+/// 접힌 줄에 건수를 적어 **접힌 채로도 근거가 있다는 사실과 규모**는 보이게 한다.
+/// **경고("도구를 부르지 않은 답")와 실패 사유는 접지 않는다** — 접으면 못 보고 지나간다.
+class _EvidencePanel extends StatefulWidget {
   const _EvidencePanel({required this.evidence});
 
   final Evidence evidence;
 
   @override
+  State<_EvidencePanel> createState() => _EvidencePanelState();
+}
+
+class _EvidencePanelState extends State<_EvidencePanel> {
+  bool _open = false;
+
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final e = evidence;
+    final e = widget.evidence;
     return Container(
       width: double.infinity,
       margin: const EdgeInsets.only(bottom: 12),
@@ -266,14 +283,35 @@ class _EvidencePanel extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            e.carriedOver ? AssistPageText.evidenceCarried : AssistPageText.evidence,
-            style: theme.textTheme.labelMedium,
-          ),
-          const SizedBox(height: 6),
           if (e.isEmpty)
+            // 경고는 접지 않는다 — 근거가 없다는 사실은 접어 두면 안 된다.
             Text(AssistText.noToolCall, style: TextStyle(color: theme.colorScheme.error))
           else ...[
+            InkWell(
+              onTap: () => setState(() => _open = !_open),
+              child: Row(
+                children: [
+                  Icon(_open ? Icons.expand_less : Icons.expand_more, size: 18),
+                  const SizedBox(width: 4),
+                  Expanded(
+                    child: Text(
+                      e.carriedOver ? AssistPageText.evidenceCarried : AssistPageText.evidence,
+                      style: theme.textTheme.labelMedium,
+                    ),
+                  ),
+                  Text(AssistPageText.evidenceCount(e), style: theme.textTheme.bodySmall),
+                ],
+              ),
+            ),
+            // 실패 사유도 접지 않는다.
+            for (final f in e.failures)
+              Padding(
+                padding: const EdgeInsets.only(top: 4),
+                child: Text(f, style: TextStyle(color: theme.colorScheme.error)),
+              ),
+          ],
+          if (_open && !e.isEmpty) ...[
+            const SizedBox(height: 6),
             for (final s in e.substances) ...[
               Text(AssistPageText.substance(s), style: theme.textTheme.bodyMedium),
               for (final r in s.rows)
@@ -289,11 +327,6 @@ class _EvidencePanel extends StatelessWidget {
                   '${AssistPageText.rulesUsed}: ${e.ruleTopics.join(', ')}',
                   style: theme.textTheme.bodySmall,
                 ),
-              ),
-            for (final f in e.failures)
-              Padding(
-                padding: const EdgeInsets.only(top: 4),
-                child: Text(f, style: TextStyle(color: theme.colorScheme.error)),
               ),
             if (e.notice case final notice?)
               Padding(
