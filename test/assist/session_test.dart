@@ -62,6 +62,47 @@ void main() {
     expect(results.map((r) => r['tool_use_id']), ['toolu_1', 'toolu_2']);
   });
 
+  test('thinking 블록은 본문·서명 그대로 다음 왕복에 실린다 — 빈 채로 보내면 API가 400을 준다', () async {
+    // 실호출에서 실제로 걸렸던 결함이다(2026-09-16):
+    // `messages.1.content.0.thinking: each thinking block must contain thinking`.
+    final fake = FakeAnthropic(
+      turns: const [
+        FakeTurn(
+          thinking: (text: '별표 3을 먼저 본다', signature: 'sig-abc'),
+          toolUses: [FakeToolUse('toolu_1', ToolName.search, {'query': '7664-41-7'})],
+        ),
+        FakeTurn(text: ['답']),
+      ],
+    );
+    final session = sessionOf(fake);
+    await session.ask('암모니아 0.3톤?');
+
+    expect(fake.callCount, 2);
+    // 요청에 thinking을 켜 두고(본문이 오도록 summarized), 받은 블록을 그대로 돌려보낸다.
+    expect(fake.bodies.first['thinking'], {'type': 'adaptive', 'display': 'summarized'});
+    final assistant = (fake.bodies[1]['messages']! as List)[1] as Map;
+    final thinking = (assistant['content']! as List).first as Map;
+    expect(thinking['type'], 'thinking');
+    expect(thinking['thinking'], '별표 3을 먼저 본다');
+    expect(thinking['signature'], 'sig-abc');
+  });
+
+  test('도구 호출 앞뒤 문장 사이에 빈 줄이 들어간다(그대로 이으면 "…합니다.## 결론"처럼 붙는다)', () async {
+    final fake = FakeAnthropic(
+      turns: const [
+        FakeTurn(
+          text: ['암모니아 규정수량을 확인하겠습니다.'],
+          toolUses: [FakeToolUse('toolu_1', ToolName.search, {'query': '7664-41-7'})],
+        ),
+        FakeTurn(text: ['## 결론: 성상에 따라 갈립니다']),
+      ],
+    );
+    final session = sessionOf(fake);
+    await session.ask('암모니아 0.3톤?');
+
+    expect(session.messages.last.text, '암모니아 규정수량을 확인하겠습니다.\n\n## 결론: 성상에 따라 갈립니다');
+  });
+
   test('도구를 한 번도 안 부른 답은 근거가 비어 있다', () async {
     final fake = FakeAnthropic(turns: const [FakeTurn(text: ['0.05톤입니다'])]);
     final session = sessionOf(fake);

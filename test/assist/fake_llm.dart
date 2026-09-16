@@ -10,7 +10,11 @@ import 'package:http/testing.dart';
 
 /// 한 왕복에서 모델이 내놓을 것. 텍스트 조각과 도구 호출을 섞어 담는다.
 class FakeTurn {
-  const FakeTurn({this.text = const [], this.toolUses = const [], this.stopReason});
+  const FakeTurn({this.text = const [], this.toolUses = const [], this.stopReason, this.thinking});
+
+  /// thinking 블록(본문, 서명). 두 모델 다 thinking이 켜져 있어 실제로 온다 —
+  /// 다음 왕복에 **그대로** 실어 보내야 한다(빈 채로 보내면 400).
+  final ({String text, String signature})? thinking;
 
   /// 조각 단위로 흘려보낼 답 텍스트(스트리밍 확인용).
   final List<String> text;
@@ -113,6 +117,25 @@ String sseFor(FakeTurn turn) {
 
   event({'type': 'message_start', 'message': <String, Object?>{'id': 'msg_fake'}});
   var index = 0;
+  if (turn.thinking case final thinking?) {
+    event({
+      'type': 'content_block_start',
+      'index': index,
+      'content_block': {'type': 'thinking', 'thinking': ''},
+    });
+    event({
+      'type': 'content_block_delta',
+      'index': index,
+      'delta': {'type': 'thinking_delta', 'thinking': thinking.text},
+    });
+    event({
+      'type': 'content_block_delta',
+      'index': index,
+      'delta': {'type': 'signature_delta', 'signature': thinking.signature},
+    });
+    event({'type': 'content_block_stop', 'index': index});
+    index++;
+  }
   if (turn.text.isNotEmpty) {
     event({'type': 'content_block_start', 'index': index, 'content_block': {'type': 'text', 'text': ''}});
     for (final chunk in turn.text) {

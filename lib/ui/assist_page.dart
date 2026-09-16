@@ -6,6 +6,8 @@
 library;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
 
 import '../assist/llm_client.dart';
 import '../assist/session.dart';
@@ -102,16 +104,28 @@ class _AssistPageState extends State<AssistPage> {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Expanded(
-                      child: TextField(
-                        controller: _controller,
-                        minLines: 1,
-                        maxLines: 4,
-                        decoration: const InputDecoration(
-                          hintText: AssistPageText.hint,
-                          border: OutlineInputBorder(),
-                          isDense: true,
+                      // 여러 줄 입력칸이라 `onSubmitted`가 불리지 않는다(Enter가 줄바꿈이 된다 — 실호출에서 확인).
+                      // Enter로 보내고 Shift+Enter로 줄을 바꾼다.
+                      child: Focus(
+                        onKeyEvent: (node, event) {
+                          if (event is KeyDownEvent &&
+                              event.logicalKey == LogicalKeyboardKey.enter &&
+                              !HardwareKeyboard.instance.isShiftPressed) {
+                            _send();
+                            return KeyEventResult.handled;
+                          }
+                          return KeyEventResult.ignored;
+                        },
+                        child: TextField(
+                          controller: _controller,
+                          minLines: 1,
+                          maxLines: 4,
+                          decoration: const InputDecoration(
+                            hintText: AssistPageText.hint,
+                            border: OutlineInputBorder(),
+                            isDense: true,
+                          ),
                         ),
-                        onSubmitted: (_) => _send(),
                       ),
                     ),
                     const SizedBox(width: 8),
@@ -176,8 +190,9 @@ class _Bubble extends StatelessWidget {
         if (message.text.isNotEmpty)
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 6),
-            // 마크다운 렌더링은 하지 않는다(의존성 추가 없음) — 온 그대로 보인다.
-            child: SelectableText(message.text),
+            // 마크다운을 그린다(2026-09-16 사용자 결정 — 실호출에서 `**굵게**`와 표 파이프가 날것으로
+            // 보여 읽기 나빴다. 종전 AI 기본값 "렌더링 안 함"을 대체).
+            child: MarkdownBody(data: message.text, selectable: true),
           ),
         if (message.error case final error?)
           Padding(

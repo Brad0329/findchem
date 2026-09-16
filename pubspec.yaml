@@ -47,6 +47,10 @@ dependencies:
   http: ^1.6.0
   xml: ^6.6.1
 
+  # F-008 판정 답의 마크다운 렌더링(2026-09-16 사용자 결정 — 실호출에서 `**굵게**`와 표 파이프가
+  # 날것으로 보여 읽기 나빴다). `flutter_markdown`은 폐기됐고 이것이 후속이다(검증 퍼블리셔, 표 지원).
+  flutter_markdown_plus: ^1.0.12
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

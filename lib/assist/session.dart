@@ -88,11 +88,17 @@ class AssistSession extends ChangeNotifier {
     final outcomes = <ToolOutcome>[];
     try {
       for (var round = 0; round < assistMaxRounds; round++) {
+        // 도구 호출 앞뒤로 모델이 문장을 나눠 쓴다 — 그대로 이으면 "…확인하겠습니다.## 결론"처럼 붙는다.
+        var firstChunk = true;
         final turn = await client.send(
           apiKey: apiKey,
           model: modelOf(),
           messages: _api,
           onText: (chunk) {
+            if (firstChunk) {
+              firstChunk = false;
+              if (answer.text.isNotEmpty && !answer.text.endsWith('\n')) answer.text += '\n\n';
+            }
             answer.text += chunk;
             notifyListeners();
           },

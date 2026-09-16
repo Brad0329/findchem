@@ -117,6 +117,11 @@ class AssistLlmClient {
     // 잘리면 `stop_reason: max_tokens`로 오고, 그때는 화면에 그 사실을 알린다(조용한 절단 금지).
     'max_tokens': 16000,
     'stream': true,
+    // **thinking 블록을 되돌려 보낼 수 있어야 한다.** 두 모델 모두 thinking이 기본으로 켜져 있고,
+    // 도구 호출 뒤 다음 왕복에는 그 턴의 thinking 블록을 **그대로** 실어 보내야 한다.
+    // 기본값 display: omitted는 thinking 본문을 빈 문자열로 주는데, 빈 블록을 되돌리면
+    // `each thinking block must contain thinking`(400)이 난다 — 2026-09-16 실호출로 확인했다.
+    'thinking': {'type': 'adaptive', 'display': 'summarized'},
     'system': assistSystemPrompt,
     'tools': assistToolDefinitions(),
     'messages': messages,
@@ -262,7 +267,9 @@ enum KeyCheck {
 
 /// SSE 이벤트를 모아 한 턴의 content 블록을 만든다.
 ///
-/// 블록 종류는 둘만 쓴다 — `text`(화면에 흐른다)와 `tool_use`(`input_json_delta`를 이어 붙여 JSON으로 판다).
+/// 블록은 셋이다 — `text`(화면에 흐른다) / `tool_use`(`input_json_delta`를 이어 붙여 JSON으로 판다) /
+/// `thinking`(화면에 그리지 않지만 **본문과 signature를 그대로 모아** 다음 왕복에 실어 보낸다).
+/// 모르는 종류(예: `redacted_thinking`)는 온 그대로 두어 다시 돌려보낸다 — 손대면 서명이 깨진다.
 class _TurnAssembler {
   _TurnAssembler(this.onText);
 
@@ -295,6 +302,14 @@ class _TurnAssembler {
           case 'input_json_delta':
             final part = delta['partial_json'];
             if (part is String) _partialJson[index]?.write(part);
+          // thinking 블록은 화면에 그리지 않지만 **다음 왕복에 그대로 실어 보내야 한다** — 조각을 모은다.
+          case 'thinking_delta':
+            final part = delta['thinking'];
+            final block = _blocks[index];
+            if (part is String && block != null) block['thinking'] = '${block['thinking'] ?? ''}$part';
+          case 'signature_delta':
+            final signature = delta['signature'];
+            if (signature is String) _blocks[index]?['signature'] = signature;
         }
       case 'message_delta':
         final delta = event['delta'];

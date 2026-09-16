@@ -13,6 +13,8 @@ import 'package:findchem/ui/app_header.dart';
 import 'package:findchem/ui/assist_page.dart';
 import 'package:findchem/ui/search_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../assist/fake_llm.dart';
@@ -148,6 +150,30 @@ void main() {
       expect(find.text(AssistText.noToolCall), findsNothing);
     });
 
+    testWidgets('답의 마크다운을 그린다 — `**굵게**`가 날것으로 보이지 않는다', (tester) async {
+      final session = await pumpPage(
+        tester,
+        FakeAnthropic(turns: const [FakeTurn(text: ['**별표 3 제44호**를 적용합니다'])]),
+      );
+      await ask(tester, session, '암모니아?');
+
+      expect(find.byType(MarkdownBody), findsOneWidget);
+      expect(find.textContaining('**'), findsNothing, reason: '마크다운 기호가 그대로 보이면 안 된다');
+      expect(find.textContaining('별표 3 제44호'), findsWidgets);
+    });
+
+    testWidgets('Enter로 보내진다(여러 줄 입력칸이라 onSubmitted가 안 불린다)', (tester) async {
+      final fake = FakeAnthropic(turns: const [FakeTurn(text: ['답'])]);
+      final session = await pumpPage(tester, fake);
+
+      await tester.enterText(find.byType(TextField), '톨루엔 규정수량?');
+      await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+      await settle(tester, session);
+
+      expect(fake.callCount, 1);
+      expect(find.text('답'), findsOneWidget);
+    });
+
     testWidgets('도구 호출 0건이면 근거 칸에 그 사실이 보인다', (tester) async {
       final session = await pumpPage(tester, FakeAnthropic(turns: const [FakeTurn(text: ['0.05톤입니다'])]));
       await ask(tester, session, '톨루엔 규정수량?');
@@ -192,7 +218,8 @@ void main() {
       );
       await tick(tester);
       await tester.pump();
-      expect(find.text('성상에 '), findsOneWidget);
+      // 마크다운으로 그리므로 문단은 RichText다 — 조각이 화면에 붙었는지만 본다.
+      expect(find.textContaining('성상에', findRichText: true), findsWidgets);
 
       fake.emit(
         'event: content_block_delta\ndata: {"type":"content_block_delta","index":0,'
@@ -201,7 +228,7 @@ void main() {
       );
       await tick(tester);
       await tester.pump();
-      expect(find.text('성상에 따라 갈립니다.'), findsOneWidget);
+      expect(find.textContaining('성상에 따라 갈립니다.', findRichText: true), findsWidgets);
 
       await fake.endManual();
       await settle(tester, session);
