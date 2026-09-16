@@ -67,23 +67,33 @@ def get_rule_text(topic: str = "all") -> str:
     return run_cli(["--rule", topic])
 
 
+def tool_spec() -> dict:
+    """시스템 프롬프트와 도구 설명을 Dart 층에서 읽어 온다.
+
+    **여기에 문구를 베껴 두지 않는다** — 원본은 `lib/assist/prompt.dart` 하나이고 앱ㆍ웹이 같은 것을 쓴다
+    (REQUIREMENTS F-008 2단계 '프롬프트ㆍ도구 설명의 원본은 코드 한 곳'). 베끼면 하네스와 앱이 어긋나
+    "MCP에서는 되는데 앱에서는 안 된다"가 생긴다.
+    """
+    return json.loads(run_cli(["--tools"]))
+
+
+def description_of(spec: dict, name: str) -> str:
+    for tool in spec["tools"]:
+        if tool["name"] == name:
+            return tool["description"]
+    raise RuntimeError(f"도구 정의에 {name}이 없습니다 — lib/assist/prompt.dart를 확인하세요")
+
+
 # ── MCP 서버 ─────────────────────────────────────────────────────────────────
 def build_server():
     from mcp.server.mcpserver import MCPServer  # mcp 2.x (1.x에서는 mcp.server.fastmcp.FastMCP였다)
 
-    mcp = MCPServer(
-        name="findchem",
-        version="0.2.0-f008",
-        instructions=(
-            "유해화학물질 규정수량 조회ㆍ판정 도구다. 규정수량ㆍ함량기준ㆍ물질 존재 여부는 **반드시 도구로 "
-            "확인하고** 기억으로 답하지 않는다. 답에는 도구가 돌려준 수량 문자열을 그대로 인용하고 단위(톤)와 "
-            "출처(별표 구분ㆍ연번ㆍ고시명)를 함께 적는다. 도구 응답의 legendㆍcondition을 읽고 **도구가 준 것 "
-            "이상을 말하지 않는다** — 한 항목에 수량 행이 둘 이상이면(selection.required) 하나를 골라 단정하지 "
-            "말고 되묻거나 갈래를 모두 제시한다."
-        ),
-    )
+    # 시스템 프롬프트ㆍ도구 설명은 Dart 층에서 읽어 온다 — **이 파일에는 그 문구가 없다**
+    # (REQUIREMENTS F-008 2단계 '원본은 코드 한 곳'. 베끼면 하네스와 앱이 어긋나 "MCP에서는 되는데
+    # 앱에서는 안 된다"가 생긴다).
+    spec = tool_spec()
+    mcp = MCPServer(name="findchem", version="0.3.0-f008", instructions=spec["systemPrompt"])
 
-    @mcp.tool()
     def search_chemical(query: str) -> str:
         """물질명(국문ㆍ영문, 부분 일치, 띄어쓰기 무시) 또는 CAS 번호로 규정수량을 조회한다.
 
@@ -97,7 +107,6 @@ def build_server():
         """
         return search_chemical_text(query)
 
-    @mcp.tool()
     def get_rule(topic: str = "all") -> str:
         """규정수량 판정 규칙의 원문을 돌려준다(topic: all | byeolpyo2 | byeolpyo3 | byeolpyo4 | byeolpyo1).
 
@@ -111,6 +120,12 @@ def build_server():
         이 도구를 먼저 부른다.
         """
         return get_rule_text(topic)
+
+    # 위 docstring은 자리만 잡아 둔 것이고, 실제 설명은 Dart 층에서 읽은 것으로 덮는다.
+    search_chemical.__doc__ = description_of(spec, "search_chemical")
+    get_rule.__doc__ = description_of(spec, "get_rule")
+    mcp.tool()(search_chemical)
+    mcp.tool()(get_rule)
 
     return mcp
 
@@ -156,12 +171,26 @@ def selftest() -> int:
     except Exception as e:  # noqa: BLE001
         problems.append(f"search_chemical 호출 실패: {e!r}")
 
+    # 프롬프트ㆍ도구 설명이 Dart 층에서 오는지. 여기에 문구를 베껴 두면 하네스와 앱이 어긋난다.
+    try:
+        spec = tool_spec()
+        names = [t["name"] for t in spec["tools"]]
+        if names != ["search_chemical", "get_rule"]:
+            problems.append(f"--tools가 돌려준 도구 이름이 다릅니다: {names}")
+        if "도구가 준 것 이상을 말하지 않는다" not in spec["systemPrompt"]:
+            problems.append("systemPrompt에 spike 설계 조건이 없습니다")
+        for name in ("search_chemical", "get_rule"):
+            if not description_of(spec, name).strip():
+                problems.append(f"{name}의 설명이 비어 있습니다")
+    except Exception as e:  # noqa: BLE001
+        problems.append(f"--tools 호출 실패: {e!r}")
+
     for p in problems:
         print(f"FAIL {p}")
     if problems:
         print(f"\n자체 점검 실패 {len(problems)}건")
         return 1
-    print("\n자체 점검 통과: get_rule(전체ㆍ주제별ㆍ알 수 없는 주제) · search_chemical(값ㆍcoverageㆍcondition)")
+    print("\n자체 점검 통과: get_rule(전체ㆍ주제별ㆍ알 수 없는 주제) · search_chemical(값ㆍcoverageㆍcondition) · --tools(프롬프트ㆍ도구 설명)")
     print("  ※ 원문 PDF 대조와 조건 문장 전수 검증은 Dart 테스트(flutter test)가 한다 — 원본이 lib/assist/다")
     return 0
 

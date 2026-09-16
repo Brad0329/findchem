@@ -6,23 +6,29 @@ import 'package:flutter/material.dart';
 
 import 'brand_symbol.dart';
 
-/// 더보기 메뉴 항목. app.dart가 각 화면(F-005 저장 목록, F-002 설정)을 push한다.
-enum HeaderMenu { favorites, settings }
+/// 더보기 메뉴 항목. app.dart가 각 화면(F-005 저장 목록, F-008 판정, F-002 설정)을 push한다.
+///
+/// **선언 순서 = 화면에 보이는 순서**(2026-09-16 사용자 지시): 자주보는 Chem 목록 → 판정(AI) → 설정.
+enum HeaderMenu { favorites, assist, settings }
 
 /// 메뉴 문구(테스트가 같은 상수를 본다).
 abstract final class HeaderText {
   static const favorites = '자주보는 Chem 목록';
+  static const assist = '규정수량·최대보유량 판정(AI)';
   static const settings = '설정';
 }
 
 class AppHeader extends StatelessWidget implements PreferredSizeWidget {
-  const AppHeader({super.key, this.onMenu, this.showFavorites = false});
+  const AppHeader({super.key, this.onMenu, this.showFavorites = false, this.showAssist = false});
 
   /// 메뉴 항목을 골랐을 때. null이면 항목은 보이되 아무 일도 하지 않는다(로딩·오류 화면의 헤더).
   final ValueChanged<HeaderMenu>? onMenu;
 
   /// '자주보는 Chem 목록'을 첫 항목으로 보인다. F-005는 앱 전용 — 웹(표 화면)에서는 false.
   final bool showFavorites;
+
+  /// '규정수량·최대보유량 판정(AI)'을 보인다. F-008 2단계는 웹 먼저 — 앱은 [앱 단계]에서 켠다.
+  final bool showAssist;
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
@@ -51,6 +57,16 @@ class AppHeader extends StatelessWidget implements PreferredSizeWidget {
                 child: ListTile(
                   leading: Icon(Icons.star),
                   title: Text(HeaderText.favorites),
+                  contentPadding: EdgeInsets.zero,
+                  dense: true,
+                ),
+              ),
+            if (showAssist)
+              const PopupMenuItem(
+                value: HeaderMenu.assist,
+                child: ListTile(
+                  leading: Icon(Icons.calculate),
+                  title: Text(HeaderText.assist),
                   contentPadding: EdgeInsets.zero,
                   dense: true,
                 ),

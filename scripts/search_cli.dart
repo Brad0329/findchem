@@ -2,6 +2,7 @@
 //
 //   dart run scripts/search_cli.dart "<물질명 또는 CAS>"   → 검색 응답
 //   dart run scripts/search_cli.dart --rule <주제>          → 규칙 원문(주제: all | byeolpyo2 | byeolpyo3 | byeolpyo4 | byeolpyo1)
+//   dart run scripts/search_cli.dart --tools                → 시스템 프롬프트 + 도구 정의(앱ㆍ웹이 쓰는 그 원본)
 //
 // - **여기에는 규칙도 문장도 없다.** 응답 조립은 전부 `lib/assist/`(앱ㆍ웹 tool use가 쓸 바로 그 코드)가 하고,
 //   검색ㆍ정규화ㆍCAS 처리는 `lib/search/`가 한다. 이 파일은 번들 JSON을 읽어 그 함수를 부르고 찍는 껍데기다
@@ -13,6 +14,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:findchem/assist/assist_response.dart';
+import 'package:findchem/assist/prompt.dart';
 import 'package:findchem/assist/rules.dart';
 import 'package:findchem/parser/models.dart';
 import 'package:findchem/search/search.dart';
@@ -41,6 +43,12 @@ void emit(Map<String, Object?> out) =>
     stdout.add(utf8.encode('${const JsonEncoder.withIndent('  ').convert(out)}\n'));
 
 void main(List<String> args) {
+  if (args.length == 1 && args.single == '--tools') {
+    // 시스템 프롬프트ㆍ도구 설명의 **원본은 `lib/assist/prompt.dart` 하나다**(REQUIREMENTS F-008 2단계).
+    // MCP 서버(개발 하네스)가 이것을 읽어 쓴다 — 베껴 두면 앱과 하네스가 어긋난다.
+    emit({'systemPrompt': assistSystemPrompt, 'tools': assistToolDefinitions()});
+    return;
+  }
   if (args.isNotEmpty && args.first == '--rule') {
     if (args.length != 2) fail(usage);
     try {

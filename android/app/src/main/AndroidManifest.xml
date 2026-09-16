@@ -1,4 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- F-008 판정(AI)이 Anthropic API를 직접 부른다(2026-09-16 사용자 지시 "app도 인터넷 되도록").
+         종전에는 debug/profile 매니페스트에만 있어 릴리스 APK에서는 호출이 막혔다. -->
+    <uses-permission android:name="android.permission.INTERNET"/>
     <application
         android:label="FindChem"
         android:name="${applicationName}"

@@ -1,6 +1,9 @@
 # 개인 설정·비밀정보 (커밋 금지)
 .claude/settings.local.json
 .env
+# 로컬 실행용 빌드 상수(F-008 AI 키 등) — `--dart-define-from-file`로 넣는다.
+# 셸 명령에 키를 쓰지 않으려고 파일로 둔다(REQUIREMENTS F-008 'AI 기본값').
+.secrets.json
 
 # 릴리스 서명 키 (비밀번호·keystore — 저장소에 절대 넣지 않는다).
 # key.properties는 flutter create가 만든 android/.gitignore에도 있다 — 비밀정보라 여기에도 적어 둔다

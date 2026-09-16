@@ -1,6 +1,6 @@
-/// 설정 화면 — 영역별 접히는 카드 4개(F-007, 2026-09-14): data.go.kr API 키 / 연동 데이터(둘은 조회가 켜졌을 때만) /
-/// 사고대비물질·인체·생태 유해성 정보(F-002: 현재 원천자료, 원천자료 update, 되돌리기) / 웹·앱 정보(F-006 버전).
-/// 헤더 '⋮' → '설정'에서 Navigator.push로 연다(CLAUDE.md 화면 전환 구조).
+/// 설정 화면 — 영역별 접히는 카드: data.go.kr API 키 / 연동 데이터(둘은 조회가 켜졌을 때만) /
+/// 판정(AI) 키·모델(F-008, 2026-09-16) / 사고대비물질·인체·생태 유해성 정보(F-002: 현재 원천자료, update, 되돌리기) /
+/// 웹·앱 정보(F-006 버전). 헤더 '⋮' → '설정'에서 Navigator.push로 연다(CLAUDE.md 화면 전환 구조).
 library;
 
 import 'package:file_picker/file_picker.dart';
@@ -8,11 +8,14 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 
 import '../app_version.dart';
+import '../assist/llm_client.dart';
 import '../data/dataset_loader.dart';
 import '../data/favorites.dart';
 import '../data/source_update.dart';
+import '../lookup/api_settings.dart';
 import '../parser/models.dart';
 import 'api_settings_cards.dart';
+import 'assist_settings_card.dart';
 import 'cas_lookup_panel.dart';
 import 'favorites_page.dart';
 
@@ -89,11 +92,19 @@ class SettingsPage extends StatefulWidget {
     required this.favorites,
     this.pickPdf = pickPdfWithFilePicker,
     this.lookup,
+    this.assistSettings,
+    this.assistClient,
     bool? web,
   }) : web = web ?? kIsWeb;
 
   /// F-007. null이면 카드 1·2(API 키·연동 데이터)가 없다(앱 — REQUIREMENTS F-007 '단계').
   final CasLookup? lookup;
+
+  /// F-008 판정 설정(키·모델). null이면 그 카드가 없다.
+  final ApiSettingsController? assistSettings;
+
+  /// F-008 [키 확인]에 쓴다. 테스트에서 가짜를 넣는다.
+  final AssistLlmClient? assistClient;
 
   /// 카드 4의 버전 문구를 '웹 버전'으로. 테스트에서만 직접 넣는다.
   final bool web;
@@ -109,6 +120,9 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
+  /// [키 확인]용. 화면이 살아 있는 동안 하나만 만든다(build마다 새로 만들면 연결이 쌓인다).
+  late final AssistLlmClient _assistClient = widget.assistClient ?? AssistLlmClient();
+
   final Map<Source, PickedPdf?> _picked = {for (final s in Source.values) s: null};
   /// 작업 중이면 그 표시 문구(적용: 'PDF를 읽는 중…', 되돌리기: '되돌리는 중…'). null이면 한가하다.
   String? _busyText;
@@ -243,6 +257,18 @@ class _SettingsPageState extends State<SettingsPage> {
                   children: [LinkedDataCardBody(settings: lookup.settings)],
                 ),
               ],
+              if (widget.assistSettings case final assistSettings?)
+                _SettingsCard(
+                  key: const ValueKey('card-assist'),
+                  icon: Icons.calculate_outlined,
+                  title: AssistSettingsText.card,
+                  children: [
+                    AssistSettingsCardBody(
+                      settings: assistSettings,
+                      client: _assistClient,
+                    ),
+                  ],
+                ),
               _SettingsCard(
                 key: const ValueKey('card-source'),
                 icon: Icons.description_outlined,

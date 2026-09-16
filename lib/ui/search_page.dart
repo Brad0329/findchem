@@ -6,6 +6,7 @@ library;
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 
+import '../assist/llm_client.dart' show assistEnabledByDefault;
 import '../data/favorites.dart';
 import '../parser/models.dart';
 import '../search/search.dart';
@@ -29,8 +30,19 @@ abstract final class SearchText {
 const wideBreakpoint = 900.0;
 
 class SearchPage extends StatefulWidget {
-  const SearchPage({super.key, required this.dataset, this.onMenu, this.favorites, this.lookup, bool? useTable})
-    : useTable = useTable ?? kIsWeb;
+  const SearchPage({
+    super.key,
+    required this.dataset,
+    this.onMenu,
+    this.favorites,
+    this.lookup,
+    bool? useTable,
+    bool? showAssist,
+  }) : useTable = useTable ?? kIsWeb,
+       showAssist = showAssist ?? assistEnabledByDefault;
+
+  /// F-008 판정(AI) 메뉴 항목을 보일지. 기본값은 앱·웹 둘 다 — 테스트에서만 직접 넣는다.
+  final bool showAssist;
 
   /// F-007 CAS 조회. null이면 CAS가 눌리지 않는다. 지금은 표(웹)에만 붙는다 — 앱 카드는 앱 단계(REQUIREMENTS F-007 '단계').
   final CasLookup? lookup;
@@ -78,7 +90,11 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppHeader(onMenu: widget.onMenu, showFavorites: widget._favoritesEnabled),
+      appBar: AppHeader(
+        onMenu: widget.onMenu,
+        showFavorites: widget._favoritesEnabled,
+        showAssist: widget.showAssist,
+      ),
       body: Column(
         children: [
           Padding(

@@ -1,10 +1,12 @@
-/// F-007 설정 — data.go.kr 인증키와 조회할 서비스 체크. 파일 하나를 통째로 읽고 쓴다(SCHEMA.md 'API 키·연동 선택').
+/// 설정 저장 — F-007 data.go.kr 인증키·서비스 체크 + **F-008 판정 설정**(Anthropic 키, 모델).
+/// 파일 하나를 통째로 읽고 쓴다(SCHEMA.md 'API 키·연동 선택', '판정 설정 — 모델 선택과 사용자 키').
 library;
 
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 
+import '../assist/llm_client.dart' show AssistModel, bundledAnthropicKey;
 import '../data/update_store.dart';
 
 /// 조회 기능(CAS 누르기, 설정 카드 1·2)을 켤지. **오늘은 웹만**(2026-09-14 사용자 결정, REQUIREMENTS F-007 '단계') —
@@ -57,6 +59,30 @@ class ApiSettingsController extends ChangeNotifier {
   String? _loadError;
   Future<void>? _loading;
 
+  // ── F-008 판정 설정(SCHEMA.md '판정 설정 — 모델 선택과 사용자 키', 확정 2026-09-16) ──
+  // 같은 파일에 필드 두 개를 더했다. `version`은 1 그대로 — 필드가 없으면 기본값으로 읽으므로
+  // 기존 저장본이 그대로 읽히고 마이그레이션이 없다.
+  String? _anthropicKey;
+  AssistModel _assistModel = AssistModel.fallback;
+
+  /// 사용자가 저장한 Anthropic 키. 없으면 null(기본 키는 [effectiveAnthropicKey]).
+  String? get anthropicKey => _anthropicKey;
+
+  /// 판정에 쓸 모델. 저장된 값이 없거나 모르는 값이면 기본값(Opus 5)이고 그 사실은 로그에 남는다.
+  AssistModel get assistModel => _assistModel;
+
+  /// 빌드에 들어간 Anthropic 기본 키(없으면 빈 문자열).
+  String get defaultAnthropicKey => bundledAnthropicKey.trim();
+
+  bool get hasDefaultAnthropicKey => defaultAnthropicKey.isNotEmpty;
+
+  /// 사용자가 저장한 키가 없어 기본 키를 쓰는 중.
+  bool get usingDefaultAnthropicKey => _anthropicKey == null && hasDefaultAnthropicKey;
+
+  /// 판정에 쓸 키: 사용자 키가 우선, 없으면 기본 키, 둘 다 없으면 null(질문을 보내지 않는다).
+  String? get effectiveAnthropicKey =>
+      _anthropicKey ?? (hasDefaultAnthropicKey ? defaultAnthropicKey : null);
+
   /// 사용자가 저장한 인증키. 없으면 null(기본 키는 [effectiveKey]).
   String? get serviceKey => _serviceKey;
 
@@ -80,6 +106,8 @@ class ApiSettingsController extends ChangeNotifier {
       debugPrint('F-007 API 설정 파일을 읽지 못함: ${e.runtimeType}\n$st');
       _serviceKey = null;
       _services = const {};
+      _anthropicKey = null;
+      _assistModel = AssistModel.fallback;
       _loadError = unreadableMessage;
     }
     notifyListeners();
@@ -92,6 +120,8 @@ class ApiSettingsController extends ChangeNotifier {
     }
     final key = root['serviceKey'];
     if (key != null && key is! String) throw const FormatException('serviceKey가 문자열이 아니다');
+    final anthropic = root['anthropicKey'];
+    if (anthropic != null && anthropic is! String) throw const FormatException('anthropicKey가 문자열이 아니다');
     final services = root['services'];
     final next = <ChemService, bool>{};
     if (services is Map) {
@@ -102,31 +132,72 @@ class ApiSettingsController extends ChangeNotifier {
     }
     _serviceKey = (key as String?)?.trim();
     if (_serviceKey?.isEmpty ?? false) _serviceKey = null;
+    _anthropicKey = (anthropic as String?)?.trim();
+    if (_anthropicKey?.isEmpty ?? false) _anthropicKey = null;
+    // 모르는 모델 ID는 기본값으로 떨어지고 그 사실이 로그에 남는다(AssistModel.fromId).
+    final model = root['assistModel'];
+    _assistModel = AssistModel.fromId(model is String ? model : null);
     _services = next;
   }
 
-  String _encode({required String? key, required Map<ChemService, bool> services}) => jsonEncode({
+  String _encode({
+    required String? key,
+    required Map<ChemService, bool> services,
+    required String? anthropicKey,
+    required AssistModel assistModel,
+  }) => jsonEncode({
     'version': formatVersion,
     'serviceKey': ?key,
     'services': {for (final s in ChemService.values) s.name: services[s] ?? true},
+    'anthropicKey': ?anthropicKey,
+    'assistModel': assistModel.id,
   });
 
-  Future<void> _write({required String? key, required Map<ChemService, bool> services}) async {
+  /// 한 번에 파일 하나를 통째로 다시 쓴다. 넘기지 않은 값은 지금 값을 그대로 쓴다
+  /// (한 필드만 바꾸려다 옆 필드를 지우는 일이 없게).
+  Future<void> _write({
+    String? key,
+    Map<ChemService, bool>? services,
+    String? anthropicKey,
+    AssistModel? assistModel,
+    bool clearKey = false,
+    bool clearAnthropicKey = false,
+  }) async {
     await load();
     if (_loadError != null) throw StateError('깨진 API 설정 파일은 덮지 않는다 — [삭제]로 먼저 지운다');
-    await store.write(_encode(key: key, services: services));
-    _serviceKey = key;
-    _services = services;
+    final nextKey = clearKey ? null : (key ?? _serviceKey);
+    final nextServices = services ?? {for (final s in ChemService.values) s: enabled(s)};
+    final nextAnthropic = clearAnthropicKey ? null : (anthropicKey ?? _anthropicKey);
+    final nextModel = assistModel ?? _assistModel;
+    await store.write(
+      _encode(key: nextKey, services: nextServices, anthropicKey: nextAnthropic, assistModel: nextModel),
+    );
+    _serviceKey = nextKey;
+    _services = nextServices;
+    _anthropicKey = nextAnthropic;
+    _assistModel = nextModel;
     notifyListeners();
   }
 
   /// 키를 저장한다. 실패하면 예외 — 기존 저장은 그대로다.
-  Future<void> saveKey(String key) =>
-      _write(key: key.trim(), services: {for (final s in ChemService.values) s: enabled(s)});
+  Future<void> saveKey(String key) => _write(key: key.trim());
 
   /// 체크를 바꿔 바로 저장한다. 실패하면 예외 — 체크는 바뀌지 않는다.
-  Future<void> setService(ChemService service, bool value) =>
-      _write(key: _serviceKey, services: {for (final s in ChemService.values) s: s == service ? value : enabled(s)});
+  Future<void> setService(ChemService service, bool value) => _write(
+    services: {for (final s in ChemService.values) s: s == service ? value : enabled(s)},
+  );
+
+  /// F-008 Anthropic 키를 저장한다. 빈 문자열이면 필드를 비운다(파일은 지우지 않는다 — data.go.kr 키가 남아 있다).
+  Future<void> saveAnthropicKey(String key) {
+    final trimmed = key.trim();
+    return trimmed.isEmpty ? _write(clearAnthropicKey: true) : _write(anthropicKey: trimmed);
+  }
+
+  /// F-008 Anthropic 키만 지운다. 기본 키가 있으면 기본 키로 돌아간다.
+  Future<void> deleteAnthropicKey() => _write(clearAnthropicKey: true);
+
+  /// F-008 판정 모델을 바꿔 바로 저장한다.
+  Future<void> setAssistModel(AssistModel model) => _write(assistModel: model);
 
   /// [삭제]: 파일을 지운다(깨진 파일의 복구 경로이기도 하다). 체크도 기본값으로 돌아가고, 기본 키가 있으면 기본 키를 쓴다.
   Future<void> delete() async {
@@ -134,6 +205,8 @@ class ApiSettingsController extends ChangeNotifier {
     await store.delete();
     _serviceKey = null;
     _services = const {};
+    _anthropicKey = null;
+    _assistModel = AssistModel.fallback;
     _loadError = null;
     notifyListeners();
   }

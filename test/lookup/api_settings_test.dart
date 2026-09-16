@@ -113,11 +113,23 @@ void main() {
 
     test('배포 워크플로가 Secret을 넣는 이름과 코드가 읽는 이름이 같다(어긋나면 기본 키가 조용히 사라진다)', () {
       final workflow = File('.github/workflows/deploy-web.yml').readAsStringSync();
-      final code = File('lib/lookup/api_settings.dart').readAsStringSync();
-      final defined = RegExp(r'flutter build web[^\n]*--dart-define=(\w+)="\$(\w+)"').firstMatch(workflow);
-      expect(defined, isNotNull, reason: '빌드 줄에 --dart-define=NAME="\$ENV"가 있어야 한다');
-      expect(code, contains("String.fromEnvironment('${defined!.group(1)}')"));
-      expect(workflow, contains('${defined.group(2)}: \${{ secrets.DATA_GO_KR_KEY }}'));
+      // 어느 파일이 그 이름을 읽는지 — F-007은 api_settings.dart, F-008은 llm_client.dart.
+      final readers = [
+        File('lib/lookup/api_settings.dart').readAsStringSync(),
+        File('lib/assist/llm_client.dart').readAsStringSync(),
+      ].join('\n');
+
+      final defines = RegExp(r'--dart-define=(\w+)="\$(\w+)"').allMatches(workflow).toList();
+      expect(
+        defines.map((m) => m.group(1)),
+        containsAll(['DATA_GO_KR_DEFAULT_KEY', 'ANTHROPIC_DEFAULT_KEY']),
+        reason: '두 기본 키가 모두 빌드 상수로 들어가야 한다',
+      );
+      for (final m in defines) {
+        // 빌드 상수 이름을 읽는 코드가 있어야 하고, 그 값이 오는 Secret도 워크플로에 선언돼 있어야 한다.
+        expect(readers, contains("String.fromEnvironment('${m.group(1)}')"));
+        expect(workflow, contains('${m.group(2)}: \${{ secrets.${m.group(2)} }}'));
+      }
     });
   });
 
