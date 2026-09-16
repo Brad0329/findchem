@@ -3,7 +3,7 @@
 library;
 
 /// pubspec `version`의 `+` 앞(릴리스 태그는 `v` + 이 값).
-const appVersion = '1.1.0';
+const appVersion = '1.2.0';
 
 /// pubspec `version`의 `+` 뒤(Android 빌드 번호 — 친구에게 줄 때마다 +1).
-const appBuildNumber = 2;
+const appBuildNumber = 3;

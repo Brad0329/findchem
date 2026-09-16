@@ -4,6 +4,7 @@ library;
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:findchem/app_version.dart';
 import 'package:findchem/data/dataset_loader.dart';
 import 'package:findchem/data/favorites.dart';
 import 'package:findchem/lookup/api_settings.dart';
@@ -82,13 +83,18 @@ void main() {
     expect(find.text(ApiSettingsText.keyCard), findsNothing);
     expect(find.text(ApiSettingsText.linkCard), findsNothing);
     await expand(tester, SettingsText.infoCard);
-    expect(find.text('앱 버전 1.1.0 (빌드 2)'), findsOneWidget);
+    expect(find.text(SettingsText.version), findsOneWidget);
 
     await tester.pumpWidget(const SizedBox()); // 앞 화면의 펼침 상태가 남지 않게 트리를 비운다
     await pumpSettings(tester, apiStore: MemoryUpdateStore());
     await expand(tester, SettingsText.infoCard);
-    expect(find.text('웹 버전 1.1.0 (빌드 2)'), findsOneWidget);
-    expect(SettingsText.webVersion, '웹 버전 1.1.0 (빌드 2)');
+    expect(find.text(SettingsText.webVersion), findsOneWidget);
+
+    // 문구의 모양은 여기서 고정한다 — 버전 숫자는 pubspec에서 오므로 박아 두지 않는다
+    // (박아 두면 친구 배포로 버전을 올릴 때마다 이 테스트가 깨진다. 2026-09-16에 실제로 깨졌다).
+    // pubspec과 app_version.dart가 같은지는 test/release_test.dart가 따로 대조한다.
+    expect(SettingsText.version, '앱 버전 $appVersion (빌드 $appBuildNumber)');
+    expect(SettingsText.webVersion, '웹 버전 $appVersion (빌드 $appBuildNumber)');
   });
 
   testWidgets('카드 1: [저장] → 저장했습니다, 다시 읽으면 입력창에 같은 키. [삭제] → 입력창이 비고 삭제했습니다', (tester) async {

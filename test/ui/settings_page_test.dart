@@ -5,6 +5,7 @@ library;
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:findchem/app_version.dart';
 import 'package:findchem/data/dataset_loader.dart';
 import 'package:findchem/data/source_update.dart';
 import 'package:findchem/parser/models.dart';
@@ -104,8 +105,10 @@ void main() {
     await tester.ensureVisible(find.text(SettingsText.infoCard));
     await tester.tap(find.text(SettingsText.infoCard));
     await tester.pumpAndSettle();
-    expect(find.text('앱 버전 1.1.0 (빌드 2)'), findsOneWidget);
-    expect(SettingsText.version, '앱 버전 1.1.0 (빌드 2)');
+    expect(find.text(SettingsText.version), findsOneWidget);
+    // 버전 숫자는 pubspec에서 온다 — 박아 두면 친구 배포로 올릴 때마다 깨진다(2026-09-16에 실제로 깨졌다).
+    // 여기서는 문구의 모양만 고정한다. pubspec ↔ app_version.dart 대조는 test/release_test.dart가 한다.
+    expect(SettingsText.version, '앱 버전 $appVersion (빌드 $appBuildNumber)');
   });
 
   testWidgets('두 PDF를 골라 적용 → 읽는 중 표시, update 원천자료로 바뀌고 적용한 날짜가 나온다, 저장본이 생긴다', (tester) async {
