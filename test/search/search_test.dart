@@ -18,14 +18,22 @@ void main() {
 
   List<(String, int)> keys(SearchResult r) => [for (final h in r.hits) (h.entry.src.id, h.entry.no)];
 
+  /// 질의 [q]가 이 항목의 이름(국문·영문·원문)과 **정확히** 같은가. 정렬 규칙을 테스트가 직접 계산한다.
+  bool exactly(Entry e, String q) {
+    final n = SearchIndex.normalize(q);
+    return [e.ko, e.en, e.name].any((s) => s.trim().isNotEmpty && SearchIndex.normalize(s) == n);
+  }
+
   test("'염화수소'(붙여 씀)와 '염화 수소'(띄어 씀) 모두 별표2 연번 306을 찾는다", () {
     for (final q in ['염화수소', '염화 수소']) {
       expect(keys(index.search(q)), contains(('별표2', 306)), reason: q);
     }
   });
 
-  test("'GUAZATINE'·'guazatine'·'구아자틴' → 같은 2건(연번 4, 5)", () {
-    final expected = [('별표2', 4), ('별표2', 5)];
+  test("'GUAZATINE'·'guazatine'·'구아자틴' → 같은 2건. 이름이 정확히 같은 연번 5가 위", () {
+    // 연번 5 '구아자틴'은 이름이 정확히 같고, 연번 4 '구아자틴 염류'는 부분 일치다
+    // → 정확 일치 우선(2026-09-17 사용자 결정)이라 연번 순서(4→5)보다 정확 일치가 앞선다.
+    final expected = [('별표2', 5), ('별표2', 4)];
     for (final q in ['GUAZATINE', 'guazatine', '구아자틴']) {
       final r = index.search(q);
       expect(keys(r), expected, reason: q);
@@ -85,19 +93,41 @@ void main() {
     expect(name.casQueryNoHit, isFalse);
   });
 
-  test("'톨루엔' → 사고대비물질이 맨 위, (삭제) 연번 439가 맨 아래", () {
+  test("'톨루엔' → 이름이 같은 사고대비물질이 1위, (삭제) 연번 439가 맨 아래", () {
     final r = index.search('톨루엔');
     expect(r.hits.first.entry.src, Source.byeolpyo3);
+    expect(r.hits.first.entry.ko, '톨루엔', reason: '정확 일치가 부분 일치(4-니트로톨루엔 등)보다 앞이다');
     expect(keys(r).last, ('별표2', 439));
     expect(r.hits.last.entry.deleted, isTrue);
-    // 묶음 순서: 별표3 → 별표2 살아있는 항목 → 삭제. 각 묶음 안은 연번 오름차순
-    final groups = [for (final h in r.hits) h.entry.src == Source.byeolpyo3 ? 0 : (h.entry.deleted ? 2 : 1)];
+    // 묶음 순서: (정확 일치 별표3 → 정확 일치 별표2) → (부분 일치 별표3 → 부분 일치 별표2) → 삭제.
+    // 각 묶음 안은 연번 오름차순.
+    final groups = [
+      for (final h in r.hits)
+        h.entry.deleted
+            ? 4
+            : (exactly(h.entry, '톨루엔') ? 0 : 2) + (h.entry.src == Source.byeolpyo3 ? 0 : 1),
+    ];
     expect(groups, List.of(groups)..sort());
     for (var i = 1; i < r.hits.length; i++) {
       if (groups[i] == groups[i - 1]) {
         expect(r.hits[i].entry.no, greaterThan(r.hits[i - 1].entry.no));
       }
     }
+  });
+
+  test("'아세트산' → 자기 자신이 1위. 전에는 34건 중 31위라 상한 20에 잘려 안 보였다", () {
+    final r = index.search('아세트산');
+    expect(r.total, greaterThan(20), reason: '동음 접두 물질이 많아 상한에 걸리는 질의다');
+    expect(r.hits.first.entry.ko, '아세트산');
+    expect(r.hits.first.entry.src, Source.byeolpyo2);
+  });
+
+  test("'황산' → 이름이 같은 항목 둘이 1·2위, 그중 사고대비물질이 먼저(별표2 일반기준 가)", () {
+    final r = index.search('황산');
+    expect(r.hits.take(2).map((h) => h.entry.ko), ['황산', '황산']);
+    expect(r.hits[0].entry.src, Source.byeolpyo3);
+    expect(r.hits[1].entry.src, Source.byeolpyo2);
+    expect(r.hits[2].entry.ko, isNot('황산'), reason: '나머지는 황산아연·발연황산 같은 부분 일치다');
   });
 
   test('빈 입력·공백만 → 검색하지 않는다(0건, 안내 없음)', () {
