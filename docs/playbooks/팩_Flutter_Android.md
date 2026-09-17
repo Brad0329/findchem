@@ -73,8 +73,10 @@
 1. `pubspec.yaml` `version`을 올린다 — **빌드 번호(+ 뒤)는 반드시 +1**(더 낮은 번호는 덮어 설치가 안 된다).
    `lib/app_version.dart`도 같이 고친다(안 고치면 `test/release_test.dart`가 실패한다)
 2. 전체 테스트 → 커밋·push
-3. **통합 APK**: `flutter build apk` → `build/app/outputs/flutter-apk/app-release.apk`
-   (ABI 분할본은 본인 폰 설치용. 친구 폰의 CPU는 모르므로 통합본을 올린다)
+3. **arm64-v8a 분할본**: `flutter build apk --split-per-abi` →
+   `build/app/outputs/flutter-apk/app-arm64-v8a-release.apk`(약 19MB. 본인 폰 설치에 쓰는 그 파일이다)
+   — ~~통합본~~ **2026-09-17 사용자 결정으로 바뀌었다**(통합본은 3배 크다). 32비트 전용 폰에는 안 깔린다는 것이
+   대가다(REQUIREMENTS F-006). 그런 폰이 나오면 그때만 `flutter build apk`로 통합본을 따로 준다
 4. 파일 이름을 `findchem.apk`로 바꾼 사본을 만들고 SHA-256을 잰다(`Get-FileHash`)
 5. GitHub 웹 → Releases → Draft a new release → 태그 `v<버전>`(예: `v1.1.0`, 대상 master) →
    `findchem.apk` 끌어다 놓기 → 설명에 바뀐 내용 + SHA-256 → Publish.
