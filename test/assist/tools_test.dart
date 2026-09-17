@@ -21,13 +21,21 @@ void main() {
   });
 
   group('검색 도구', () {
-    test('상한은 20건이고, 넘으면 잘랐다는 사실과 전체 건수가 함께 온다(조용한 절단 금지)', () {
+    test('상한은 10건이고, 넘으면 잘랐다는 사실과 전체 건수가 함께 온다(조용한 절단 금지)', () {
       final r = tools.run(ToolName.search, {'query': 'acid'}).response;
-      expect(assistSearchCap, 20);
-      expect(r['returned'], 20);
+      expect(assistSearchCap, 10);
+      expect(r['returned'], 10);
       expect(r['truncated'], true);
-      expect(r['total'], greaterThan(20));
-      expect((r['hits']! as List).length, 20);
+      expect(r['total'], greaterThan(10));
+      expect((r['hits']! as List).length, 10);
+    });
+
+    test('상한 10에서도 찾는 물질은 잘리지 않는다 — 정확 일치가 맨 앞이다', () {
+      // 상한을 내려도 되는 근거가 정렬이다(2026-09-17). 종전 순서였다면 아세트산은 31위라 잘렸다.
+      final r = tools.run(ToolName.search, {'query': '아세트산'}).response;
+      expect(r['truncated'], true, reason: '동음 접두 물질이 많아 상한에 걸리는 질의다');
+      final first = (r['hits']! as List).first as Map;
+      expect(first['ko'], '아세트산');
     });
 
     test('상한 안쪽이면 자르지 않는다', () {

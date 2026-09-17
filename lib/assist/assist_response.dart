@@ -20,9 +20,14 @@ const casNoHitHint = '염류·화합물 묶음 항목에 해당할 수 있으니
 /// 대화는 왕복마다 재전송된다(2026-09-16 `count_tokens` 실측, REQUIREMENTS F-008 2단계 수용 기준).
 /// 상한을 넘으면 `truncated`ㆍ`total`이 응답에 남는다 — 조용한 절단이 아니다.
 ///
+/// **20 → 10 (2026-09-17 사용자 결정).** 정확 일치 우선 정렬을 넣은 뒤 `scripts/rank_probe.dart`로
+/// 재면 살아있는 1,638건의 자기 순위가 전부 2위 이내라, 10으로 잘라도 찾는 물질이 사라지지 않는다.
+/// **정렬을 되돌리면 이 값도 되돌려야 한다** — 정렬 없이 10이면 칠 건(칼륨ㆍ황산ㆍ붕산ㆍ염소ㆍ나프탈렌ㆍ
+/// 코발트ㆍ아세트산)이 자기 이름으로 검색해도 안 보인다.
+///
 /// **응답 조립과 같은 파일에 둔다** — 앱(`lib/assist/tools.dart`)과 개발 하네스(`scripts/search_cli.dart`)가
 /// 같은 상수를 봐야 같은 건수를 돌려준다. `tools.dart`는 Flutter를 import해서 CLI가 읽어갈 수 없다.
-const assistSearchCap = 20;
+const assistSearchCap = 10;
 
 /// 이 도구가 덮는 범위. **모든 응답에 싣는다** — "없으면 없다"고 빠져나갈 수 있어야 한다.
 const coverageStatement =
