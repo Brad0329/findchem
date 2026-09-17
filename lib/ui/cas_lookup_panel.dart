@@ -9,7 +9,6 @@ import 'package:flutter/rendering.dart' show SelectedContent;
 
 import '../lookup/api_settings.dart';
 import '../lookup/chem_api.dart';
-import '../lookup/ghs_phrases.dart';
 import '../lookup/ghs_pictogram_data.dart';
 
 /// 조회에 필요한 것 묶음. null이면 CAS가 눌리지 않는다(앱 — REQUIREMENTS F-007 '단계').
@@ -249,23 +248,21 @@ class _KeyValues extends StatelessWidget {
 }
 
 /// 격자 표(분류 목록 등). 빈 칸은 비워 두고, 복사하면 칸은 탭·행은 줄바꿈(빈 칸도 자리 유지).
-/// [copyRows]가 있으면 복사에는 그 값을 쓴다(칸 안 여러 줄을 한 줄로 — 칸 안 줄바꿈은 Excel 칸을 깬다).
 class _Grid extends StatelessWidget {
-  const _Grid({required this.caption, required this.header, required this.flex, required this.rows, this.copyRows});
+  const _Grid({required this.caption, required this.header, required this.flex, required this.rows});
 
   final String caption;
   final List<String> header;
   final List<int> flex;
   final List<List<String>> rows;
-  final List<List<String>>? copyRows;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final side = BorderSide(color: theme.dividerColor);
 
-    Widget row(List<String> values, {List<String>? copy, TextStyle? style, bool isHeader = false}) => _CopyJoin.row(
-      cells: copy ?? values,
+    Widget row(List<String> values, {TextStyle? style, bool isHeader = false}) => _CopyJoin.row(
+      cells: values,
       child: Container(
         decoration: BoxDecoration(
           color: isHeader ? theme.colorScheme.surfaceContainerHighest : null,
@@ -304,7 +301,7 @@ class _Grid extends StatelessWidget {
             ),
           ),
           row(header, style: theme.textTheme.labelSmall, isHeader: true),
-          for (var i = 0; i < rows.length; i++) row(rows[i], copy: copyRows?[i]),
+          for (final r in rows) row(r),
         ],
       ),
     );
@@ -353,15 +350,6 @@ class _GhsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final hazardLines = [
-      for (final h in r.hazards)
-        (
-          h.item,
-          h.grade,
-          [if (h.hCode.isNotEmpty) hPhraseLine(h.hCode)],
-          [for (final p in h.pCodes) pPhraseLine(p)],
-        ),
-    ];
     return _CopyJoin.lines(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -380,13 +368,11 @@ class _GhsView extends StatelessWidget {
             _Grid(
               caption: '유해성 분류 ${r.hazards.length}건',
               header: const ['분류항목', '구분', 'H코드', 'P코드'],
-              flex: const [12, 4, 24, 44],
-              // H·P 칸은 코드마다 `(코드)문구` 한 줄(2026-09-15 사용자 결정). 복사에서는 한 칸의 줄을 공백으로 잇는다
+              flex: const [14, 5, 6, 40],
+              // 코드 그대로 보인다 — 2026-09-15에 넣었던 `(코드)문구` 표시는 2026-09-17 사용자들 요청으로 화면에서 뺐다
+              // (문구 대응표 lib/lookup/ghs_phrase_data.dart·ghs_phrases.dart와 만드는 스크립트는 다시 켤 때를 위해 남겨 두었다)
               rows: [
-                for (final (item, grade, h, p) in hazardLines) [item, grade, h.join('\n'), p.join('\n')],
-              ],
-              copyRows: [
-                for (final (item, grade, h, p) in hazardLines) [item, grade, h.join(' '), p.join(' ')],
+                for (final h in r.hazards) [h.item, h.grade, h.hCode, h.pCodes.join(', ')],
               ],
             ),
         ],
