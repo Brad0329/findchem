@@ -69,5 +69,7 @@ void main(List<String> args) {
     fail('번들 JSON을 읽지 못했습니다(${file.path}): $e');
   }
 
-  emit(searchResponse(SearchIndex(ds).search(args.single), ds));
+  // 상한은 **앱ㆍ웹 판정 도구와 같은 값**([assistSearchCap])이다 — 개발 하네스가 앱과 다른 건수를 주면
+  // 여기서 통과한 질문이 앱에서 다르게 답한다(2026-09-16 상한 100→20 결정이 이 파일에만 안 닿아 있었다).
+  emit(searchResponse(SearchIndex(ds, cap: assistSearchCap).search(args.single), ds));
 }

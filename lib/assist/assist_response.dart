@@ -16,6 +16,14 @@ import 'rules.dart';
 /// UI는 Flutter라 `dart run`으로 도는 CLI가 import할 수 없어 문장을 옮겨 적었다.
 const casNoHitHint = '염류·화합물 묶음 항목에 해당할 수 있으니 물질명으로도 검색해 보세요';
 
+/// 판정 도구의 검색 상한. **F-001 검색 화면(100)과 다르다** — 넓은 질의 한 번이 55,211 입력 토큰이었고
+/// 대화는 왕복마다 재전송된다(2026-09-16 `count_tokens` 실측, REQUIREMENTS F-008 2단계 수용 기준).
+/// 상한을 넘으면 `truncated`ㆍ`total`이 응답에 남는다 — 조용한 절단이 아니다.
+///
+/// **응답 조립과 같은 파일에 둔다** — 앱(`lib/assist/tools.dart`)과 개발 하네스(`scripts/search_cli.dart`)가
+/// 같은 상수를 봐야 같은 건수를 돌려준다. `tools.dart`는 Flutter를 import해서 CLI가 읽어갈 수 없다.
+const assistSearchCap = 20;
+
 /// 이 도구가 덮는 범위. **모든 응답에 싣는다** — "없으면 없다"고 빠져나갈 수 있어야 한다.
 const coverageStatement =
     '이 도구는 「유해화학물질의 규정수량에 관한 규정」의 별표 2(인체ㆍ생태 유해성)와 별표 3(사고대비물질)만 덮는다. '

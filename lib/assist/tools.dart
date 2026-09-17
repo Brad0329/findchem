@@ -15,11 +15,6 @@ import 'assist_response.dart';
 import 'prompt.dart';
 import 'rules.dart';
 
-/// 판정 도구의 검색 상한. **F-001 검색 화면(100)과 다르다** — 넓은 질의 한 번이 55,211 입력 토큰이었고
-/// 대화는 왕복마다 재전송된다(2026-09-16 `count_tokens` 실측, REQUIREMENTS F-008 2단계 수용 기준).
-/// 상한을 넘으면 `truncated`ㆍ`total`이 응답에 남는다 — 조용한 절단이 아니다.
-const assistSearchCap = 20;
-
 /// 도구 실행 결과 한 건. 실패해도 루프는 이어진다(모델에 `is_error`로 알린다).
 class ToolOutcome {
   const ToolOutcome({required this.name, required this.response, this.error});

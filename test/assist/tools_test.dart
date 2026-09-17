@@ -4,6 +4,7 @@ library;
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:findchem/assist/assist_response.dart' show assistSearchCap;
 import 'package:findchem/assist/prompt.dart';
 import 'package:findchem/assist/tools.dart';
 import 'package:findchem/parser/models.dart';
