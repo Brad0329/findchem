@@ -51,7 +51,7 @@ class FindChemApp extends StatefulWidget {
   final ApiSettingsController? apiSettings;
   final ChemApiClient? apiClient;
 
-  /// F-008 판정을 켤지. 기본값은 웹만(`assistEnabledByDefault`) — 테스트에서만 직접 넣는다.
+  /// F-008 판정을 켤지. 기본값은 앱·웹 둘 다(`assistEnabledByDefault`) — 테스트에서만 직접 넣는다.
   final bool assistEnabled;
 
   /// 테스트에서 LLM 호출을 바꿔 넣을 때. null이면 실제 호출.
