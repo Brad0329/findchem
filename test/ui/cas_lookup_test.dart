@@ -12,6 +12,7 @@ import 'package:findchem/ui/entry_card.dart';
 import 'package:findchem/ui/search_page.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart' show RenderParagraph;
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -28,7 +29,14 @@ void main() {
   });
 
   /// 표 화면 + 조회. [stored]는 F-007 설정 파일.
-  Future<FakeApi> pumpPage(WidgetTester tester, {String? stored, bool useTable = true, FakeApi? api}) async {
+  /// [phraseBubbles] 기본 true — 조회 결과 영역이 실제로 쓰이는 웹과 같게 H·P 말풍선을 켠다(복사 테스트도 켠 채로 돈다).
+  Future<FakeApi> pumpPage(
+    WidgetTester tester, {
+    String? stored,
+    bool useTable = true,
+    FakeApi? api,
+    bool phraseBubbles = true,
+  }) async {
     const size = Size(1400, 5000);
     tester.view.physicalSize = size;
     tester.view.devicePixelRatio = 1;
@@ -37,6 +45,7 @@ void main() {
     final lookup = CasLookup(
       settings: ApiSettingsController(store: MemoryUpdateStore(stored ?? apiSettingsJson())),
       client: fake.client(),
+      phraseBubbles: phraseBubbles,
     );
     await tester.pumpWidget(
       MaterialApp(home: SearchPage(dataset: ds, useTable: useTable, lookup: lookup)),
@@ -315,6 +324,95 @@ void main() {
       await openGhs(tester, pictograms: '');
       expect(find.descendant(of: panel(Source.byeolpyo3, 1), matching: find.byType(Image)), findsNothing);
       expect(t('UN번호'), findsOneWidget);
+    });
+  });
+
+  group('H·P 말풍선(2026-09-18 — 웹만)', () {
+    final bubble = find.byKey(const ValueKey('phrase-bubble'));
+    const pText = 'P280, P302+P352, P312, P321, P361+P364, P405, P501';
+    Finder inPanelText(String text) => find.descendant(of: panel(Source.byeolpyo3, 1), matching: find.text(text));
+
+    /// 유독물 GHS 정보만 켜고 50-00-0 결과를 연다. [hCode]가 있으면 첫 행의 H코드를 바꾼다.
+    Future<void> openGhs(WidgetTester tester, {bool phraseBubbles = true, String? hCode}) async {
+      final api = FakeApi();
+      if (hCode != null) {
+        final body = (jsonDecode(fixtures[ChemService.ghs]!) as Map);
+        ((body['body']['items'][0]['hrmflnList'] as List)[0] as Map)['hrmDngrCd'] = hCode;
+        api.overrides[ChemService.ghs] = () async => utf8Response(jsonEncode(body), 200);
+      }
+      await pumpPage(
+        tester,
+        api: api,
+        phraseBubbles: phraseBubbles,
+        stored: apiSettingsJson(services: {'chem': false, 'ghs': true, 'safety': false}),
+      );
+      await type(tester, '50-00-0');
+      await tester.tap(cas(Source.byeolpyo3, 1, '50-00-0'));
+      await tester.pumpAndSettle();
+    }
+
+    /// [text] 칸 안에서 [code]의 **첫 글자 가운데**(전역 좌표). 코드 전체의 가운데는 글자 경계에 떨어질 수 있고,
+    /// 경계 위의 점은 어느 글자에도 적중하지 않는다(2026-09-18 실측: 'H311' 가운데 x=25.0 = '3'·'1' 경계).
+    Offset codeCenter(WidgetTester tester, String text, String code) {
+      final para = tester.renderObject<RenderParagraph>(
+        find.descendant(of: inPanelText(text), matching: find.byType(RichText)),
+      );
+      final start = para.text.toPlainText().indexOf(code);
+      expect(start, isNot(-1), reason: '$text 안에 $code가 없다');
+      final box = para.getBoxesForSelection(TextSelection(baseOffset: start, extentOffset: start + 1)).first;
+      return para.localToGlobal(box.toRect().center);
+    }
+
+    Future<TestGesture> hover(WidgetTester tester, Offset at) async {
+      final mouse = await tester.createGesture(kind: PointerDeviceKind.mouse);
+      await mouse.addPointer(location: const Offset(1, 1));
+      addTearDown(mouse.removePointer);
+      await mouse.moveTo(at);
+      await tester.pumpAndSettle();
+      return mouse;
+    }
+
+    testWidgets('문구표에 있는 코드에 올리면 그 자리 위에 말풍선(코드·문구), 치우면 사라진다', (tester) async {
+      await openGhs(tester);
+      // 마우스 장치는 하나를 계속 옮겨 쓴다 — 같은 테스트에서 장치를 또 더하면 Flutter 검사(MouseTracker)에 걸린다
+      final mouse = await hover(tester, const Offset(1, 1));
+      for (final (text, code, phrase) in [
+        ('H311', 'H311', '피부와 접촉하면 유독함'),
+        (pText, 'P302+P352', '피부에 묻으면 다량의 물/···(으)로 씻으시오.'),
+      ]) {
+        final at = codeCenter(tester, text, code);
+        await mouse.moveTo(at);
+        await tester.pumpAndSettle();
+        expect(bubble, findsOneWidget, reason: code);
+        expect(find.descendant(of: bubble, matching: find.text(code)), findsOneWidget, reason: code);
+        expect(find.descendant(of: bubble, matching: find.text(phrase)), findsOneWidget, reason: code);
+        final rect = tester.getRect(bubble);
+        expect(rect.bottom, lessThan(at.dy), reason: '$code 말풍선은 올린 자리보다 위');
+        expect(rect.left, lessThanOrEqualTo(at.dx), reason: code);
+        expect(rect.right, greaterThanOrEqualTo(at.dx), reason: '$code 말풍선이 가로로 올린 자리를 덮는다');
+
+        await mouse.moveTo(const Offset(1, 1));
+        await tester.pumpAndSettle();
+        expect(bubble, findsNothing, reason: '$code 마우스를 치우면 사라진다');
+      }
+    });
+
+    testWidgets('문구표에 없는 코드(H99)는 밑줄도 말풍선도 없다 — 문구표에 있는 P코드는 밑줄', (tester) async {
+      await openGhs(tester, hCode: 'H99');
+      await hover(tester, codeCenter(tester, 'H99', 'H99'));
+      expect(bubble, findsNothing);
+
+      TextSpan spanOf(String text, int index) =>
+          (tester.widget<Text>(inPanelText(text)).textSpan! as TextSpan).children![index] as TextSpan;
+      expect(spanOf('H99', 0).style?.decoration, isNull);
+      expect(spanOf(pText, 0).style?.decoration, TextDecoration.underline, reason: 'P280은 문구표에 있다');
+    });
+
+    testWidgets('앱(말풍선 꺼짐): 칸은 글자 그대로이고 올려도 말풍선이 없다', (tester) async {
+      await openGhs(tester, phraseBubbles: false);
+      expect(tester.widget<Text>(inPanelText('H311')).data, 'H311', reason: '밑줄 없는 평범한 글자');
+      await hover(tester, tester.getCenter(inPanelText('H311')));
+      expect(bubble, findsNothing);
     });
   });
 

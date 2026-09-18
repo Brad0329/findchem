@@ -4,19 +4,24 @@
 /// **구분자 없이** 이어 붙이므로(selection_copy_probe_test 실측) 결과 영역은 [_CopyJoin]으로 감싸 칸은 탭, 줄은 줄바꿈으로 나눈다.
 library;
 
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart' show SelectedContent;
 
 import '../lookup/api_settings.dart';
 import '../lookup/chem_api.dart';
+import '../lookup/ghs_phrase_data.dart';
 import '../lookup/ghs_pictogram_data.dart';
 
 /// 조회에 필요한 것 묶음. null이면 CAS가 눌리지 않는다(앱 — REQUIREMENTS F-007 '단계').
 class CasLookup {
-  const CasLookup({required this.settings, required this.client});
+  const CasLookup({required this.settings, required this.client, this.phraseBubbles = kIsWeb});
 
   final ApiSettingsController settings;
   final ChemApiClient client;
+
+  /// 유해성 분류 표의 H·P 코드에 마우스를 올리면 문구 말풍선(2026-09-18 사용자 결정 — **웹만**, 켜는 분기는 여기 한 곳).
+  final bool phraseBubbles;
 }
 
 class CasLookupPanel extends StatefulWidget {
@@ -58,7 +63,12 @@ class _CasLookupPanelState extends State<CasLookupPanel> {
                       children: [
                         for (final s in ChemService.values)
                           if (calls[s] != null)
-                            _Section(key: ValueKey('lookup-${s.name}'), service: s, call: calls[s]!),
+                            _Section(
+                              key: ValueKey('lookup-${s.name}'),
+                              service: s,
+                              call: calls[s]!,
+                              phraseBubbles: widget.lookup.phraseBubbles,
+                            ),
                       ],
                     ),
                   ),
@@ -148,10 +158,11 @@ class _Loading extends StatelessWidget {
 }
 
 class _Section extends StatelessWidget {
-  const _Section({super.key, required this.service, required this.call});
+  const _Section({super.key, required this.service, required this.call, required this.phraseBubbles});
 
   final ChemService service;
   final Future<ServiceResult> call;
+  final bool phraseBubbles;
 
   @override
   Widget build(BuildContext context) {
@@ -199,7 +210,7 @@ class _Section extends StatelessWidget {
 
   Widget _record(Object r) => switch (r) {
     ChemRecord() => _ChemView(r),
-    GhsRecord() => _GhsView(r),
+    GhsRecord() => _GhsView(r, phraseBubbles: phraseBubbles),
     SafetyRecord() => _SafetyView(r),
     _ => Text(LookupText.failed('형식')),
   };
@@ -248,13 +259,15 @@ class _KeyValues extends StatelessWidget {
 }
 
 /// 격자 표(분류 목록 등). 빈 칸은 비워 두고, 복사하면 칸은 탭·행은 줄바꿈(빈 칸도 자리 유지).
+/// [cell]이 위젯을 돌려주면 그 칸(머리글 제외)은 그 위젯으로 그린다 — 복사 값은 여전히 [rows]의 글자다.
 class _Grid extends StatelessWidget {
-  const _Grid({required this.caption, required this.header, required this.flex, required this.rows});
+  const _Grid({required this.caption, required this.header, required this.flex, required this.rows, this.cell});
 
   final String caption;
   final List<String> header;
   final List<int> flex;
   final List<List<String>> rows;
+  final Widget? Function(int column, String value, TextStyle? style)? cell;
 
   @override
   Widget build(BuildContext context) {
@@ -280,7 +293,8 @@ class _Grid extends StatelessWidget {
                     decoration: BoxDecoration(
                       border: Border(left: i == 0 ? side : BorderSide.none, right: side, bottom: side),
                     ),
-                    child: Text(values[i], style: style ?? theme.textTheme.bodySmall),
+                    child: (isHeader ? null : cell?.call(i, values[i], style ?? theme.textTheme.bodySmall)) ??
+                        Text(values[i], style: style ?? theme.textTheme.bodySmall),
                   ),
                 ),
             ],
@@ -344,9 +358,10 @@ class _ChemView extends StatelessWidget {
 }
 
 class _GhsView extends StatelessWidget {
-  const _GhsView(this.r);
+  const _GhsView(this.r, {required this.phraseBubbles});
 
   final GhsRecord r;
+  final bool phraseBubbles;
 
   @override
   Widget build(BuildContext context) {
@@ -374,6 +389,14 @@ class _GhsView extends StatelessWidget {
               rows: [
                 for (final h in r.hazards) [h.item, h.grade, h.hCode, h.pCodes.join(', ')],
               ],
+              // 웹: 코드에 마우스를 올리면 문구 말풍선(2026-09-18). 글자·복사는 위 rows 그대로
+              cell: phraseBubbles
+                  ? (column, value, style) => switch (column) {
+                      2 when value.isNotEmpty => _PhraseCodes(codes: [value], phrases: ghsHPhrases, style: style),
+                      3 when value.isNotEmpty => _PhraseCodes(codes: value.split(', '), phrases: ghsPPhrases, style: style),
+                      _ => null,
+                    }
+                  : null,
             ),
         ],
       ),
@@ -472,6 +495,190 @@ class _PictogramTable extends StatelessWidget {
       ),
     );
   }
+}
+
+// ───── H·P 문구 말풍선(웹, 2026-09-18 사용자 결정 — 목업 hp_bubble_mockup "이대로") ─────
+
+/// 코드들을 `, `로 이은 **Text 하나**로 그린다 — 선택·복사는 말풍선이 없던 때와 같다.
+/// 문구표에 있는 코드만 점선 밑줄·도움말 커서이고, 마우스를 올리면 그 자리 위에 [_PhraseBubble]을 띄운다.
+/// 문구표에 없는 코드는 밑줄도 말풍선도 없다. 올린 코드 색을 바꾸지 않는 이유: 다시 그리면 글자 조각이 새 객체가 되어
+/// 마우스가 나갔다 들어온 것으로 처리돼 말풍선이 깜박인다.
+class _PhraseCodes extends StatefulWidget {
+  const _PhraseCodes({required this.codes, required this.phrases, this.style});
+
+  final List<String> codes;
+  final Map<String, String> phrases;
+  final TextStyle? style;
+
+  @override
+  State<_PhraseCodes> createState() => _PhraseCodesState();
+}
+
+class _PhraseCodesState extends State<_PhraseCodes> {
+  OverlayEntry? _bubble;
+
+  void _show(String code, String phrase, Offset globalPosition) {
+    _hide();
+    final overlay = Overlay.of(context);
+    final box = overlay.context.findRenderObject() as RenderBox;
+    final anchor = box.globalToLocal(globalPosition) - const Offset(0, 6);
+    _bubble = OverlayEntry(builder: (_) => _PhraseBubble(anchor: anchor, code: code, phrase: phrase));
+    overlay.insert(_bubble!);
+  }
+
+  void _hide() {
+    _bubble?.remove();
+    _bubble?.dispose();
+    _bubble = null;
+  }
+
+  @override
+  void dispose() {
+    _hide();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final accent = Theme.of(context).colorScheme.primary;
+    TextSpan span(String code) {
+      final phrase = widget.phrases[code];
+      if (phrase == null) return TextSpan(text: code);
+      return TextSpan(
+        text: code,
+        style: TextStyle(
+          decoration: TextDecoration.underline,
+          decorationStyle: TextDecorationStyle.dotted,
+          decorationColor: accent,
+        ),
+        mouseCursor: SystemMouseCursors.help,
+        onEnter: (e) => _show(code, phrase, e.position),
+        onExit: (_) => _hide(),
+      );
+    }
+
+    return Text.rich(
+      TextSpan(
+        style: widget.style,
+        children: [
+          for (var i = 0; i < widget.codes.length; i++) ...[
+            if (i > 0) const TextSpan(text: ', '),
+            span(widget.codes[i]),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+/// 만화 말풍선: 흰 바탕·검은 테두리·둥근 모서리, 꼬리 끝이 [anchor](오버레이 좌표)를 가리킨다.
+/// 가장자리에 걸리면 몸통만 안쪽으로 밀고 꼬리는 그 자리에 둔다. 마우스를 가리지 않게 입력을 받지 않는다.
+class _PhraseBubble extends StatelessWidget {
+  const _PhraseBubble({required this.anchor, required this.code, required this.phrase});
+
+  final Offset anchor;
+  final String code;
+  final String phrase;
+
+  static const _ink = Color(0xFF1D1B20);
+  static const _tail = Size(18, 15);
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return IgnorePointer(
+      child: Stack(
+        children: [
+          CustomSingleChildLayout(
+            delegate: _BubbleLayout(anchor: anchor, gap: _tail.height - 2),
+            child: Container(
+              key: const ValueKey('phrase-bubble'),
+              constraints: const BoxConstraints(maxWidth: 280),
+              padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 9),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                border: Border.all(color: _ink, width: 2),
+                borderRadius: BorderRadius.circular(18),
+                boxShadow: const [BoxShadow(color: _ink, offset: Offset(3, 3))],
+              ),
+              child: DefaultTextStyle(
+                style: theme.textTheme.bodySmall!.copyWith(color: _ink, fontSize: 12.5, height: 1.5),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      code,
+                      style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: theme.colorScheme.primary),
+                    ),
+                    Text(phrase),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Positioned(
+            left: anchor.dx - _tail.width / 2,
+            top: anchor.dy - _tail.height,
+            child: CustomPaint(size: _tail, painter: _TailPainter(_ink)),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// 몸통 아래 끝을 [anchor]에서 [gap]만큼 위에, 가로는 [anchor] 가운데 — 화면 밖으로 나가면 안쪽으로 민다.
+class _BubbleLayout extends SingleChildLayoutDelegate {
+  const _BubbleLayout({required this.anchor, required this.gap});
+
+  final Offset anchor;
+  final double gap;
+
+  static const _margin = 8.0;
+
+  @override
+  BoxConstraints getConstraintsForChild(BoxConstraints constraints) => constraints.loosen();
+
+  @override
+  Offset getPositionForChild(Size size, Size childSize) {
+    final maxX = size.width - childSize.width - _margin;
+    final x = (anchor.dx - childSize.width / 2).clamp(_margin, maxX < _margin ? _margin : maxX);
+    final y = anchor.dy - gap - childSize.height;
+    return Offset(x, y < _margin ? _margin : y);
+  }
+
+  @override
+  bool shouldRelayout(_BubbleLayout old) => old.anchor != anchor || old.gap != gap;
+}
+
+/// 꼬리: 흰 삼각형(윗변이 몸통 테두리를 덮어 이어 보이게) + 양 옆 빗변만 검은 선.
+class _TailPainter extends CustomPainter {
+  const _TailPainter(this.ink);
+
+  final Color ink;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final tip = Offset(size.width / 2, size.height);
+    canvas.drawPath(
+      Path()
+        ..moveTo(0, 0)
+        ..lineTo(size.width, 0)
+        ..lineTo(tip.dx, tip.dy)
+        ..close(),
+      Paint()..color = Colors.white,
+    );
+    final line = Paint()
+      ..color = ink
+      ..strokeWidth = 2
+      ..style = PaintingStyle.stroke;
+    canvas.drawLine(const Offset(0, 3), tip, line);
+    canvas.drawLine(Offset(size.width, 3), tip, line);
+  }
+
+  @override
+  bool shouldRepaint(_TailPainter old) => old.ink != ink;
 }
 
 class _SafetyView extends StatelessWidget {
