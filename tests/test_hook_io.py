@@ -36,7 +36,7 @@ CASES = [
 ]
 
 # 선택형 훅 — 초기화 때 Flutter가 아니면 파일째 지운다(CLAUDE.md 초기화 5번). 지웠으면 여기서도
-# 자동으로 빠진다. 위 3종은 스택 중립이라 항상 있어야 하고, 없으면 그대로 실패한다(조용히 빼지 않는다).
+# 자동으로 빠진다. 위 훅들은 스택 중립이라 항상 있어야 하고, 없으면 그대로 실패한다(조용히 빼지 않는다).
 # 2026-09-05 초기화 시뮬레이션에서 이 훅을 지우자 이 파일의 4건이 "파일 없음"으로 죽은 실사례.
 _OPTIONAL = [
     ("no_targeted_flutter_test.py", "flutter test test/x_test.dart", "flutter test"),
@@ -47,16 +47,21 @@ HOOK_IDS = [c[0] for c in CASES]
 
 
 def _run(hook: str, command: str) -> subprocess.CompletedProcess:
-    """훅을 **cp949 콘솔인 척**하는 환경에서 돌린다 — 하네스가 훅을 띄우는 조건의 재현이다."""
+    """훅을 **cp949 콘솔인 척**하는 환경에서 돌린다 — 하네스가 훅을 띄우는 조건의 재현이다.
+
+    입력은 `ensure_ascii=False` — 하네스(Node의 JSON.stringify)는 한글을 `\\uXXXX`로 이스케이프하지 않고
+    **UTF-8 바이트 그대로** 보낸다. 기본값(ASCII 이스케이프)으로 보내면 디코드 문제가 가려진다(2026-09-28 실측).
+    """
     env = dict(os.environ)
     env["PYTHONIOENCODING"] = "cp949"
     env.pop("PYTHONUTF8", None)
     return subprocess.run(
         [sys.executable, str(HOOKS / hook)],
-        input=json.dumps({"tool_input": {"command": command}}),
+        input=json.dumps({"tool_input": {"command": command}}, ensure_ascii=False),
         capture_output=True,
         text=True,
         encoding="utf-8",
+        errors="replace",   # 훅의 stderr는 cp949로 나온다 — 읽다가 테스트 스레드가 죽지 않게
         env=env,
     )
 
@@ -85,6 +90,19 @@ def test_cp949_콘솔에서도_정상_호출은_통과한다(hook, _blocked, ok_
     p = _run(hook, ok_command)
     assert p.returncode == 0, p.stderr
     assert p.stdout.strip() == "", f"막으면 안 되는 호출을 막았다: {ok_command}"
+
+
+@pytest.mark.parametrize("hook,blocked_command,_ok", CASES, ids=HOOK_IDS)
+def test_cp949_콘솔에서_한글이_든_명령도_읽어서_막는다(hook, blocked_command, _ok):
+    """★ 2026-09-28 발견: 하네스는 stdin을 UTF-8로 보내는데 파이썬은 콘솔 인코딩(cp949)으로 읽는다.
+    한글이 든 명령은 디코드가 깨져 read_command가 None → **막아야 할 명령을 조용히 통과**시켰다
+    (승인 창 기록 훅 테스트에서 드러남). 막히는 명령 뒤에 한글 인자를 붙여 같은 판정이 나오는지 본다."""
+    korean = blocked_command.replace("\n", " # 노하우_검증 한글 인자 —\n", 1) if "\n" in blocked_command \
+        else blocked_command + " # 노하우_검증 한글 인자 —"
+    p = _run(hook, korean)
+    assert p.returncode == 0, p.stderr
+    assert p.stdout.strip(), f"한글이 붙자 판정을 못 했다(입력 디코드 실패) — stderr: {p.stderr}"
+    assert json.loads(p.stdout)["hookSpecificOutput"]["permissionDecision"] == "deny"
 
 
 @pytest.mark.parametrize("hook", HOOK_IDS)
