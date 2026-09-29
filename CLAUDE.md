@@ -13,8 +13,8 @@ Flutter(Android + 웹 한 벌), 서버 없음, 데이터는 JSON으로 번들해
   https://brad0329.github.io/findchem/
 
 ## 새 세션 시작 시
-1. `work_log/plan.md` — 전체 현황·아키텍처·완료 Phase
-2. 진행 중 Phase의 `work_log/Phase_XXX.md`(있으면) — 이전 결정과 실패 경험을 이어받는다
+- 훅(`session_context.py`)이 plan.md의 현재 Phase·읽을 Phase 로그·실테스트 대기를 주입한다 — 지시대로 읽는다.
+  세션 첫머리에 `[session_context]` 줄이 안 보이면 훅이 죽은 것이다 — `work_log/plan.md`부터 직접 읽고 훅을 고친다.
 
 ## 요구사항 정책 ★"정답 기준"이 없으면 완료를 판단할 수 없다
 - 기능 요구사항 + 수용 기준의 **단일 원본 = `docs/REQUIREMENTS.md`**

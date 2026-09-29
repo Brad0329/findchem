@@ -77,6 +77,18 @@
           }
         ]
       }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python \"$CLAUDE_PROJECT_DIR/.claude/hooks/session_context.py\"",
+            "timeout": 10,
+            "statusMessage": "plan.md 현재 Phase 주입"
+          }
+        ]
+      }
     ]
   }
 }
