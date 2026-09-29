@@ -18,17 +18,19 @@
 
 from __future__ import annotations
 
+import json
 import re
 import sys
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 
 import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 from measure_approvals import (  # noqa: E402
-    REDUNDANT_CD_COMMAND, REDUNDANT_CD_SEGMENT, REDUNDANT_GIT_C_COMMAND, ROOT, allowed, classify,
-    head_command,
-    is_readonly, split_segments,
+    REDUNDANT_CD_COMMAND, REDUNDANT_CD_SEGMENT, REDUNDANT_GIT_C, ROOT, _repo_path_pattern,
+    allowed, classify,
+    find_sessions, head_command, is_readonly, load_permission_log, print_permission_log,
+    shell_calls, split_segments,
 )
 
 REPO = str(ROOT).replace("\\", "/")   # 슬래시형 경로
@@ -111,6 +113,14 @@ def test_절대경로의_선두_구분자를_잃지_않는다():
         assert not REDUNDANT_CD_SEGMENT.match(f"cd {REPO.lstrip('/')}")
 
 
+def test_POSIX_절대경로_패턴은_어느_OS에서든_선두_구분자를_지킨다():
+    """위 테스트는 리눅스에서만 단언이 돈다 — Windows 세션에서 수정을 되돌려도 초록불이라
+    POSIX 경로를 패턴 함수에 직접 넣어 어디서든 걸리게 한다(2026-09-29 템플릿 병합 때 추가)."""
+    pat = re.compile(r"^\s*cd\s+" + _repo_path_pattern(PurePosixPath("/home/u/findchem")) + r"\s*&&")
+    assert pat.match("cd /home/u/findchem && ls")
+    assert not pat.match("cd home/u/findchem && ls"), "선두 구분자를 흘렸다 — 절대경로를 못 본다"
+
+
 def test_조각용_패턴도_리다이렉트_변형과_MSYS_경로를_잡는다():
     """분류(measure_approvals)는 조각 단위로 본다 — 명령용만 넓히면 훅은 막는데 보고서는 '형태 0건'이 된다."""
     assert REDUNDANT_CD_SEGMENT.match(f"cd {REPO} 2>/dev/null")
@@ -135,7 +145,7 @@ def test_조각용_패턴은_연산자가_없는_형태를_잡는다():
     f"git -C {REPO}/ log --oneline -1",
 ])
 def test_루트를_가리키는_git_C를_잡는다(command):
-    assert REDUNDANT_GIT_C_COMMAND.match(command)
+    assert REDUNDANT_GIT_C.search(command)
 
 
 @pytest.mark.parametrize("command", [
@@ -144,10 +154,9 @@ def test_루트를_가리키는_git_C를_잡는다(command):
     f"git -C {REPO}/scripts log",             # 루트 아래 하위
     f"git -C {REPO}-other status",            # 이름이 루트로 시작하는 다른 저장소
     'git -C "C:/Users/user/Documents/template" status',
-    f"echo git -C {REPO} status",             # 맨 앞이 git이 아니다
 ])
 def test_다른_곳의_git_C와_맨몸_git은_안_잡는다(command):
-    assert not REDUNDANT_GIT_C_COMMAND.match(command)
+    assert not REDUNDANT_GIT_C.search(command)
 
 
 # ── ③ 읽기 전용 판정: 모르면 '아니다' 쪽으로 ────────────────────────────────
@@ -188,9 +197,59 @@ def test_리다이렉트와_fd복제를_구분한다():
     ("grep -n x y", "읽기전용"),
     ("rm x", "상태변경"),
     ("flutter test", "판단필요"),
+    (f"git -C {REPO} diff --stat", "형태"),                        # 루트를 가리키는 -C는 습관
+    ("git -C /c/Users/user/Documents/other-repo diff", "판단필요"),   # 다른 저장소는 습관이 아니다
 ])
 def test_원인을_갈라_분류한다(segment, kind):
     assert classify(segment) == kind
+
+
+# ── ⑥ 서브에이전트 기록도 센다 ──────────────────────────────────────────────
+
+def _tool_use(command: str) -> str:
+    return json.dumps({"message": {"content": [
+        {"type": "tool_use", "id": command, "name": "Bash", "input": {"command": command}}]}})
+
+
+def test_서브에이전트_기록까지_합쳐_센다(tmp_path, monkeypatch):
+    """★ bid-collectors 2026-09-26: 8초 초과 셸 호출의 57%가 서브에이전트였는데 본 세션만 셌다.
+    `<세션ID>/subagents/*.jsonl`을 안 보면 조사·QA를 맡긴 쪽의 대기가 보고서에서 통째로 빠진다."""
+    (tmp_path / "s1.jsonl").write_text(_tool_use("git status") + "\n", encoding="utf-8")
+    sub = tmp_path / "s1" / "subagents"
+    sub.mkdir(parents=True)
+    (sub / "agent-a.jsonl").write_text(_tool_use("cat >> x <<EOF") + "\n", encoding="utf-8")
+    monkeypatch.setenv("CLAUDE_TRANSCRIPT_DIR", str(tmp_path))
+
+    paths = find_sessions(None, 1)
+    assert [p.name for p in paths] == ["s1.jsonl", "agent-a.jsonl"]
+    assert [c for _, c in shell_calls(paths)] == ["git status", "cat >> x <<EOF"]
+    assert find_sessions("s1", 1) == paths               # 세션 ID로 골라도 같다
+
+
+# ── ⑦ 승인 창 실측 기록 ─────────────────────────────────────────────────────
+
+def test_실측_기록은_고른_세션_것만_읽는다(tmp_path):
+    log = tmp_path / "permission_requests.jsonl"
+    log.write_text("\n".join([
+        json.dumps({"session_id": "s1", "tool_name": "Bash", "target": "git fetch"}),
+        json.dumps({"session_id": "s1", "agent_id": "a", "tool_name": "Bash", "target": "cat > x"}),
+        json.dumps({"session_id": "other", "tool_name": "Bash", "target": "ls"}),
+        "{잘린 줄",
+    ]) + "\n", encoding="utf-8")
+    got = load_permission_log({"s1"}, log)
+    assert [r["target"] for r in got] == ["git fetch", "cat > x"]
+
+
+def test_기록_파일이_없으면_0건이_아니라_없음이다(tmp_path):
+    """★ '안 물었다(0건)'와 '훅이 안 돌았다(파일 없음)'를 섞으면 측정기가 조용히 거짓 초록불을 낸다."""
+    assert load_permission_log({"s1"}, tmp_path / "none.jsonl") is None
+
+
+def test_실측_보고는_잘랐으면_전체_건수를_알린다(capsys):
+    recs = [{"session_id": "s", "tool_name": f"Tool{i}", "target": "x"} for i in range(5)]
+    print_permission_log(recs, top=2)
+    out = capsys.readouterr().out
+    assert "5건" in out and "나머지 3종 3건 생략" in out   # CLAUDE.md '조용한 절단 금지'
 
 
 # ── ⑤ 규칙 매칭: 접두사 의미 ────────────────────────────────────────────────

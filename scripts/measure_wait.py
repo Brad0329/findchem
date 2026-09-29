@@ -8,8 +8,13 @@ hanjadic 2026-08-20 실측에서 **양쪽으로 틀렸다**:
 - **과대**: `git add`·`git commit -F`를 승인 필요로 셌다. 실제로는 1.6초 이하로 통과한다.
 - **과소**: 정작 **자기 자신을 부르는 명령**(인자가 붙은 형태)이 30초를 물고 있었는데 못 짚었다.
 
-그래서 판정은 여기서 한다. **명령 자체 시간으로 설명되지 않는 초가 승인 대기다.**
+그래서 판정은 여기서 했다. **명령 자체 시간으로 설명되지 않는 초가 승인 대기다.**
 예측은 어디를 볼지 고르는 데 쓰고, 줄었는지 여부는 이 숫자로 확인한다.
+
+**★ 2026-09-28부터 1순위는 이 벽시계가 아니다** — 승인 창 기록 훅(`log_permission_request`)이 실제로 뜬 창을
+적고 `measure_approvals.py`의 `[실측]` 절이 센다. 이 스크립트는 ① 그 기록이 없는 세션(훅 등록 전)과
+② 창이 **얼마나 오래** 떠 있었나(사람이 자리를 비운 비용)를 볼 때 쓴다 — 기록은 "떴다"만 알고 길이는 모른다.
+벽시계만으로 "떴는가"를 가르면 놓친다: 2.9초 만에 누른 창은 8초 기준에 안 걸렸다(노하우 [H20]).
 
 ## 재는 것
 
@@ -43,7 +48,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 # 세션 찾기는 measure_approvals와 **같은 규칙이어야 한다** — 두 스크립트가 다른 세션을 보면
 # 예측과 실측을 대조할 수 없다. 그래서 복사하지 않고 가져다 쓴다. 출력 인코딩도 같은 이유로
 # 한 곳에서 가져온다 — 여기만 빠져 있어 cp949 콘솔에서 죽었다(vanasso.kr 2026-09-06).
-from measure_approvals import find_sessions, utf8_stdout  # noqa: E402
+from measure_approvals import find_sessions, print_sessions, utf8_stdout  # noqa: E402
 
 # 도구 이름. 셸 말고 Write/Edit도 본다 — 보호 디렉토리에 쓸 때 확인을 물어서
 # 실제로 137초가 나온 적이 있다(`.git/` 안의 커밋 메시지 파일, hanjadic 2026-08-19).
@@ -134,9 +139,7 @@ def main() -> int:
     utf8_stdout()
 
     paths = find_sessions(args.session, args.sessions)
-    print("[대상 세션]")
-    for p in paths:
-        print(f"  {p.name}  ({p.stat().st_size / 1_000_000:.1f} MB)")
+    print_sessions(paths)
 
     spans = measure_spans(paths)
     # **하나도 못 찾으면 '깨끗함'이 아니라 실패다.** 초록색으로 보이면서 아무것도 안 재는
