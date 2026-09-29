@@ -1,6 +1,5 @@
 {
   "permissions": {
-    "defaultMode": "acceptEdits",
     "allow": [],
     "deny": [
       "Bash(rm -rf *)",
@@ -51,6 +50,30 @@
             "command": "python \"$CLAUDE_PROJECT_DIR/.claude/hooks/no_commit_m.py\"",
             "timeout": 10,
             "statusMessage": "git commit -m 검사"
+          },
+          {
+            "type": "command",
+            "command": "python \"$CLAUDE_PROJECT_DIR/.claude/hooks/no_scratchpad_path.py\"",
+            "timeout": 10,
+            "statusMessage": "스크래치패드 경로 검사"
+          },
+          {
+            "type": "command",
+            "command": "python \"$CLAUDE_PROJECT_DIR/.claude/hooks/no_shell_file_write.py\"",
+            "timeout": 10,
+            "statusMessage": "셸 파일 쓰기 검사"
+          }
+        ]
+      }
+    ],
+    "PermissionRequest": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python \"$CLAUDE_PROJECT_DIR/.claude/hooks/log_permission_request.py\"",
+            "timeout": 10,
+            "statusMessage": "승인 창 기록"
           }
         ]
       }

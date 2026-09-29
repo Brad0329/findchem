@@ -15,6 +15,12 @@
 # AI 커밋 메시지 파일 (고정 경로 — 노하우_승인_대기_최소화.md 참조)
 .commit_msg.txt
 
+# 승인 창 기록 (.claude/hooks/log_permission_request.py — 측정기가 읽는다. 사용자 데이터)
+.claude/permission_requests.jsonl
+
+# 서브에이전트(researcher·qa-tester)의 일회성 스크립트·임시 산출물 — .claude/agents/*.md
+scripts/_tmp/
+
 # Office가 파일을 열어 둔 동안 만드는 잠금 파일
 ~$*
 
