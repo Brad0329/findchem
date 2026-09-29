@@ -13,7 +13,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
-from count_claude_rules import DEFAULT_CAP, ROOT, rule_lines  # noqa: E402
+from count_claude_rules import DEFAULT_CAP, ROOT, expiry_lines, rule_lines  # noqa: E402
 
 
 def test_글머리와_번호를_센다():
@@ -32,6 +32,12 @@ def test_플레이스홀더_줄은_세지_않는다():
 def test_초기화_블록은_세지_않는다():
     text = "- 초기화 1\n- 초기화 2\n<!-- 초기화 블록 끝 -->\n- 진짜 규칙\n"
     assert rule_lines(text) == ["- 진짜 규칙"]
+
+
+def test_만료_표시는_이어지는_줄에서도_찾고_초기화_블록은_뺀다():
+    text = ("- 초기화 ⏳만료: 이건 빼야 한다\n<!-- 초기화 블록 끝 -->\n"
+            "- 규칙\n  ⏳만료: 채워지면 지운다\n본문 ⏳만료: 글머리 아님\n- 모래시계(⏳) 설명 줄\n")
+    assert expiry_lines(text) == ["⏳만료: 채워지면 지운다", "본문 ⏳만료: 글머리 아님"]
 
 
 def test_실제_CLAUDE_md가_상한_이내다():
