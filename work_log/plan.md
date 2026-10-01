@@ -543,6 +543,21 @@
         (kreach는 웹 화면만). 그림은 UNECE 원본을 옮긴 Wikimedia Commons SVG가 퍼블릭 도메인. 미확인: 받은 별표 PDF가
         제2025-7호 기준본인지, API가 NICS 문구를 따른다는 공식 명시, UNECE 이용 조건 원문, KOSHA MSDS API(15157612)의 H·P 필드명,
         GHS Rev.11 신규 코드(P322·P323 등)가 섞일 가능성
+    - **KOSHA MSDS 조회 서비스 실측(2026-10-01, 사용자가 15157612 활용신청 직후)** — 도구: `scripts/_tmp/probe_msds.py`,
+      `scripts/_tmp/probe_msds_batch.py`(gitignore). 표본 CAS 6건(50-00-0·108-88-3·67-56-1·7664-93-9·13516-27-3 + 없는 CAS 1), 상세는 chemId 1건으로 01~16 전부
+      - **불러오는 길**: `https://msds.kosha.or.kr/openapi/service/msdschem/chemlist?searchWrd=<CAS>&searchCnd=1` → `chemId`(6자리)
+        → `…/chemdetail01`~`16?chemId=`(MSDS 16개 항목, 17은 404). 응답은 **XML 전용**(`_type=json`·`returnType=JSON` 무시).
+        목록 필드: casNo·chemId·chemNameKor·enNo·keNo·unNo·lastDate, `totalCount`·`pageNo`·`numOfRows`(기본 10). 0건은 200에 `<items/>`
+      - **CAS 검색은 부분 일치다** — `50-00-0`에 `13150-00-0`도 온다(2건 중 1건이 남). `casNo`가 완전히 같은 행만 골라야 한다
+      - 상세 필드: `msdsItemCode`(I28 등)·`upMsdsItemCode`·`lev`·`msdsItemNameKor`·`itemDetail`·`ordrIdx`. 값 끝에 `|   ※출처 : ECHA`가 붙는다
+      - **비중 = chemdetail09의 I28**(F-009 선행 조사의 답 후보): `1.15`, `0.8623 (g/cu cm at 20℃)`, `0.79 (물=1, 20℃)`, `1.8 (물=1, 20℃)`,
+        `자료없음`(구아자틴) — **자유 문자열**이라 숫자·조건을 파싱해야 하고 없는 물질이 있다(5건 중 1건). 성상은 I0202
+      - **H·P는 chemdetail02**: B0406 `H220 : 극인화성 가스|H280 : …`(코드+국문 문구, `|` 구분), 예방조치는 B040802~08. 그림문자는 `GHS02.gif|…`
+        (산안법 체계 — 위 NICS 문구와 다를 수 있다)
+      - **CORS: 목록에는 `Access-Control-Allow-Origin: *`가 있고 상세(02·09 확인)에는 없다** → 웹(브라우저 직접 호출)은 상세를 못 읽는다. 앱은 무관
+      - **이 주소는 키를 검사하지 않는다** — 엉터리 키로도 200. 그래서 "내 키로 된다"는 승인의 근거가 아니다. 포털 게이트웨이 후보
+        `apis.data.go.kr/B552468/msdschem/getChemList`는 403 코드 30(없는 경로는 400 코드 12라 경로는 있다) — 승인 미반영인지 다른 데이터셋의
+        주소인지 **미확인**. 정식 주소는 포털 참고문서(`…오픈API활용가이드_260916수정.hwp`)에 있다(못 읽음). 한도: 개발 계정 하루 2,000건(포털 기재)
 
 - **유료 서비스화 + 서버 인증(아이디어, 2026-09-11 — 착수 전, 사용자 미결정)** — 사용자 아이디어: 데이터를 원격 서버에
   두고 API로 제공하고, 유료 회원에게 발급한 키를 서버 데몬이 인증한다. 앱은 API 응답을 파싱하는 얇은 클라이언트로 간다.
