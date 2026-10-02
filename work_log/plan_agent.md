@@ -27,6 +27,18 @@
 - [ ] **A-001 원격 MCP 시범** — 기존 도구 2개(`search_chemical`·`get_rule`)를 공개 HTTPS로 올려 Cowork(폰·PC)에서 붙인다.
   서버가 만든 파일(PDF)을 Cowork가 받는 길도 여기서 잰다(plan.md '미정'의 1단계 첫 실측). **기본 구조 변경 — 착수 전 사용자 결정**:
   호스팅(서버리스/상시)·언어(Dart면 `lib/search`·`lib/assist`를 그대로 쓴다)·인증(처음엔 인증 없는 읽기 전용, 필요 시 OAuth)
+  - **★ 결정(사용자 2026-10-02)**: ① 언어 **Dart**(`lib/search`·`lib/assist`·`lib/msds` 그대로 — 두 번째 구현 금지. `scripts/mcp_server.py`는 PC stdio 하네스로 남는다)
+    ② 호스팅 **Google Cloud Run, 서울(`asia-northeast3`)** ③ 인증 **처음엔 없음, 읽기 전용** — KOSHA 키를 쓰는 `get_msds`를 서버에 올릴 때 인증을 붙인다
+    ④ 배포는 **이 클라우드 세션에서** 서비스 계정 키로(`gcloud run deploy`, 자동 배포는 나중) ⑤ 순서 = **A-001 먼저**(Cowork 연결·폰·서버 파일 받기 실측)
+    → 이어서 **A-004를 같은 서버에 도구로 추가**. `get_msds`는 A-001 범위 밖. 버린 대안: Python/TS 래퍼(Dart CLI subprocess — 느리고 두 런타임),
+    Cloudflare Workers(Dart 코드 못 씀), A-004 개발을 배포보다 먼저(가장 불확실한 것은 연결이라 위험한 것 먼저)
+  - **GCP 준비 상태(2026-10-02, 사용자)**: 가입·프로젝트·결제 완료, 서비스 계정 `findchem-deployer`에 역할 6개 확인(Cloud Run 관리자·Cloud Build 편집자·
+    Artifact Registry 관리자·스토리지 관리자·서비스 계정 사용자·서비스 사용량 소비자 — 기억에 기댄 목록, 첫 배포에서 권한 오류가 나면 보정).
+    API 3개(Cloud Run Admin·Cloud Build·Artifact Registry) 켜기와 예산 알림은 안내함(사용자 완료 여부 미확인).
+    **다음**: 사용자가 JSON 키 → base64 → 클라우드 환경 변수 `GCP_SA_KEY_B64`·`GCP_PROJECT`에 넣고 **새 세션**에서 이어간다(환경 변수는 새 세션부터).
+    새 세션 첫 일: 두 변수 존재 확인(값은 출력 금지) → `gcloud auth activate-service-account` → A-001 수용 기준(REQUIREMENTS_AGENT) → 서버 코드
+  - 착수 시 확인할 것: Dart MCP 패키지의 Streamable HTTP 지원 여부(없으면 그 층만 직접), Claude 앱·Cowork의 원격 커넥터 현재 문서(인증 없는 커넥터·폰 지원),
+    이 세션에서 `*.run.app`·googleapis 접속(네트워크 정책)
 - [ ] **A-002 데이터 출처 조사** — 위험노출수준(ERPG-2·PAC-2), 시나리오 규정수량 기준표(400·100·5kg), 별지1의 규정수량 표기("*400 / -")가
   고시 별표 2·3과 같은 출처인지. `researcher`로
 - [x] **A-003 물성 조회 도구** — KOSHA MSDS(정식 주소, plan.md 보류 항목 'KOSHA MSDS 조회 서비스 실측')에서 비중·증기압·폭발한계·TWA·GHS·H코드.
