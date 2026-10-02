@@ -42,7 +42,8 @@
     인증이 실패한다 — gcloud는 `env -u CLOUDSDK_AUTH_ACCESS_TOKEN`으로 부른다. API 3개는 켜져 있음 확인.
     **배포 완료(2026-10-02, 사용자 승인)**: 서비스 `findchem-mcp`, 리비전 `00001-fkx` Ready.
     주소 `https://findchem-mcp-26084771400.asia-northeast3.run.app/mcp`. ★ 이 세션의 네트워크 정책이 `*.run.app`을 막아(curl·WebFetch 둘 다 403)
-    공개 주소 호출 실측은 못 함 — 환경 허용 도메인에 추가하거나 사용자 커넥터 실테스트로 확인. 서비스 계정에 로그 보기 권한 없음(`logging.read` 거부)
+    curl로는 못 잼 → 사용자가 커스텀 커넥터(findchem, 읽기 전용 2개)로 붙인 뒤 **이 세션에서 그 커넥터 도구를 불러** 실측 통과. 서비스 계정에 로그 보기 권한 없음(`logging.read` 거부).
+    **남은 것**: 폰 실테스트, 서버가 만든 파일(PDF)을 Cowork가 받는 길(2차)
   - 착수 시 확인할 것: Dart MCP 패키지의 Streamable HTTP 지원 여부(없으면 그 층만 직접), Claude 앱·Cowork의 원격 커넥터 현재 문서(인증 없는 커넥터·폰 지원),
     이 세션에서 `*.run.app`·googleapis 접속(네트워크 정책)
 - [ ] **A-002 데이터 출처 조사** — 위험노출수준(ERPG-2·PAC-2), 시나리오 규정수량 기준표(400·100·5kg), 별지1의 규정수량 표기("*400 / -")가

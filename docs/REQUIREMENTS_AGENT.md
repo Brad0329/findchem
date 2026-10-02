@@ -8,7 +8,7 @@
 
 | ID | 기능 | 상태 |
 |---|---|---|
-| A-001 | 원격 MCP 시범 (기존 도구 2개를 공개 HTTPS로, Cowork 연결 + 서버 파일 받기 실측) | 진행(2026-10-02 착수 — 결정: Dart·Cloud Run 서울·인증 없음·클라우드 세션 배포, 상세 plan_agent.md. 수용 기준 미작성) |
+| A-001 | 원격 MCP 시범 (기존 도구 2개를 공개 HTTPS로, Cowork 연결 + 서버 파일 받기 실측) | 진행(2026-10-02 착수·배포 — 커넥터 연결 확인. 남은 것: 폰 실테스트, 서버 파일 받기 실측) |
 | A-002 | 데이터 출처 조사 (ERPG-2·PAC-2, 시나리오 규정수량, 별지1 규정수량 표기) | 미착수(2026-10-02) |
 | A-003 | 물성 조회 도구 (KOSHA MSDS — 비중·증기압·폭발한계·TWA·GHS·H코드) | 완료(2026-10-02 — 1차 값 해석·녹화 스크립트, 2차 녹화·호출·응답, spec-checker 대조 후 보완) |
 | A-004 | 계산 도구 (작성수준 판정, 함량미만·시나리오 대상 산정) | 미착수(2026-10-02) |
@@ -30,17 +30,18 @@
   - 범위 밖: 인증(get_msds를 올릴 때), A-004 계산 도구, 자동 배포, 캐시
 - **수용 기준**
   - 프로토콜(테스트: `test/mcp/`)
-    - [ ] `initialize` → `protocolVersion`(클라이언트가 보낸 판이 지원 목록에 있으면 그대로, 아니면 최신) · `capabilities.tools` · `serverInfo` · `instructions` = `assistSystemPrompt`
-    - [ ] `tools/list` → 도구 2개, 이름·설명·`inputSchema`가 `assistToolDefinitions()`와 같다(설명 문자열 완전 일치)
-    - [ ] `tools/call search_chemical {query: 50-00-0}` → `content[0].text`의 JSON이 `searchResponse`와 같고 `isError` false
-    - [ ] `tools/call get_rule {topic: 없는토픽}` → `isError: true` + 사유(조용히 전체로 대체하지 않는다). 알 수 없는 도구도 `isError: true`
-    - [ ] 알림(`id` 없음, `notifications/initialized`) → HTTP 202 본문 없음. 모르는 메서드 → JSON-RPC `-32601`. JSON이 아니면 `-32700`, `ping` → 빈 결과
+    - [x] `initialize` → `protocolVersion`(클라이언트가 보낸 판이 지원 목록에 있으면 그대로, 아니면 최신) · `capabilities.tools` · `serverInfo` · `instructions` = `assistSystemPrompt`
+    - [x] `tools/list` → 도구 2개, 이름·설명·`inputSchema`가 `assistToolDefinitions()`와 같다(설명 문자열 완전 일치)
+    - [x] `tools/call search_chemical {query: 50-00-0}` → `content[0].text`의 JSON이 `searchResponse`와 같고 `isError` false
+    - [x] `tools/call get_rule {topic: 없는토픽}` → `isError: true` + 사유(조용히 전체로 대체하지 않는다). 알 수 없는 도구도 `isError: true`
+    - [x] 알림(`id` 없음, `notifications/initialized`) → HTTP 202 본문 없음. 모르는 메서드 → JSON-RPC `-32601`. JSON이 아니면 `-32700`, `ping` → 빈 결과
   - HTTP(테스트: 포트 0에 띄워 실제 요청)
-    - [ ] `POST /mcp` 정상 요청 → 200 `application/json`. `GET /mcp` → 405. 다른 경로 → 404
-    - [ ] 처리 중 예외는 500 + 사유 없는 JSON-RPC 오류, 원인은 로그에(조용한 실패 금지)
+    - [x] `POST /mcp` 정상 요청 → 200 `application/json`. `GET /mcp` → 405. 다른 경로 → 404
+    - [x] 처리 중 예외는 500 + 사유 없는 JSON-RPC 오류, 원인은 로그에(조용한 실패 금지)
   - 배포·연결(실측)
-    - [ ] Cloud Run 서울에 배포되고, 공개 주소 `/mcp`에 이 세션에서 `initialize`·`tools/list`·`tools/call`이 통한다
-          (2026-10-02 배포·Ready 확인. 호출 실측은 세션 네트워크가 `*.run.app`을 막아 미완)
+    - [x] Cloud Run 서울에 배포되고, 공개 주소 `/mcp`에 이 세션에서 `initialize`·`tools/list`·`tools/call`이 통한다
+          (2026-10-02 — 세션 프록시가 `*.run.app`을 막아 curl 대신 **사용자가 붙인 커스텀 커넥터를 이 세션에서 불러** 확인:
+          initialize·tools/list(도구 2개) 통과, search_chemical 7782-50-5 정상 JSON, get_rule 없는 주제 → isError + 사유)
     - [ ] (사용자 실테스트) Claude 커스텀 커넥터로 PC·폰에서 붙여 질문 하나에 두 도구가 불린다
     - [ ] 서버가 만든 파일(PDF)을 Cowork가 받는 길 실측 — 2차(도구 2개 연결 확인 뒤)
 
