@@ -17,7 +17,7 @@ void main() {
     final ds = Dataset.fromJson(
       (jsonDecode(File('assets/data/findchem_data.json').readAsStringSync()) as Map).cast<String, Object?>(),
     );
-    tools = AssistTools(ds);
+    tools = AssistTools(ds, log: (_) {});
   });
 
   group('검색 도구', () {

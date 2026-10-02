@@ -7,8 +7,6 @@
 /// 화면이 이것을 그리므로 모델이 인용을 빠뜨려도 근거가 사라지지 않는다.
 library;
 
-import 'package:flutter/foundation.dart';
-
 import '../parser/models.dart';
 import '../search/search.dart';
 import 'assist_response.dart';
@@ -31,10 +29,14 @@ class ToolOutcome {
 }
 
 /// 도구 실행부. 데이터셋 하나를 잡고 산다(화면이 데이터를 바꾸면 새로 만든다).
+///
+/// Flutter를 import하지 않는다 — 원격 MCP 서버(A-001, `dart compile exe`)가 같은 실행부를 쓴다.
+/// 그래서 로그는 생성자로 받는다(앱은 `debugPrint`, 서버는 stderr).
 class AssistTools {
-  AssistTools(this.dataset) : _index = SearchIndex(dataset, cap: assistSearchCap);
+  AssistTools(this.dataset, {required this.log}) : _index = SearchIndex(dataset, cap: assistSearchCap);
 
   final Dataset dataset;
+  final void Function(String message) log;
   final SearchIndex _index;
 
   /// [name] 도구를 [input]으로 실행한다. **예외를 밖으로 던지지 않는다** — 실패도 결과로 돌려준다.
@@ -60,7 +62,7 @@ class AssistTools {
       // 알 수 없는 주제를 전체로 조용히 대체하지 않는다(1단계 수용 기준) — 모델에 사유를 돌려주고 다시 부르게 한다.
       return ToolOutcome(name: name, response: const {}, error: e.toString());
     } catch (e, st) {
-      debugPrint('F-008 도구 실행 실패($name): $e\n$st');
+      log('F-008 도구 실행 실패($name): $e\n$st');
       return ToolOutcome(name: name, response: const {}, error: '도구 실행에 실패했습니다: ${e.runtimeType}');
     }
   }

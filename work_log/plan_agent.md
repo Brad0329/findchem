@@ -37,6 +37,10 @@
     API 3개(Cloud Run Admin·Cloud Build·Artifact Registry) 켜기와 예산 알림은 안내함(사용자 완료 여부 미확인).
     **다음**: 사용자가 JSON 키 → base64 → 클라우드 환경 변수 `GCP_SA_KEY_B64`·`GCP_PROJECT`에 넣고 **새 세션**에서 이어간다(환경 변수는 새 세션부터).
     새 세션 첫 일: 두 변수 존재 확인(값은 출력 금지) → `gcloud auth activate-service-account` → A-001 수용 기준(REQUIREMENTS_AGENT) → 서버 코드
+  - **진행(2026-10-02)**: 수용 기준 작성, 서버 코드(`lib/mcp/`·`scripts/mcp_http_server.dart`, 새 의존성 없이 dart:io) + 테스트 통과, 로컬 컴파일 실행 확인.
+    `scripts/gcp_auth.sh`(로그인)·`scripts/deploy_mcp.sh`(배포). ★ 클라우드 세션 환경의 `CLOUDSDK_AUTH_ACCESS_TOKEN`이 서비스 계정을 덮어써
+    인증이 실패한다 — gcloud는 `env -u CLOUDSDK_AUTH_ACCESS_TOKEN`으로 부른다. API 3개는 켜져 있음 확인.
+    **`deploy_mcp.sh` 실행은 자동 승인 분류기가 거부** — 사용자 승인 후 배포
   - 착수 시 확인할 것: Dart MCP 패키지의 Streamable HTTP 지원 여부(없으면 그 층만 직접), Claude 앱·Cowork의 원격 커넥터 현재 문서(인증 없는 커넥터·폰 지원),
     이 세션에서 `*.run.app`·googleapis 접속(네트워크 정책)
 - [ ] **A-002 데이터 출처 조사** — 위험노출수준(ERPG-2·PAC-2), 시나리오 규정수량 기준표(400·100·5kg), 별지1의 규정수량 표기("*400 / -")가

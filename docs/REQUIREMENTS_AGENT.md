@@ -21,6 +21,28 @@
 
 각 항목은 착수할 때 이 아래에 절을 만들어 수용 기준을 먼저 쓴다.
 
+### A-001: 원격 MCP 시범
+- **설명**: F-008 도구 2개(`search_chemical`·`get_rule`)를 MCP Streamable HTTP로 공개 HTTPS(Cloud Run 서울)에 올려
+  Claude(Cowork·폰·PC)에 커스텀 커넥터로 붙인다. 결정은 plan_agent.md A-001(Dart·Cloud Run `asia-northeast3`·인증 없음·읽기 전용·이 세션에서 배포).
+  - 구현 위치: 프로토콜 처리 `lib/mcp/`(Flutter 없음 — `dart compile exe`로 돈다), 진입점 `scripts/mcp_http_server.dart`, 배포 `scripts/deploy_mcp.sh`.
+    도구 실행은 앱·웹과 **같은 `AssistTools.run`**, 설명·시스템 프롬프트는 `lib/assist/prompt.dart` — 두 번째 구현 금지
+  - 새 의존성 없음(`dart:io` HttpServer). 상태 없는 서버(세션 ID 안 씀) — 요청마다 JSON 응답 하나(SSE 스트림 안 씀)
+  - 범위 밖: 인증(get_msds를 올릴 때), A-004 계산 도구, 자동 배포, 캐시
+- **수용 기준**
+  - 프로토콜(테스트: `test/mcp/`)
+    - [ ] `initialize` → `protocolVersion`(클라이언트가 보낸 판이 지원 목록에 있으면 그대로, 아니면 최신) · `capabilities.tools` · `serverInfo` · `instructions` = `assistSystemPrompt`
+    - [ ] `tools/list` → 도구 2개, 이름·설명·`inputSchema`가 `assistToolDefinitions()`와 같다(설명 문자열 완전 일치)
+    - [ ] `tools/call search_chemical {query: 50-00-0}` → `content[0].text`의 JSON이 `searchResponse`와 같고 `isError` false
+    - [ ] `tools/call get_rule {topic: 없는토픽}` → `isError: true` + 사유(조용히 전체로 대체하지 않는다). 알 수 없는 도구도 `isError: true`
+    - [ ] 알림(`id` 없음, `notifications/initialized`) → HTTP 202 본문 없음. 모르는 메서드 → JSON-RPC `-32601`. JSON이 아니면 `-32700`, `ping` → 빈 결과
+  - HTTP(테스트: 포트 0에 띄워 실제 요청)
+    - [ ] `POST /mcp` 정상 요청 → 200 `application/json`. `GET /mcp` → 405. 다른 경로 → 404
+    - [ ] 처리 중 예외는 500 + 사유 없는 JSON-RPC 오류, 원인은 로그에(조용한 실패 금지)
+  - 배포·연결(실측)
+    - [ ] Cloud Run 서울에 배포되고, 공개 주소 `/mcp`에 이 세션에서 `initialize`·`tools/list`·`tools/call`이 통한다
+    - [ ] (사용자 실테스트) Claude 커스텀 커넥터로 PC·폰에서 붙여 질문 하나에 두 도구가 불린다
+    - [ ] 서버가 만든 파일(PDF)을 Cowork가 받는 길 실측 — 2차(도구 2개 연결 확인 뒤)
+
 ### A-003: 물성 조회 도구 (KOSHA MSDS)
 - **설명**: CAS 하나로 안전보건공단 MSDS 조회 서비스(data.go.kr 15157612, `https://apis.data.go.kr/B552468/msdschem1`, XML 전용)를 불러
   계획서 1.2 물질 목록·별지7·작성수준 판정에 필요한 물성을 돌려준다. 실측 근거: plan.md 보류 항목 'KOSHA MSDS 조회 서비스 실측'.

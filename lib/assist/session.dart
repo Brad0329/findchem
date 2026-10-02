@@ -38,7 +38,7 @@ class AssistSession extends ChangeNotifier {
     required this.client,
     required this.apiKey,
     required this.modelOf,
-  }) : tools = AssistTools(dataset);
+  }) : tools = AssistTools(dataset, log: debugPrint);
 
   final AssistTools tools;
   final AssistLlmClient client;
