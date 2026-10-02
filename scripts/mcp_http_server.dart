@@ -3,7 +3,7 @@
 //   dart run scripts/mcp_http_server.dart          → PORT(기본 8080)에서 POST /mcp
 //   FINDCHEM_DATA=<번들 JSON 경로>                  → 데이터 위치(기본 assets/data/findchem_data.json)
 //
-// 여기에는 규칙도 문장도 없다 — 프로토콜은 lib/mcp/, 도구는 lib/assist/(앱ㆍ웹과 같은 코드).
+// 여기에는 규칙도 문장도 없다 — 프로토콜은 lib/mcp/, 도구는 lib/assist/(앱ㆍ웹과 같은 코드)ㆍlib/calc/(A-004 계산).
 // 로그는 stderr 한 줄씩(Cloud Run이 Cloud Logging으로 모은다).
 import 'dart:async';
 import 'dart:convert';
@@ -14,7 +14,7 @@ import 'package:findchem/mcp/mcp_http.dart';
 import 'package:findchem/parser/models.dart';
 
 /// 배포 판 구분용. 서버 동작을 바꾸면 올린다.
-const serverVersion = '0.3.0-a001';
+const serverVersion = '0.4.0-a004';
 
 void log(String message) => stderr.writeln(message);
 

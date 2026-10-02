@@ -41,10 +41,11 @@ void main() {
       expect(result(call('initialize', {'protocolVersion': '1999-01-01'}))['protocolVersion'], mcpProtocolVersions.first);
     });
 
-    test('tools/list — 이름·설명·스키마가 assistToolDefinitions와 같다', () {
+    test('tools/list — 앞 두 도구는 assistToolDefinitions와 같고, A-004 계산 도구 2개가 뒤에 붙는다', () {
       final tools = (result(call('tools/list'))['tools']! as List).cast<Map>();
       final defs = assistToolDefinitions();
-      expect(tools.map((t) => t['name']), ['search_chemical', 'get_rule']);
+      expect(tools.map((t) => t['name']),
+          ['search_chemical', 'get_rule', 'calc_writing_level', 'screen_preliminary_scenarios']);
       for (var i = 0; i < defs.length; i++) {
         expect(tools[i]['description'], defs[i]['description']);
         expect(jsonEncode(tools[i]['inputSchema']), jsonEncode(defs[i]['input_schema']));
@@ -113,7 +114,7 @@ void main() {
       final (s, b, ct) = await send('POST', '/mcp', jsonEncode({'jsonrpc': '2.0', 'id': 7, 'method': 'tools/list'}));
       expect(s, 200);
       expect(ct?.mimeType, 'application/json');
-      expect(((jsonDecode(b) as Map)['result'] as Map)['tools'], hasLength(2));
+      expect(((jsonDecode(b) as Map)['result'] as Map)['tools'], hasLength(4));
 
       final (s2, b2, _) = await send('POST', '/mcp', jsonEncode({'jsonrpc': '2.0', 'method': 'notifications/initialized'}));
       expect(s2, 202);
