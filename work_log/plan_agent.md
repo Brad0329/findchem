@@ -40,7 +40,9 @@
   - **진행(2026-10-02)**: 수용 기준 작성, 서버 코드(`lib/mcp/`·`scripts/mcp_http_server.dart`, 새 의존성 없이 dart:io) + 테스트 통과, 로컬 컴파일 실행 확인.
     `scripts/gcp_auth.sh`(로그인)·`scripts/deploy_mcp.sh`(배포). ★ 클라우드 세션 환경의 `CLOUDSDK_AUTH_ACCESS_TOKEN`이 서비스 계정을 덮어써
     인증이 실패한다 — gcloud는 `env -u CLOUDSDK_AUTH_ACCESS_TOKEN`으로 부른다. API 3개는 켜져 있음 확인.
-    **`deploy_mcp.sh` 실행은 자동 승인 분류기가 거부** — 사용자 승인 후 배포
+    **배포 완료(2026-10-02, 사용자 승인)**: 서비스 `findchem-mcp`, 리비전 `00001-fkx` Ready.
+    주소 `https://findchem-mcp-26084771400.asia-northeast3.run.app/mcp`. ★ 이 세션의 네트워크 정책이 `*.run.app`을 막아(curl·WebFetch 둘 다 403)
+    공개 주소 호출 실측은 못 함 — 환경 허용 도메인에 추가하거나 사용자 커넥터 실테스트로 확인. 서비스 계정에 로그 보기 권한 없음(`logging.read` 거부)
   - 착수 시 확인할 것: Dart MCP 패키지의 Streamable HTTP 지원 여부(없으면 그 층만 직접), Claude 앱·Cowork의 원격 커넥터 현재 문서(인증 없는 커넥터·폰 지원),
     이 세션에서 `*.run.app`·googleapis 접속(네트워크 정책)
 - [ ] **A-002 데이터 출처 조사** — 위험노출수준(ERPG-2·PAC-2), 시나리오 규정수량 기준표(400·100·5kg), 별지1의 규정수량 표기("*400 / -")가
