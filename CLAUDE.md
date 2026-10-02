@@ -3,8 +3,9 @@
 Flutter(Android + 웹 한 벌), 서버 없음, 데이터는 JSON으로 번들해 처음부터 만드는 신규 시스템.
 
 ## 현재 단계
-- **`agent` 브랜치(에이전트 트랙: 원격 MCP + 스킬)에서는 계획 = `work_log/plan_agent.md`, 요구사항·번호 대장 = `docs/REQUIREMENTS_AGENT.md`(`A-NNN`)** —
-  아래 plan.md·F 번호는 master 트랙이다. 두 번호 체계를 섞지 않는다
+- **에이전트 트랙(원격 MCP·스킬, 번호 `A-NNN`) 요청이면 `agent` 브랜치에서 한다** — master로 열린 세션은 `git checkout agent` 후
+  `work_log/plan_agent.md`를 읽는다(훅은 세션 시작 때만 돈다). 그 브랜치의 계획 = `plan_agent.md`, 요구사항 = `docs/REQUIREMENTS_AGENT.md`.
+  아래 plan.md·F 번호는 master 트랙(앱·웹)이다 — 두 번호 체계를 섞지 않는다
 - 전체 Phase 체크리스트/아키텍처의 **단일 원본 = `work_log/plan.md`** (여기에 중복 기재 금지)
 - 현재: **F-008 규정수량·최대보유량 판정 도우미** — 1단계 완료 2026-09-16, **2단계(앱·웹 화면 + LLM 루프) 구현·웹 배포
   2026-09-16**(비용 실측·검색 상한 10은 09-17). **남은 것: 2단계 수용 기준 대조(spec-checker 미실행)·웹 C1·D3·폰 실테스트**
