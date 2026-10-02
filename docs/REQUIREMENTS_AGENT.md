@@ -8,7 +8,7 @@
 
 | ID | 기능 | 상태 |
 |---|---|---|
-| A-001 | 원격 MCP 시범 (기존 도구 2개를 공개 HTTPS로, Cowork 연결 + 서버 파일 받기 실측) | 진행(2026-10-02 착수·배포 — 커넥터 연결 확인. 남은 것: 폰 실테스트, 서버 파일 받기 실측) |
+| A-001 | 원격 MCP 시범 (기존 도구 2개를 공개 HTTPS로, Cowork 연결 + 서버 파일 받기 실측) | 완료(2026-10-02 — Cloud Run 서울 배포, PC·폰·Cowork 커넥터 연결, 파일 받기 실측 후 실험 도구 삭제. 결과는 plan_agent.md) |
 | A-002 | 데이터 출처 조사 (ERPG-2·PAC-2, 시나리오 규정수량, 별지1 규정수량 표기) | 미착수(2026-10-02) |
 | A-003 | 물성 조회 도구 (KOSHA MSDS — 비중·증기압·폭발한계·TWA·GHS·H코드) | 완료(2026-10-02 — 1차 값 해석·녹화 스크립트, 2차 녹화·호출·응답, spec-checker 대조 후 보완) |
 | A-004 | 계산 도구 (작성수준 판정, 함량미만·시나리오 대상 산정) | 미착수(2026-10-02) |
@@ -51,8 +51,9 @@
     - [x] `tools/call sample_pdf` → `resource_link`의 uri = 요청 주소 기준 `<scheme>://<host>/files/findchem-sample.pdf`(Cloud Run 뒤에서는 `X-Forwarded-Proto`로 https),
           내장 `blob`을 풀면 `GET /files/findchem-sample.pdf`가 주는 바이트와 같다
     - [x] `GET /files/findchem-sample.pdf` → 200 `application/pdf` + `Content-Disposition: attachment`. `/files/` 아래 다른 이름은 404
-    - [ ] (사용자 실테스트) 채팅(PC·폰)과 Cowork에서 `sample_pdf`를 부르게 해, 세 길 각각 ⓐ 화면에 파일·링크로 보이는지 ⓑ 받아서 열리는지
+    - [x] (사용자 실테스트) 채팅(PC·폰)과 Cowork에서 `sample_pdf`를 부르게 해, 세 길 각각 ⓐ 화면에 파일·링크로 보이는지 ⓑ 받아서 열리는지
           ⓒ Cowork가 그 파일을 작업 폴더·Drive에 저장할 수 있는지 — 결과를 plan_agent.md에 표로 남긴다
+          (2026-10-02 실측 완료 → `sample_pdf`·`GET /files/…`·`lib/mcp/sample_pdf.dart`는 계획대로 삭제, 서버 0.3.0-a001. 위 네 기준은 실측 기간의 기록)
 
 ### A-003: 물성 조회 도구 (KOSHA MSDS)
 - **설명**: CAS 하나로 안전보건공단 MSDS 조회 서비스(data.go.kr 15157612, `https://apis.data.go.kr/B552468/msdschem1`, XML 전용)를 불러

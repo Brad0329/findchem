@@ -24,7 +24,7 @@
 > 순서는 "가장 위험한 것 먼저". 번호는 발급 순서일 뿐 — 착수 순서는 이 목록 순서를 따른다.
 > 각 항목은 착수할 때 `REQUIREMENTS_AGENT.md`에 수용 기준을 먼저 쓴다.
 
-- [ ] **A-001 원격 MCP 시범** — 기존 도구 2개(`search_chemical`·`get_rule`)를 공개 HTTPS로 올려 Cowork(폰·PC)에서 붙인다.
+- [x] **A-001 원격 MCP 시범** — **완료 2026-10-02.** 기존 도구 2개(`search_chemical`·`get_rule`)를 공개 HTTPS로 올려 Cowork(폰·PC)에서 붙인다.
   서버가 만든 파일(PDF)을 Cowork가 받는 길도 여기서 잰다(plan.md '미정'의 1단계 첫 실측). **기본 구조 변경 — 착수 전 사용자 결정**:
   호스팅(서버리스/상시)·언어(Dart면 `lib/search`·`lib/assist`를 그대로 쓴다)·인증(처음엔 인증 없는 읽기 전용, 필요 시 OAuth)
   - **★ 결정(사용자 2026-10-02)**: ① 언어 **Dart**(`lib/search`·`lib/assist`·`lib/msds` 그대로 — 두 번째 구현 금지. `scripts/mcp_server.py`는 PC stdio 하네스로 남는다)
@@ -56,7 +56,16 @@
       반면 넷째 길(모델이 샌드박스에서 직접 만든 파일)은 폰에서 파일 카드로 보였다.
       → **잠정 결론: 서버는 파일이 아니라 데이터(JSON·텍스트)를 돌려주고, 파일(PDF·hwpx·docx)은 스킬이 지시해 Claude가 샌드박스에서 만든다.**
       같은 PDF를 브라우저로 직접 열면 정상(문구 확인, 사용자 2026-10-02) — 파일 자체는 멀쩡하고 막힌 것은 Claude 쪽 수신이다.
-      Cowork(데스크톱, 로컬 폴더 접근)는 다를 수 있어 미실측. 버린 대안 후보: 서버가 Drive에 올리기(OAuth 필요 — Cowork의 Drive 커넥터가 대신할 수 있다)
+      **Cowork 실측(2026-10-02)**: ② 내장 `resource`(base64, application/pdf)를 **정상 수신**해 첨부(699바이트, `%PDF-1.4` 확인). ①·③은 쓰이지 않음.
+      | 길 | 채팅(폰) | Cowork |
+      |---|---|---|
+      | ① resource_link | 미지원 | 안 씀 |
+      | ② 내장 resource(base64) | 미지원 | **수신·첨부됨** |
+      | ③ 본문 주소 | web_fetch 권한 오류 | 안 씀(②로 충분) |
+      | ④ 모델이 샌드박스에서 직접 생성 | 파일 카드로 보임 | (미실측 — Cowork 기본 기능) |
+      → **결론**: 계획서 작성의 주 무대인 Cowork는 서버 파일(②)을 받는다. 다만 채팅은 못 받으므로 **기본 설계는 "서버는 데이터, 파일은 Claude가 만든다(④)"**,
+      서버가 꼭 만들어야 하는 파일(공식 서식 원본 등)이 생기면 ② 내장 resource로 Cowork 전용 제공. 버린 대안: 서버가 Drive에 올리기(OAuth 필요 — Cowork의 Drive 커넥터가 대신한다).
+      실험 도구 `sample_pdf`·`GET /files/…`는 계획대로 삭제(서버 0.3.0-a001). 데스크톱 앱의 옛 로컬 하네스(`claude_desktop_config.json`의 stdio findchem)는 원격과 이름이 겹쳐 사용자가 지움
     배포·로그인 스크립트는 `.claude/settings.json` 허용 목록에 넣음(사용자 결정 2026-10-02 — 자동 승인 분류기가 매번 막았다)
   - 착수 시 확인할 것: Dart MCP 패키지의 Streamable HTTP 지원 여부(없으면 그 층만 직접), Claude 앱·Cowork의 원격 커넥터 현재 문서(인증 없는 커넥터·폰 지원),
     이 세션에서 `*.run.app`·googleapis 접속(네트워크 정책)

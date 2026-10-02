@@ -8,7 +8,6 @@ import 'package:findchem/assist/assist_response.dart';
 import 'package:findchem/assist/prompt.dart';
 import 'package:findchem/mcp/mcp_handler.dart';
 import 'package:findchem/mcp/mcp_http.dart';
-import 'package:findchem/mcp/sample_pdf.dart';
 import 'package:findchem/parser/models.dart';
 import 'package:findchem/search/search.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -42,10 +41,10 @@ void main() {
       expect(result(call('initialize', {'protocolVersion': '1999-01-01'}))['protocolVersion'], mcpProtocolVersions.first);
     });
 
-    test('tools/list — 앞 두 도구는 이름·설명·스키마가 assistToolDefinitions와 같고, 셋째가 실험 도구 sample_pdf', () {
+    test('tools/list — 이름·설명·스키마가 assistToolDefinitions와 같다', () {
       final tools = (result(call('tools/list'))['tools']! as List).cast<Map>();
       final defs = assistToolDefinitions();
-      expect(tools.map((t) => t['name']), ['search_chemical', 'get_rule', 'sample_pdf']);
+      expect(tools.map((t) => t['name']), ['search_chemical', 'get_rule']);
       for (var i = 0; i < defs.length; i++) {
         expect(tools[i]['description'], defs[i]['description']);
         expect(jsonEncode(tools[i]['inputSchema']), jsonEncode(defs[i]['input_schema']));
@@ -85,41 +84,6 @@ void main() {
     });
   });
 
-  group('시험 PDF (A-001 2차)', () {
-    test('%PDF-로 시작해 %%EOF로 끝나고, xref 오프셋마다 그 위치에 N 0 obj가 있다', () {
-      final text = latin1.decode(mcp.samplePdfBytes());
-      expect(text.startsWith('%PDF-'), true);
-      expect(text.trimRight().endsWith('%%EOF'), true);
-      final startxref = int.parse(RegExp(r'startxref\n(\d+)').firstMatch(text)!.group(1)!);
-      expect(text.substring(startxref).startsWith('xref'), true);
-      final offsets = RegExp(r'^(\d{10}) 00000 n $', multiLine: true)
-          .allMatches(text)
-          .map((m) => int.parse(m.group(1)!))
-          .toList();
-      expect(offsets, hasLength(5));
-      for (var i = 0; i < offsets.length; i++) {
-        expect(text.substring(offsets[i]).startsWith('${i + 1} 0 obj'), true, reason: '객체 ${i + 1}');
-      }
-      expect(() => buildSamplePdf(['한글']), throwsArgumentError);
-    });
-
-    test('tools/call sample_pdf — resource_link는 공개 주소 기준, 내장 blob은 같은 바이트. 주소를 모르면 링크를 뺀다', () {
-      final r = (mcp.handleMessage({
-        'jsonrpc': '2.0',
-        'id': 1,
-        'method': 'tools/call',
-        'params': {'name': 'sample_pdf'},
-      }, baseUrl: Uri.parse('https://example.run.app/'))!['result']! as Map);
-      final content = (r['content']! as List).cast<Map>();
-      expect(content.map((c) => c['type']), ['text', 'resource_link', 'resource']);
-      expect(content[1]['uri'], 'https://example.run.app/files/findchem-sample.pdf');
-      expect(base64Decode((content[2]['resource'] as Map)['blob'] as String), mcp.samplePdfBytes());
-
-      final noBase = (result(call('tools/call', {'name': 'sample_pdf'}))['content']! as List).cast<Map>();
-      expect(noBase.map((c) => c['type']), ['text', 'resource']);
-    });
-  });
-
   group('HTTP', () {
     late HttpServer server;
     late Uri base;
@@ -149,7 +113,7 @@ void main() {
       final (s, b, ct) = await send('POST', '/mcp', jsonEncode({'jsonrpc': '2.0', 'id': 7, 'method': 'tools/list'}));
       expect(s, 200);
       expect(ct?.mimeType, 'application/json');
-      expect(((jsonDecode(b) as Map)['result'] as Map)['tools'], hasLength(3));
+      expect(((jsonDecode(b) as Map)['result'] as Map)['tools'], hasLength(2));
 
       final (s2, b2, _) = await send('POST', '/mcp', jsonEncode({'jsonrpc': '2.0', 'method': 'notifications/initialized'}));
       expect(s2, 202);
@@ -157,30 +121,6 @@ void main() {
 
       expect((await send('GET', '/mcp')).$1, 405);
       expect((await send('POST', '/other', '{}')).$1, 404);
-    });
-
-    test('GET /files/findchem-sample.pdf — 200 application/pdf attachment, 바이트가 같다. 다른 이름 404. 링크는 Host·X-Forwarded-Proto 기준', () async {
-      final req = await client.getUrl(base.resolve(samplePdfPath));
-      final res = await req.close();
-      final bytes = await res.fold<List<int>>([], (a, b) => a..addAll(b));
-      expect(res.statusCode, 200);
-      expect(res.headers.contentType?.mimeType, 'application/pdf');
-      expect(res.headers.value('content-disposition'), contains('attachment'));
-      expect(bytes, mcp.samplePdfBytes());
-      expect((await send('GET', '/files/other.pdf')).$1, 404);
-      expect((await send('GET', '/files/../mcp')).$1, isNot(200));
-
-      final call = await client.postUrl(base.resolve('/mcp'));
-      call.headers.set('x-forwarded-proto', 'https');
-      call.add(utf8.encode(jsonEncode({
-        'jsonrpc': '2.0',
-        'id': 1,
-        'method': 'tools/call',
-        'params': {'name': 'sample_pdf'},
-      })));
-      final body = jsonDecode(await utf8.decodeStream(await call.close())) as Map;
-      final link = ((body['result'] as Map)['content'] as List)[1] as Map;
-      expect(link['uri'], 'https://127.0.0.1:${server.port}/files/findchem-sample.pdf');
     });
 
     test('처리 중 예외 — 500 + 사유 없는 오류, 원인은 로그에', () async {
@@ -203,5 +143,5 @@ class _Throwing extends McpHandler {
   _Throwing(super.dataset) : super(version: 'test', log: (_) {});
 
   @override
-  Object? handleBody(String body, {Uri? baseUrl}) => throw StateError('boom');
+  Object? handleBody(String body) => throw StateError('boom');
 }
