@@ -123,6 +123,27 @@ def test_취소선으로_닫은_통과_항목은_대기로_세지_않는다(tmp_
     assert "Android 실기기에서 별" not in text
 
 
+PLAN_AGENT = """# 에이전트 트랙 계획
+
+## Phase 체크리스트
+
+- [x] **A-001 수용 테스트 설계** — 완료 2026-10-02
+- [ ] **A-002 원격 MCP 시범**
+"""
+
+
+def test_plan_agent가_있으면_그것을_주입한다(tmp_path):
+    """agent 브랜치(2026-10-02~)는 계획을 work_log/plan_agent.md에 둔다 — plan.md를 주입하면
+    master 트랙의 F-006을 현재라고 말한다."""
+    root = _project(tmp_path, plan=PLAN_FINDCHEM)
+    (root / "work_log" / "plan_agent.md").write_text(PLAN_AGENT, encoding="utf-8")
+    text = build_context(root)
+    assert "work_log/plan_agent.md 요약" in text
+    assert "현재 Phase: A-002 원격 MCP 시범" in text
+    assert "Phase 1/2 완료" in text
+    assert "F-006" not in text
+
+
 def test_미초기화_템플릿이면_초기화가_먼저라고만_한다(tmp_path):
     root = _project(tmp_path, claude_md="<!-- ★★★ 템플릿 초기화 모드 ★★★ -->\n")
     text = build_context(root)

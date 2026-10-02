@@ -19,6 +19,10 @@ r"""세션이 시작될 때 plan.md의 현재 Phase와 이어 읽을 파일을 �
   끼워 넣은 기능은 여럿이 동시에 진행 중일 수 있어 "첫 미완료"가 곧 현재라고 단정하지 못한다 —
   미완료가 둘 이상이면 그 사실과 CLAUDE.md '현재 단계'와 대조하라는 말을 붙인다.
 
+**agent 브랜치(2026-10-02~)** — 에이전트 트랙(MCP 서버 + 스킬)은 master와 따로 `agent` 브랜치에서
+`work_log/plan_agent.md`로 계획하고 요구사항은 `A-NNN`으로 센다. 그 파일이 있으면 plan.md 대신 그것을
+주입한다 — plan.md를 주입하면 master 트랙의 F-006을 현재라고 말한다.
+
 **주입하지 않는 경우에도 한 줄은 낸다** — 이 훅의 출력이 세션 첫머리에 안 보이면 훅이 죽은 것이다
 (2026-08-22 훅 4종이 cp949로 조용히 죽어 있던 실사례. 죽은 훅과 "할 말이 없는 훅"을 구분한다).
   - 미초기화 템플릿(CLAUDE.md에 초기화 블록이 남아 있음): 초기화가 먼저라고만 알린다
@@ -40,7 +44,7 @@ ROOT = Path(__file__).resolve().parents[2]
 INIT_MARKER = "템플릿 초기화 모드"
 # `- [ ] Phase 003: …` / `- [ ] (Phase 007 전 끼워 넣은 기능) **F-006 …** — …` / `- [ ] **F-009 …**`
 PHASE_LINE = re.compile(
-    r"^- \[( |x|X)\] (?:\([^)]*\) )?(?:\*\*)?((?:Phase |F-)[^\s:*]+)(.*)$")
+    r"^- \[( |x|X)\] (?:\([^)]*\) )?(?:\*\*)?((?:Phase |F-|A-)[^\s:*]+)(.*)$")
 PHASE_NUMBER = re.compile(r"Phase (\d{3})$")
 HEADING = re.compile(r"^## +(.*)$")
 
@@ -67,7 +71,9 @@ def build_context(root: Path) -> str:
     if claude_md.exists() and INIT_MARKER in claude_md.read_text(encoding="utf-8"):
         return "[session_context] 미초기화 템플릿이다 — CLAUDE.md 초기화 체크리스트가 먼저다. plan.md 주입은 생략한다."
 
-    plan = root / "work_log" / "plan.md"
+    plan = root / "work_log" / "plan_agent.md"
+    if not plan.exists():
+        plan = root / "work_log" / "plan.md"
     if not plan.exists():
         return "[session_context] work_log/plan.md가 없다 — 현재 Phase를 알 수 없다. 사용자에게 확인할 것."
 
@@ -78,7 +84,7 @@ def build_context(root: Path) -> str:
     open_items = [m for m in phases if m.group(1) == " "]
     current = open_items[0] if open_items else None
 
-    out = ["[session_context] work_log/plan.md 요약 — 작업 전에 plan.md 전문을 Read로 읽을 것."]
+    out = [f"[session_context] work_log/{plan.name} 요약 — 작업 전에 {plan.name} 전문을 Read로 읽을 것."]
     out.append(f"Phase {done}/{len(phases)} 완료:")
     out += [f"  {m.group(0)}" for m in phases]
 
