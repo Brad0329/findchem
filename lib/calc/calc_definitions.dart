@@ -36,7 +36,8 @@ const scenarioToolDescription = '''설비별로 예비시나리오 대상인지 
 취급량(kg) = 설계용량(m³) × 비중 × 1000을 운전조건 성상의 예비시나리오 규정수량과 비교한다
 (고체 2,000kg / 액체 400kg / 기체 독성구분 1ㆍ2 5kg, 3 100kg, 구분 없음 100kg / 액화가스는 기체 규정수량).
 판정 verdict: 표준시설(규정수량 이상 — 대상) / 소량시설(미만) / 함량미만(그 물질의 가장 낮은 함량기준 미만) /
-미대상(low_diffusion: true — 저확산물질 설비는 선정하지 않는다) / error. 탱크로리도 대상 설비다.
+미대상(low_diffusion: true — 저확산물질 설비는 선정하지 않는다) / selection_required(저확산 행이 있는 물질인데
+low_diffusion을 안 줌 — 성상을 확인해 다시 부를 것) / error. 하나라도 error·selection_required면 status incomplete. 탱크로리도 대상 설비다.
 가스처럼 용량×비중이 아니면 quantity_kg + basis로 양을 직접 준다. 급성독성 구분은 MSDS(get_msds 2절)에서 확인해 넣는다.
 영향범위(장외 여부 = 사고시나리오)는 이 도구가 정하지 않는다 — KORA 결과를 쓴다.''';
 

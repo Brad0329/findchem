@@ -20,6 +20,12 @@ bool _isSolutionRow2(QuantityRow r) => r.kind == '용액';
 /// 별표2의 저확산 구분 행(일반기준 다).
 bool _isLowDiffusionRow(QuantityRow r) => r.kind == '저확산';
 
+/// 용액ㆍ* 표시 행(별표 2 일반기준 나 / 별표 3 일반기준 가). A-004 계산 도구가 같은 판별을 쓴다(두 번째 구현 금지).
+bool isSolutionRow(Entry e, QuantityRow r) => e.src == Source.byeolpyo3 ? _isSolutionRow3(r) : _isSolutionRow2(r);
+
+/// 저확산 구분 행(별표 2 일반기준 다). A-004 계산 도구가 같은 판별을 쓴다.
+bool isLowDiffusionRow(QuantityRow r) => _isLowDiffusionRow(r);
+
 /// 유해성 구분 행(급성ㆍ만성ㆍ생태, `급성,생태`처럼 묶인 것 포함).
 bool _isHazardRow(Entry e, QuantityRow r) =>
     e.src == Source.byeolpyo2 &&

@@ -4,6 +4,7 @@ library;
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:findchem/assist/conditions.dart';
 import 'package:findchem/calc/calc.dart';
 import 'package:findchem/mcp/mcp_handler.dart';
 import 'package:findchem/parser/models.dart';
@@ -53,6 +54,25 @@ void main() {
     expect(e(sicl4).rows.single.content, '10');
   });
 
+  test('빈 함량기준 해석(D3)이 F-008 condition 문장과 전 행에서 같다 — 같은 규칙의 두 표현 대조', () {
+    var checked = 0;
+    for (final e in ds.entries.where((e) => !e.deleted)) {
+      for (final r in e.rows.where((r) => r.content.isEmpty)) {
+        final t = thresholdOf(e, r);
+        final c = conditionOf(e, r);
+        if (t == null) {
+          expect(c, contains('함량기준이 없'), reason: '$e');
+        } else if (e.src == Source.byeolpyo2) {
+          expect(c, contains('가장 낮은 것은 ${t.raw})'), reason: '$e');
+        } else {
+          expect(c, contains("'${t.raw}% 이상'"), reason: '$e');
+        }
+        checked++;
+      }
+    }
+    expect(checked, greaterThan(250)); // 별표2 258 + 별표3 3
+  });
+
   group('공통 입력 검증', () {
     test('없는 항목ㆍ(삭제) 항목 → 그 설비만 error, 나머지는 계산, 판정 incomplete', () {
       final deleted = ds.entries.firstWhere((e) => e.deleted);
@@ -78,9 +98,11 @@ void main() {
         {...sicl4, 'content_pct': 100, 'capacity_m3': 1, 'specific_gravity': 1.5, 'quantity_ton': 1, 'basis': 'x'},
         {...sicl4, 'content_pct': 100, 'quantity_ton': 1},
         {...sicl4, 'content_pct': 0, 'capacity_m3': 1, 'specific_gravity': 1.5},
+        {...sicl4, 'content_pct': 100, 'capacity_m3': 1, 'specific_gravity': 0},
       ]);
       final f = facilities(r);
       expect(f[0]['error'], contains('물=1'));
+      expect(f[5]['error'], contains('물=1'));
       expect(f.every((x) => x['status'] == 'error'), true);
       expect(f[3]['error'], contains('basis'));
     });
@@ -235,6 +257,14 @@ void main() {
       expect(s[96]!['level'], '미해당');
       expect(mixed['level'], '미해당');
 
+      // 다른 물질에 상위 규정수량이 없으면(디노셉 0.5% = 만성 40/- 행뿐) 비고 3 나의 조건이 아니다 — 저확산 물질이 남는다.
+      final noHigh = level([
+        {...leadAcetate, 'content_pct': 10, 'quantity_ton': 500, 'basis': 'x', 'low_diffusion': true},
+        {...dinoseb, 'content_pct': 0.5, 'quantity_ton': 10, 'basis': 'x'},
+      ]);
+      expect(substances(noHigh).every((s) => !s.containsKey('excluded_from_level')), true);
+      expect(noHigh['level'], '2군');
+
       final alone = level([
         {...naoh, 'content_pct': 25, 'quantity_ton': 500, 'basis': 'x', 'low_diffusion': true},
       ]);
@@ -262,8 +292,20 @@ void main() {
       expect(a['threshold_kg'], 400.0);
       expect(a['verdict'], '표준시설');
       expect(f1({...sicl4, 'content_pct': 100, 'phase': '액체', 'quantity_kg': 399.9, 'basis': 'x'})['verdict'], '소량시설');
-      expect(f1({...naoh, 'content_pct': 25, 'phase': '액체', 'capacity_m3': 30.0, 'specific_gravity': 1.37})['amount_kg'],
+      expect(
+          f1({...naoh, 'content_pct': 25, 'phase': '액체', 'capacity_m3': 30.0, 'specific_gravity': 1.37, 'low_diffusion': false})[
+              'amount_kg'],
           41100.0);
+    });
+
+    test('저확산 행이 있는 물질에 low_diffusion이 없으면 selection_required(미대상을 조용히 놓치지 않는다)', () {
+      final r = scenario([
+        {...naoh, 'content_pct': 25, 'phase': '액체', 'capacity_m3': 30.0, 'specific_gravity': 1.37},
+      ]);
+      expect(r['status'], 'incomplete');
+      final f = facilities(r).single;
+      expect(f['verdict'], 'selection_required');
+      expect((f['selection']! as Map)['field'], 'low_diffusion');
     });
 
     test('성상별 규정수량 — 고체 2000, 기체 1ㆍ2 = 5, 3 = 100, 없음ㆍ4 = 100(비고 3), 액화가스는 기체(비고 4)', () {

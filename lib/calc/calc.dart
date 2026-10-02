@@ -94,9 +94,10 @@ Threshold? lowestThresholdOf(Entry e) {
 /// 부동소수 비교 오차를 없애려고 6자리에서 반올림한다(표시도 같은 값).
 double _r(double v) => (v * 1e6).roundToDouble() / 1e6;
 
-bool _isSolution(Entry e, QuantityRow r) =>
-    e.src == Source.byeolpyo3 ? r.kind.endsWith('용액') : r.kind == '용액';
-bool _isLowDiffusion(QuantityRow r) => r.kind == '저확산';
+// 행 판별(용액ㆍ* 행, 저확산 행)은 F-008 condition 문장과 같은 함수(`conditions.dart`)를 쓴다.
+// 빈 함량기준 해석([thresholdOf])은 여기에만 있다 — condition 문장과의 대조는 test/calc/calc_test.dart.
+const _isSolution = isSolutionRow;
+const _isLowDiffusion = isLowDiffusionRow;
 
 // ───── 입력 ─────
 
@@ -296,23 +297,25 @@ Level _levelOf(double total, QuantityRow r) {
   return Level.none;
 }
 
-/// 취급량(톤). 용량×비중 또는 직접 준 양. 실패면 사유.
-Object _amountTon(_Input f) {
+/// 취급량. 용량(m³)×비중×[scale] 또는 직접 준 양([direct] 필드, [unit] 단위). 실패면 사유.
+/// 작성수준은 톤(scale 1, `quantity_ton`), 예비시나리오는 kg(scale 1000, `quantity_kg`).
+Object _amount(_Input f, {required String direct, required double scale, required String unit}) {
   final cap = f.num_('capacity_m3');
   final sg = f.num_('specific_gravity');
-  final q = f.num_('quantity_ton');
-  if (q != null && (cap != null || sg != null)) return 'quantity_ton과 capacity_m3ㆍspecific_gravity는 함께 쓸 수 없습니다';
+  final q = f.num_(direct);
+  if (q != null && (cap != null || sg != null)) return '$direct과 capacity_m3ㆍspecific_gravity는 함께 쓸 수 없습니다';
   if (q != null) {
-    if (q < 0) return 'quantity_ton은 0 이상이어야 합니다';
-    if (f.str('basis')?.isNotEmpty != true) return 'quantity_ton을 쓰면 산정 근거(basis — 예: 충전량, 보관구획도)를 함께 주어야 합니다';
-    return (ton: _r(q), formula: 'quantity_ton 직접 기재');
+    if (q < 0) return '$direct은 0 이상이어야 합니다';
+    if (f.str('basis')?.isNotEmpty != true) return '$direct을 쓰면 산정 근거(basis — 예: 충전량, 보관구획도)를 함께 주어야 합니다';
+    return (value: _r(q), formula: '$direct 직접 기재');
   }
-  if (cap == null || sg == null) return 'capacity_m3와 specific_gravity(물=1 상대밀도)를 함께 주거나 quantity_ton을 주어야 합니다';
+  if (cap == null || sg == null) return 'capacity_m3와 specific_gravity(물=1 상대밀도)를 함께 주거나 $direct을 주어야 합니다';
   if (cap < 0) return 'capacity_m3는 0 이상이어야 합니다';
   if (sg <= 0 || sg > maxSpecificGravity) {
     return 'specific_gravity $sg는 물=1 기준 상대밀도(0 초과 $maxSpecificGravity 이하)가 아닙니다 — g/L이면 1000으로 나눈 값을 넣으세요';
   }
-  return (ton: _r(cap * sg), formula: '$cap m³ × $sg = ${_r(cap * sg)} t');
+  final v = _r(cap * sg * scale);
+  return (value: v, formula: scale == 1 ? '$cap m³ × $sg = $v $unit' : '$cap m³ × $sg × ${scale.toInt()} = $v $unit');
 }
 
 CalcOutcome calcWritingLevel(Dataset ds, Map<String, Object?> args) {
@@ -361,13 +364,13 @@ CalcOutcome calcWritingLevel(Dataset ds, Map<String, Object?> args) {
       fail(ga.error!);
       continue;
     }
-    final amount = _amountTon(f);
+    final amount = _amount(f, direct: 'quantity_ton', scale: 1, unit: 't');
     if (amount is String) {
       fail(amount);
       continue;
     }
-    final a = amount as ({double ton, String formula});
-    out['amount_ton'] = a.ton;
+    final a = amount as ({double value, String formula});
+    out['amount_ton'] = a.value;
     out['formula'] = a.formula;
     if (f.str('basis') case final b? when b.isNotEmpty) out['basis'] = b;
 
@@ -394,9 +397,9 @@ CalcOutcome calcWritingLevel(Dataset ds, Map<String, Object?> args) {
     out['rows_applied'] = ap.applied;
     final rows = perRow.putIfAbsent(entry, () => {});
     for (final i in ap.applied) {
-      rows.putIfAbsent(i, () => []).add((index: f.index, ton: a.ton));
+      rows.putIfAbsent(i, () => []).add((index: f.index, ton: a.value));
     }
-    perEntryTotal[entry] = _r((perEntryTotal[entry] ?? 0) + a.ton);
+    perEntryTotal[entry] = _r((perEntryTotal[entry] ?? 0) + a.value);
     notesByEntry.putIfAbsent(entry, () => {}).addAll(notes);
   }
 
@@ -444,9 +447,11 @@ CalcOutcome calcWritingLevel(Dataset ds, Map<String, Object?> args) {
   }
 
   // 규정수량 고시 별표 4 비고 3 나 — 저확산으로 판정한 물질은 다른 유해화학물질과 같이 취급하면 결정에서 뺀다.
+  // 조건은 "상위 규정수량이 규정되어 있는 물질"과 같이 취급할 때 — 다른 물질이 있어도 평가된 행에 상위가 없으면 저확산 물질을 남긴다.
   final others = levels.keys.where((e) => !viaLowDiffusion.contains(e)).toList();
+  final othersHaveHigh = others.any((e) => perRow[e]!.keys.any((i) => quantityOf(e.rows[i].high) != null));
   final deciding = <Entry>[...others];
-  if (others.isNotEmpty) {
+  if (othersHaveHigh) {
     for (final s in substances) {
       final e = levels.keys.firstWhere((x) => x.src.id == s['src'] && x.no == s['no']);
       if (viaLowDiffusion.contains(e)) {
@@ -575,44 +580,25 @@ CalcOutcome screenPreliminaryScenarios(Dataset ds, Map<String, Object?> args) {
       continue;
     }
 
-    final cap = f.num_('capacity_m3');
-    final sg = f.num_('specific_gravity');
-    final qkg = f.num_('quantity_kg');
-    final double kg;
-    if (qkg != null) {
-      if (cap != null || sg != null) {
-        fail('quantity_kg과 capacity_m3ㆍspecific_gravity는 함께 쓸 수 없습니다');
-        continue;
-      }
-      if (qkg < 0) {
-        fail('quantity_kg은 0 이상이어야 합니다');
-        continue;
-      }
-      if (f.str('basis')?.isNotEmpty != true) {
-        fail('quantity_kg을 쓰면 산정 근거(basis — 예: 충전량)를 함께 주어야 합니다');
-        continue;
-      }
-      kg = _r(qkg);
-      out['formula'] = 'quantity_kg 직접 기재';
-      out['basis'] = f.str('basis');
-    } else {
-      if (cap == null || sg == null) {
-        fail('capacity_m3와 specific_gravity(물=1)를 함께 주거나 quantity_kg을 주어야 합니다');
-        continue;
-      }
-      if (cap < 0) {
-        fail('capacity_m3는 0 이상이어야 합니다');
-        continue;
-      }
-      if (sg <= 0 || sg > maxSpecificGravity) {
-        fail('specific_gravity $sg는 물=1 기준 상대밀도(0 초과 $maxSpecificGravity 이하)가 아닙니다 — g/L이면 1000으로 나눈 값을 넣으세요');
-        continue;
-      }
-      kg = _r(cap * sg * 1000);
-      out['formula'] = '$cap m³ × $sg × 1000 = $kg kg';
+    final amount = _amount(f, direct: 'quantity_kg', scale: 1000, unit: 'kg');
+    if (amount is String) {
+      fail(amount);
+      continue;
     }
+    final (:value, :formula) = amount as ({double value, String formula});
+    final kg = value;
     out['amount_kg'] = kg;
+    out['formula'] = formula;
+    if (f.str('basis') case final b? when b.isNotEmpty) out['basis'] = b;
 
+    // 저확산 행이 있는 물질은 미대상 여부를 호출자가 정해야 한다 — 빠뜨리면 미대상을 조용히 놓친다(작성수준 도구와 같은 규칙).
+    if (ld == null && entry.rows.any(_isLowDiffusion)) {
+      out['verdict'] = 'selection_required';
+      out['selection'] = _choices(entry, 'low_diffusion',
+          '취급 과정 성상이 액체ㆍ고체라 저확산 행을 적용하면 그 설비는 예비시나리오 대상에서 빠진다(제23조① 단서) — 적용 여부를 정해 다시 부를 것');
+      issues.add('facilities[${f.index}]: ${_id(entry)} 행 선택 필요(low_diffusion)');
+      continue;
+    }
     if (ld == true) {
       out['verdict'] = '미대상';
       out['reason'] = '저확산물질 취급 설비는 예비시나리오 대상 설비로 선정하지 않는다(제23조① 단서)';
