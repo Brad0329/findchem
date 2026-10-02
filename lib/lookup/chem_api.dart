@@ -12,25 +12,10 @@ import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart';
 
 import 'api_settings.dart';
+import 'portal.dart';
 
-/// 화면 문구(테스트가 같은 상수를 본다).
-abstract final class LookupText {
-  static const badKey = '키가 올바르지 않습니다';
-  static const notApproved = '이 서비스의 활용신청이 승인되지 않았습니다';
-  static const overLimit = '오늘 호출 한도를 넘었습니다';
-  static const offline = '접속하지 못했습니다';
-  static String failed(String code) => '조회하지 못했습니다 (코드 $code)';
-
-  static const noKey = '설정 → data.go.kr API 키에서 키를 넣으세요';
-  static const noService = '설정 → 연동 데이터에서 조회할 정보를 고르세요';
-  static const settingsUnreadable = '설정을 읽지 못했습니다';
-
-  static const loading = '조회 중…';
-  static const noResult = '조회 결과 없음';
-  static const noPictogram = '그림 없음';
-  static String title(String cas) => 'CAS $cas 공공데이터 조회';
-  static String truncated(int total, int shown) => '$total건 중 $shown건 표시 · 더 있음';
-}
+// 화면 문구·키 가리기·포털 실패 판정은 Flutter 없는 portal.dart로 옮겼다(A-003 Q1) — 쓰는 쪽은 그대로 이 파일을 import한다
+export 'portal.dart';
 
 /// [키 인증]에 쓰는 CAS(세 서비스 모두 결과가 있는 포르말린).
 const verifyCas = '50-00-0';
@@ -55,24 +40,6 @@ Uri buildRequestUri(ChemService s, String key, String cas) {
     _ => 'pageNo=1&numOfRows=$pageRows&searchGubun=2&searchNm=$c&returnType=JSON',
   };
   return Uri.parse('${endpointOf(s)}?serviceKey=$k&$query');
-}
-
-/// [text]에서 키(넣은 형태와 인코딩/디코딩한 형태 둘 다)를 `<KEY>`로 바꾼다.
-String maskKey(String text, String key) {
-  if (key.isEmpty) return text;
-  var out = text.replaceAll(key, '<KEY>');
-  String? other;
-  try {
-    other = key.contains('%') ? Uri.decodeQueryComponent(key) : Uri.encodeQueryComponent(key);
-  } on ArgumentError catch (e) {
-    // 잘못된 % 표기라 다른 형태가 없다 — 넣은 형태만 가린다(키 자체는 로그에 쓰지 않는다)
-    debugPrint('F-007 키의 다른 표기를 만들지 못해 원형만 가림: ${e.runtimeType}');
-  }
-  if (other != null && other.isNotEmpty && other != key) out = out.replaceAll(other, '<KEY>');
-  // Uri는 %xx를 대문자로 바꿔 적는다 — 소문자로 넣은 인코딩 키가 요청 주소(접속 오류 문구)에서 새지 않게
-  final upper = key.replaceAllMapped(RegExp('%[0-9a-fA-F]{2}'), (m) => m[0]!.toUpperCase());
-  if (upper != key) out = out.replaceAll(upper, '<KEY>');
-  return out;
 }
 
 // ───── 응답 모델 ─────
@@ -178,18 +145,6 @@ List<String> _caret(String v) => [
     if (p.trim().isNotEmpty) p.trim(),
 ];
 
-/// 포털 공통 오류(키 미등록·한도 초과 등)의 사유 코드. HTTP 200으로도 온다. 없으면 null.
-String? portalReasonCode(String body) =>
-    RegExp(r'returnReasonCode\W+(\d+)').firstMatch(body)?.group(1);
-
-/// 실패 판정(REQUIREMENTS F-007 '실패 문구').
-String failureMessage(int status, String? portalCode) {
-  if (status == 401) return LookupText.badKey;
-  if (status == 403 || portalCode == '30') return LookupText.notApproved;
-  if (portalCode == '22') return LookupText.overLimit;
-  return LookupText.failed(portalCode ?? '$status');
-}
-
 /// JSON 응답(chem·ghs) 공통: 머리 결과 코드 확인, items·totalCount 꺼내기.
 ServiceResult _parseJson(String body, Object Function(Map<Object?, Object?>) item) {
   final root = jsonDecode(body);
@@ -287,7 +242,8 @@ class ChemApiClient {
 
   /// 서비스 하나를 CAS로 부른다. **예외를 던지지 않는다** — 실패는 [ServiceFailed]로(원인은 로그에).
   Future<ServiceResult> fetch(ChemService service, String key, String cas) async {
-    void log(String what) => debugPrint('F-007 ${service.name} 조회 실패: ${maskKey(what, key)}');
+    void log(String what) =>
+        debugPrint('F-007 ${service.name} 조회 실패: ${maskKey(what, key, onWarn: (m) => debugPrint('F-007 $m'))}');
 
     final http.Response res;
     try {
