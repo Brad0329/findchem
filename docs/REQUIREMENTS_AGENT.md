@@ -42,8 +42,17 @@
     - [x] Cloud Run 서울에 배포되고, 공개 주소 `/mcp`에 이 세션에서 `initialize`·`tools/list`·`tools/call`이 통한다
           (2026-10-02 — 세션 프록시가 `*.run.app`을 막아 curl 대신 **사용자가 붙인 커스텀 커넥터를 이 세션에서 불러** 확인:
           initialize·tools/list(도구 2개) 통과, search_chemical 7782-50-5 정상 JSON, get_rule 없는 주제 → isError + 사유)
-    - [ ] (사용자 실테스트) Claude 커스텀 커넥터로 PC·폰에서 붙여 질문 하나에 두 도구가 불린다
-    - [ ] 서버가 만든 파일(PDF)을 Cowork가 받는 길 실측 — 2차(도구 2개 연결 확인 뒤)
+    - [x] (사용자 실테스트) Claude 커스텀 커넥터로 PC·폰에서 붙여 질문 하나에 두 도구가 불린다(2026-10-02 PC·폰 확인)
+  - 2차 — 서버가 만든 파일(PDF)을 받는 길 실측. **실험 도구** `sample_pdf`(입력 없음, A-001 실측 뒤 지운다)가 같은 PDF를 세 가지로 돌려준다:
+    ① `resource_link`(공개 주소 `GET /files/findchem-sample.pdf`) ② 내장 `resource`(base64 `blob`) ③ 본문 텍스트에 받는 주소.
+    PDF는 의존성 없이 손으로 조립(ASCII 문구 한 쪽 — 한글 글꼴 내장은 실측 범위 밖). 앱·웹 `AssistTools`에는 넣지 않는다
+    - [x] `tools/list`에 `sample_pdf`가 셋째로 있고, 앞 두 도구는 `assistToolDefinitions()`와 그대로 같다
+    - [x] 만든 PDF는 `%PDF-`로 시작해 `%%EOF`로 끝나고, xref의 모든 오프셋이 그 위치의 `N 0 obj`를 가리킨다
+    - [x] `tools/call sample_pdf` → `resource_link`의 uri = 요청 주소 기준 `<scheme>://<host>/files/findchem-sample.pdf`(Cloud Run 뒤에서는 `X-Forwarded-Proto`로 https),
+          내장 `blob`을 풀면 `GET /files/findchem-sample.pdf`가 주는 바이트와 같다
+    - [x] `GET /files/findchem-sample.pdf` → 200 `application/pdf` + `Content-Disposition: attachment`. `/files/` 아래 다른 이름은 404
+    - [ ] (사용자 실테스트) 채팅(PC·폰)과 Cowork에서 `sample_pdf`를 부르게 해, 세 길 각각 ⓐ 화면에 파일·링크로 보이는지 ⓑ 받아서 열리는지
+          ⓒ Cowork가 그 파일을 작업 폴더·Drive에 저장할 수 있는지 — 결과를 plan_agent.md에 표로 남긴다
 
 ### A-003: 물성 조회 도구 (KOSHA MSDS)
 - **설명**: CAS 하나로 안전보건공단 MSDS 조회 서비스(data.go.kr 15157612, `https://apis.data.go.kr/B552468/msdschem1`, XML 전용)를 불러
