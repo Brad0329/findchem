@@ -1,6 +1,10 @@
 {
   "permissions": {
-    "allow": [],
+    "allow": [
+      "Bash(bash scripts/deploy_mcp.sh)",
+      "Bash(bash scripts/deploy_mcp.sh --stage-only)",
+      "Bash(bash scripts/gcp_auth.sh)"
+    ],
     "deny": [
       "Bash(rm -rf *)",
       "Bash(git push --force*)",
