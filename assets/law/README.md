@@ -12,4 +12,7 @@
 - `byeolpyoNN.{pdf,hwpx}` · `byeoljiNN.{pdf,hwpx}` — 별표·별지 원본 파일(law.go.kr 첨부 그대로, 파일명만 ASCII로)
 - `manifest.json` — 파일명 ↔ 원 제목 ↔ law.go.kr `flSeq`
 
+**원본은 이 저장소다.** Google Drive `FindChem/assets/law/`는 Cowork가 작업 중에 읽는 사본(2026-10-02 사용자가 올림) —
+Drive에서 고치지 않는다. 바뀌면 여기를 고치고 Drive로 다시 복사한다(저장소 → Drive 한 방향).
+
 고시가 개정되면 새 폴더(`prevention_plan_notice_<고시번호>/`)로 받고 옛 판은 지우지 않는다 — 제출본(사례 A)은 제출 당시 판으로 쓰였다.
