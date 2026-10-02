@@ -309,6 +309,9 @@
 - **에이전트 우선 전환(검토 중, 2026-09-30~ — 확정 전)**. 검토 문서(저장소 밖, 비공개 아티팩트):
   [FindChem 에이전트 우선 전환 검토](https://claude.ai/artifact/Txdi8q8TpMKzKEYP6hTUKT),
   참고 목업 [FindChem 계획서 작업실](https://claude.ai/artifact/LCEeztxunHFDxdpVhxeV7p). 다음 세션은 이 문서부터 읽는다.
+  - **★ 2026-10-02 사용자 결정: 에이전트 트랙(원격 MCP + 스킬)의 개발·테스트는 `agent` 브랜치에서 한다** — 계획은 그 브랜치의
+    `work_log/plan_agent.md`, 요구사항 번호는 `A-NNN`(`docs/REQUIREMENTS_AGENT.md`). 이 plan.md와 F 번호는 master 트랙(앱·웹)만 다룬다.
+    master → agent 한 방향으로 병합하고, agent를 master에 합치는 것은 방향 확정 시 한 번
   - **문서의 결론 요지**: 사용자의 목적은 프로젝트를 AI 에이전트를 쓰는 방식으로 짜는 것이고 "서버 없음"은 원칙이 아니다(2026-09-30 사용자 명시).
     FindChem이 만들 것은 작업 공간 화면이 아니라 **원격 MCP 서버(데이터·조회 도구·검증 도구) + 스킬(판정 규칙·서류 작성 지침)** 둘이고,
     에이전트는 Cowork, 저장소는 Google Drive를 쓴다. 틀리면 안 되는 것은 도구·코드로, 판단의 방향은 스킬로.
