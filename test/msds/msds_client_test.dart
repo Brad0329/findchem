@@ -11,6 +11,7 @@ import 'package:findchem/msds/msds_value.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
+import 'package:xml/xml.dart';
 
 const dir = 'test/fixtures/msds';
 const testKey = 'abc+def/ghi==';
@@ -54,6 +55,18 @@ String row(String cas, String id, String name) =>
 
 /// 본문을 UTF-8 바이트로(`http.Response(String)`은 charset이 없으면 latin1이라 한글이 깨진다).
 http.Response res(String body, [int status = 200]) => http.Response.bytes(utf8.encode(body), status);
+
+/// 녹화한 8물질(CAS, chemId).
+const recorded = [
+  ('50-00-0', '001097'),
+  ('108-88-3', '001032'),
+  ('67-56-1', '001151'),
+  ('7664-93-9', '001049'),
+  ('13516-27-3', '000826'),
+  ('7727-37-9', '015812'),
+  ('7722-84-1', '001015'),
+  ('7782-44-7', '015939'),
+];
 
 int fixtureItemCount(String name) => RegExp('<item>').allMatches(fixture(name)).length;
 
@@ -162,6 +175,11 @@ void main() {
       expect(r2.source!['chemId'], '001097');
       expect(p2.calls.skip(1).every((u) => u.queryParameters['chemId'] == '001097'), isTrue);
       expect(p2.calls, hasLength(4));
+
+      // 후보에 없는 chemId → failed, 후보 목록도 JSON으로 돌려준다(다시 고를 수 있게)
+      final r3 = await clientOf(portal()).lookup('50-00-0', chemId: '123456');
+      expect(r3.status, MsdsStatus.failed);
+      expect(r3.toJson()['candidates'], hasLength(2));
     });
   });
 
@@ -177,20 +195,35 @@ void main() {
         'lastDate': RegExp(r'<lastDate>([^<]*)').firstMatch(fixture('list_108-88-3.xml'))!.group(1),
         'retrievedAt': '2026-10-02T09:00:00.000Z',
       });
+
+      // 시계가 지역 시각이어도 UTC 표기(시간대를 잃지 않게)
+      final local = await MsdsClient(httpClient: FakePortal().client, key: testKey, clock: () => DateTime(2026, 10, 2, 18)).lookup('108-88-3');
+      expect(local.source!['retrievedAt'], DateTime(2026, 10, 2, 18).toUtc().toIso8601String());
+      expect(local.source!['retrievedAt'], endsWith('Z'));
     });
 
-    test('021·081·091 항목이 하나도 빠지지 않고 원문 그대로 items에(항목 수 = fixture item 수)', () async {
-      final r = await clientOf(FakePortal()).lookup('50-00-0');
-      for (final s in ['02', '08', '09']) {
-        final name = 'detail${s}_001097.xml';
-        final items = r.sections[s]!.items;
-        expect(items.length, fixtureItemCount(name), reason: name);
-        final raw = fixture(name);
-        for (final i in items.where((i) => i.detail != null)) {
-          final escaped = i.detail!.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;');
-          expect(raw.contains(i.detail!) || raw.contains(escaped), isTrue, reason: '${i.code}: ${i.detail}');
+    test('021·081·091 항목이 하나도 빠지지 않고 원문 그대로 items에 — 녹화 8물질 24파일 전부, 요소 전부', () async {
+      var files = 0;
+      for (final (cas, id) in recorded) {
+        final r = await clientOf(FakePortal()).lookup(cas);
+        for (final s in ['02', '08', '09']) {
+          final name = 'detail${s}_$id.xml';
+          final want = [
+            for (final it in XmlDocument.parse(fixture(name)).findAllElements('item'))
+              [
+                for (final tag in ['msdsItemCode', 'upMsdsItemCode', 'lev', 'msdsItemNameKor', 'itemDetail', 'ordrIdx'])
+                  it.getElement(tag)?.innerText,
+              ],
+          ];
+          final got = [
+            for (final i in r.sections[s]!.items) [i.code, i.parentCode, i.level, i.nameKor, i.detail, i.order],
+          ];
+          expect(want.length, fixtureItemCount(name), reason: name);
+          expect(got, want, reason: name);
+          files++;
         }
       }
+      expect(files, 24);
     });
 
     // 표본 5개 — 기대값은 녹화 원문(2026-10-02)
@@ -199,19 +232,19 @@ void main() {
         'appearance': '(액체 또는 기체)',
         'sg': (1.15, null, UnitKind.unknown, null),
         'vp': (1.3187, 'hPa', UnitKind.pressure, '20℃'),
-        'el': ((73.0, '%'), (7.0, '%')),
+        'el': ((73.0, '%', null), (7.0, '%', null)),
       },
       '108-88-3': {
         'appearance': '액체',
         'sg': (0.8623, 'g/cu cm', UnitKind.density, '20℃'),
         'vp': (28.4, '㎜Hg', UnitKind.pressure, '25℃'),
-        'el': ((7.8, '%'), (1.0, '%')),
+        'el': ((7.8, '%', null), (1.0, '%', null)),
       },
       '67-56-1': {
         'appearance': '액체',
         'sg': (0.79, null, UnitKind.relativeDensity, '20℃'),
         'vp': (127.0, '㎜Hg', UnitKind.pressure, '25℃'),
-        'el': ((50.0, '%'), (6.0, '%')),
+        'el': ((50.0, 'vol %', null), (6.0, 'vol %', null)), // `50 / 6 % (vol %)` — 괄호의 `vol %`는 단위의 자세한 표기지 적용 조건이 아니다
       },
       '7664-93-9': {
         'appearance': '액체  (오일)',
@@ -246,13 +279,13 @@ void main() {
         check(r.specificGravity(), want['sg'] as (double, String?, UnitKind, String?)?, '비중');
         check(r.vaporPressure(), want['vp'] as (double, String?, UnitKind, String?)?, '증기압');
         final el = r.explosionLimits();
-        final w = want['el'] as ((double, String), (double, String))?;
+        final w = want['el'] as ((double, String, String?), (double, String, String?))?;
         if (w == null) {
           expect(el.upper.status, ValueStatus.unparsed, reason: el.upper.raw);
           expect(el.lower.status, ValueStatus.unparsed, reason: el.lower.raw);
         } else {
-          expect((el.upper.parsed!.value, el.upper.parsed!.unit), w.$1, reason: '$cas 상한');
-          expect((el.lower.parsed!.value, el.lower.parsed!.unit), w.$2, reason: '$cas 하한');
+          expect((el.upper.parsed!.value, el.upper.parsed!.unit, el.upper.parsed!.condition), w.$1, reason: '$cas 상한');
+          expect((el.lower.parsed!.value, el.lower.parsed!.unit, el.lower.parsed!.condition), w.$2, reason: '$cas 하한');
           expect(el.upper.parsed!.unitKind, UnitKind.percent);
         }
       });
@@ -265,11 +298,17 @@ void main() {
     });
 
     test('지어낸 숫자 0건 — 녹화한 8물질의 해석 성공 값 전부, 숫자 문자열이 raw 안에 있다', () async {
-      final cases = ['50-00-0', '108-88-3', '67-56-1', '7664-93-9', '13516-27-3', '7727-37-9', '7722-84-1', '7782-44-7'];
-      var checked = 0;
-      for (final cas in cases) {
+      var checked = 0, pairs = 0;
+      for (final (cas, _) in recorded) {
         final r = await clientOf(FakePortal()).lookup(cas);
         final el = r.explosionLimits();
+        // 상한·하한의 raw는 둘 다 원문 전체라 위치로 검사한다 — 상한은 `/` 앞, 하한은 `/` 뒤의 숫자
+        if (el.upper.parsed != null && el.lower.parsed != null) {
+          final slash = el.upper.text.indexOf('/');
+          expect(el.upper.text.substring(0, slash).trim(), el.upper.parsed!.number, reason: '$cas 상한');
+          expect(el.lower.text.substring(slash + 1).trim().startsWith(el.lower.parsed!.number), isTrue, reason: '$cas 하한');
+          pairs++;
+        }
         for (final v in [r.specificGravity(), r.vaporPressure(), el.upper, el.lower]) {
           if (v.status != ValueStatus.value) continue;
           expect(v.raw.contains(v.parsed!.number), isTrue, reason: '$cas ${v.raw} → ${v.parsed!.number}');
@@ -277,10 +316,12 @@ void main() {
         }
       }
       expect(checked, greaterThanOrEqualTo(20)); // 8물질 × 최대 4값 중 해석 성공 수(빈 검사로 통과하지 않게)
+      expect(pairs, 3); // 폭발한계 숫자 쌍은 포름알데히드·톨루엔·메탄올
     });
 
     test('8절 노출기준 하위 항목이 이름과 원문 그대로 전부 나온다', () async {
       final r = await clientOf(FakePortal()).lookup('50-00-0');
+      expect(r.exposureStatus(), ValueStatus.value);
       final ex = r.exposureLimits();
       expect([for (final i in ex) i.nameKor], ['국내규정', 'ACGIH 규정', '생물학적 노출기준', '기타 노출기준']);
       expect(ex[0].detail, '|TWA : 0.3ppm포름알데히드');
@@ -314,13 +355,38 @@ void main() {
       final r = await clientOf(p).lookup('108-88-3');
       expect(r.specificGravity().status, ValueStatus.itemMissing);
       expect(r.vaporPressure().status, ValueStatus.value);
+
+      // 숫자 필드 말고 폭발한계(따로 나누는 경로)·글 필드·노출기준도
+      final p2 = FakePortal(
+        override: (u) => switch (u.pathSegments.last) {
+          'getChemDetail091' => res(
+            fixture('detail09_001032.xml')
+                .replaceAll('<msdsItemCode>I20<', '<msdsItemCode>I98<')
+                .replaceAll('<msdsItemCode>I0202<', '<msdsItemCode>I0298<'),
+          ),
+          'getChemDetail081' => res(
+            fixture('detail08_001032.xml').replaceAll('<upMsdsItemCode>H02<', '<upMsdsItemCode>H98<'),
+          ),
+          'getChemDetail021' => res(fixture('detail02_001032.xml').replaceAll('<msdsItemCode>B0402<', '<msdsItemCode>B0498<')),
+          _ => null,
+        },
+      );
+      final r2 = await clientOf(p2).lookup('108-88-3');
+      expect(r2.explosionLimits().upper.status, ValueStatus.itemMissing);
+      expect(r2.explosionLimits().lower.status, ValueStatus.itemMissing);
+      expect(r2.appearance().status, ValueStatus.itemMissing);
+      expect(r2.pictogramsRaw().status, ValueStatus.itemMissing);
+      expect(r2.exposureStatus(), ValueStatus.itemMissing, reason: '노출기준 항목이 없는 것과 기준이 없는 것을 구분한다');
+      expect((r2.toJson()['fields'] as Map)['exposureLimits'], containsPair('status', 'itemMissing'));
     });
 
-    test('toJson — found의 필드가 모두 있고 JSON으로 직렬화된다', () async {
+    test('toJson — found의 필드가 모두 있고 JSON 문자열로 직렬화된다', () async {
       final j = (await clientOf(FakePortal()).lookup('7782-44-7')).toJson();
+      expect(jsonDecode(jsonEncode(j)), j);
       expect(j['status'], 'found');
       final f = j['fields'] as Map;
-      expect(f.keys, containsAll(['appearance', 'specificGravity', 'vaporPressure', 'explosionLimits', 'classification', 'signalWord', 'hazardStatements', 'pictograms', 'exposureLimits']));
+      expect(f.keys.toSet(), {'appearance', 'specificGravity', 'vaporPressure', 'explosionLimits', 'hazardStatements', 'pictograms', 'exposureLimits'});
+      expect((f['exposureLimits'] as Map)['items'], hasLength(4));
       expect(((f['pictograms'] as Map)['list'] as List).map((e) => (e as Map)['standard']), ['GHS04', 'GHS03']);
     });
   });
@@ -341,6 +407,17 @@ void main() {
         (await listFails(() => res(xmlOk('').replaceAll('<resultCode>00', '<resultCode>03')))).message,
         LookupText.failed('03'),
       );
+    });
+
+    test('녹화 파일에 키가 없다(serviceKey 주소·환경 변수의 키 — 넣은 형태와 인코딩 형태)', () {
+      final key = Platform.environment['DATA_GO_KR_KEY'] ?? '';
+      final files = Directory(dir).listSync().whereType<File>().toList();
+      expect(files.length, greaterThanOrEqualTo(34));
+      for (final f in files) {
+        final body = f.readAsStringSync();
+        expect(body.contains('serviceKey'), isFalse, reason: f.path);
+        if (key.trim().isNotEmpty) expect(maskKey(body, key.trim()), body, reason: f.path);
+      }
     });
 
     test('정상 결과 코드는 00(녹화)', () {

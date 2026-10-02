@@ -31,11 +31,16 @@ const msdsOkCode = '00';
 /// 부르는 상세 절과 서비스 이름.
 const msdsSections = {'02': 'getChemDetail021', '08': 'getChemDetail081', '09': 'getChemDetail091'};
 
+/// 요청 주소. 디코딩 키는 인코딩하고 인코딩 키(`%` 포함)는 그대로 — 둘이 같은 주소가 된다.
+/// 녹화 스크립트(`scripts/record_msds.dart`)도 이것을 쓴다.
+Uri msdsRequestUri(String key, String service, String query) {
+  final k = key.contains('%') ? key : Uri.encodeQueryComponent(key);
+  return Uri.parse('$msdsEndpoint/$service?serviceKey=$k&$query');
+}
+
 /// 해석하는 항목 코드(2026-10-02 녹화 8물질에서 확인).
 abstract final class MsdsCode {
-  static const classification = 'B02'; // 유해성·위험성 분류
   static const pictograms = 'B0402'; // 그림문자
-  static const signalWord = 'B0404'; // 신호어
   static const hazardStatements = 'B0406'; // 유해·위험문구
   static const exposureParent = 'H02'; // 노출기준(하위: 국내규정·ACGIH·생물학적·기타)
   static const appearance = 'I0202'; // 성상
@@ -57,12 +62,29 @@ class MsdsCandidate {
 
 /// 상세 항목 하나 — 원문 그대로. [detail]이 null이면 응답에 `itemDetail`이 없는 머리 항목이다.
 class MsdsItem {
-  const MsdsItem({required this.code, required this.parentCode, required this.level, required this.nameKor, required this.detail});
+  const MsdsItem({
+    required this.code,
+    required this.parentCode,
+    required this.level,
+    required this.nameKor,
+    required this.detail,
+    required this.order,
+  });
 
   final String code, parentCode, level, nameKor;
   final String? detail;
 
-  Map<String, Object?> toJson() => {'code': code, 'parentCode': parentCode, 'level': level, 'nameKor': nameKor, 'detail': detail};
+  /// 원문 `ordrIdx`(KOSHA 전체 항목 순서).
+  final String? order;
+
+  Map<String, Object?> toJson() => {
+    'code': code,
+    'parentCode': parentCode,
+    'level': level,
+    'nameKor': nameKor,
+    'detail': detail,
+    'order': order,
+  };
 }
 
 /// 상세 한 절. 실패하면 [items]가 비고 [error]에 화면 문구.
@@ -98,7 +120,7 @@ class MsdsResult {
   /// provider·endpoint·chemId·casNo·nameKor·lastDate(원문)·retrievedAt.
   final Map<String, String>? source;
 
-  /// ambiguous일 때 후보.
+  /// ambiguous일 때, 그리고 준 chemId가 후보에 없어 failed일 때 후보.
   final List<MsdsCandidate> candidates;
 
   /// 목록에서 버린 부분 일치 행 수(`50-00-0` 검색에 섞여 온 `13150-00-0` 등).
@@ -109,36 +131,30 @@ class MsdsResult {
 
   // ───── 해석 필드(found일 때만 의미가 있다) ─────
 
-  MsdsValue _number(String sec, String code, {MsdsLog? log}) =>
-      _field(sec, code, (raw) => parseNumberValue(raw, log: log));
+  /// 항목 원문, 또는 원문이 없는 이유(절 실패 → fetch_failed, 코드 없음 → item_missing).
+  (String?, MsdsValue?) _raw(String sec, String code) {
+    final s = sections[sec];
+    if (s == null || !s.ok) return (null, _status(ValueStatus.fetchFailed, s?.error ?? '절을 부르지 않음'));
+    final item = s.item(code);
+    if (item == null) return (null, _status(ValueStatus.itemMissing, '항목 코드 $code 없음'));
+    return (item.detail ?? '', null);
+  }
 
   MsdsValue _field(String sec, String code, MsdsValue Function(String raw) parse) {
-    final s = sections[sec];
-    if (s == null || !s.ok) return _status(ValueStatus.fetchFailed, s?.error ?? '절을 부르지 않음');
-    final item = s.item(code);
-    if (item == null) return _status(ValueStatus.itemMissing, '항목 코드 $code 없음');
-    return parse(item.detail ?? '');
+    final (raw, why) = _raw(sec, code);
+    return why ?? parse(raw!);
   }
 
   static MsdsValue _status(ValueStatus st, String why) =>
       MsdsValue(raw: '', text: '', origin: null, status: st, parseError: why);
 
-  MsdsValue specificGravity({MsdsLog? log}) => _number('09', MsdsCode.specificGravity, log: log);
-  MsdsValue vaporPressure({MsdsLog? log}) => _number('09', MsdsCode.vaporPressure, log: log);
+  MsdsValue specificGravity({MsdsLog? log}) => _field('09', MsdsCode.specificGravity, (r) => parseNumberValue(r, log: log));
+  MsdsValue vaporPressure({MsdsLog? log}) => _field('09', MsdsCode.vaporPressure, (r) => parseNumberValue(r, log: log));
   MsdsValue appearance() => _field('09', MsdsCode.appearance, parseTextValue);
 
   ExplosionLimits explosionLimits({MsdsLog? log}) {
-    final s = sections['09'];
-    if (s == null || !s.ok) {
-      final v = _status(ValueStatus.fetchFailed, s?.error ?? '절을 부르지 않음');
-      return ExplosionLimits(upper: v, lower: v);
-    }
-    final item = s.item(MsdsCode.explosionLimits);
-    if (item == null) {
-      final v = _status(ValueStatus.itemMissing, '항목 코드 ${MsdsCode.explosionLimits} 없음');
-      return ExplosionLimits(upper: v, lower: v);
-    }
-    return parseExplosionLimits(item.detail ?? '', log: log);
+    final (raw, why) = _raw('09', MsdsCode.explosionLimits);
+    return why != null ? ExplosionLimits(upper: why, lower: why) : parseExplosionLimits(raw!, log: log);
   }
 
   /// 8절 노출기준 하위 항목 전부(국내규정·ACGIH·생물학적·기타) — 하나를 고르지 않는다.
@@ -147,8 +163,12 @@ class MsdsResult {
       if (i.parentCode == MsdsCode.exposureParent) i,
   ];
 
-  MsdsValue classification() => _field('02', MsdsCode.classification, parseTextValue);
-  MsdsValue signalWord() => _field('02', MsdsCode.signalWord, parseTextValue);
+  /// 노출기준의 상태 — 절 실패 fetch_failed / 하위 항목이 하나도 없으면 item_missing(기준 없음과 구분) / 그 밖 value.
+  ValueStatus exposureStatus() {
+    if (sections['08']?.ok != true) return ValueStatus.fetchFailed;
+    return exposureLimits().isEmpty ? ValueStatus.itemMissing : ValueStatus.value;
+  }
+
   MsdsValue hazardStatementsRaw() => _field('02', MsdsCode.hazardStatements, parseTextValue);
   MsdsValue pictogramsRaw() => _field('02', MsdsCode.pictograms, parseTextValue);
 
@@ -168,15 +188,13 @@ class MsdsResult {
     'message': message,
     'source': source,
     'droppedPartialMatches': droppedPartialMatches,
-    if (status == MsdsStatus.ambiguous) 'candidates': [for (final c in candidates) c.toJson()],
+    if (candidates.isNotEmpty) 'candidates': [for (final c in candidates) c.toJson()],
     if (status == MsdsStatus.found) ...{
       'fields': {
         'appearance': appearance().toJson(),
         'specificGravity': specificGravity(log: log).toJson(),
         'vaporPressure': vaporPressure(log: log).toJson(),
         'explosionLimits': explosionLimits(log: log).toJson(),
-        'classification': classification().toJson(),
-        'signalWord': signalWord().toJson(),
         'hazardStatements': {
           ...hazardStatementsRaw().toJson(),
           'list': [for (final h in hazardStatements(log: log)) h.toJson()],
@@ -185,9 +203,11 @@ class MsdsResult {
           ...pictogramsRaw().toJson(),
           'list': [for (final p in pictograms(log: log)) p.toJson()],
         },
-        'exposureLimits': sections['08']?.ok == true
-            ? [for (final i in exposureLimits()) i.toJson()]
-            : {'status': ValueStatus.fetchFailed.name, 'error': sections['08']?.error},
+        'exposureLimits': {
+          'status': exposureStatus().name,
+          'error': sections['08']?.error,
+          'items': [for (final i in exposureLimits()) i.toJson()],
+        },
       },
       'sections': {for (final e in sections.entries) e.key: e.value.toJson()},
     },
@@ -221,11 +241,7 @@ class MsdsClient {
 
   void _warn(String m) => _log?.call(maskKey('A-003 MSDS $m', _key, onWarn: (w) => _log.call('A-003 MSDS $w')));
 
-  /// 요청 주소. 디코딩 키는 인코딩하고 인코딩 키(`%` 포함)는 그대로 — 둘이 같은 주소가 된다.
-  Uri requestUri(String service, String query) {
-    final k = _key.contains('%') ? _key : Uri.encodeQueryComponent(_key);
-    return Uri.parse('$msdsEndpoint/$service?serviceKey=$k&$query');
-  }
+  Uri requestUri(String service, String query) => msdsRequestUri(_key, service, query);
 
   /// CAS 하나를 조회한다. 완전 일치가 여럿이면 [chemId]로 고른다.
   Future<MsdsResult> lookup(String cas, {String? chemId}) async {
@@ -290,6 +306,7 @@ class MsdsClient {
               level: _text(it, 'lev') ?? '',
               nameKor: _text(it, 'msdsItemNameKor') ?? '',
               detail: it.getElement('itemDetail')?.innerText,
+              order: it.getElement('ordrIdx')?.innerText,
             ),
         ]);
       } on _Fail catch (f) {
@@ -306,7 +323,7 @@ class MsdsClient {
         'casNo': pick.casNo,
         'nameKor': pick.nameKor,
         'lastDate': pick.lastDate,
-        'retrievedAt': _clock().toIso8601String(),
+        'retrievedAt': _clock().toUtc().toIso8601String(),
       },
       droppedPartialMatches: dropped,
       sections: sections,

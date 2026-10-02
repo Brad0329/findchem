@@ -14,10 +14,10 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:findchem/lookup/portal.dart';
+import 'package:findchem/msds/msds_client.dart';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart';
 
-const base = 'https://apis.data.go.kr/B552468/msdschem1';
 const outDir = 'test/fixtures/msds';
 
 /// 기본 표본: 비중 실측 5종(마지막은 비중 '자료없음') + 그림문자 03·04 실측 3종 + 없는 CAS.
@@ -43,13 +43,12 @@ Future<void> main(List<String> args) async {
     return;
   }
   final cases = args.isEmpty ? defaultCas : args;
-  final k = key.contains('%') ? key : Uri.encodeQueryComponent(key);
   final client = http.Client();
   Directory(outDir).createSync(recursive: true);
   var failures = 0;
 
   Future<String?> get(String path, String query, String file) async {
-    final uri = Uri.parse('$base/$path?serviceKey=$k&$query');
+    final uri = msdsRequestUri(key, path, query);
     http.Response? res;
     // 클라우드 프록시가 연결을 간헐적으로 끊는다(2026-10-02 실측 9/30) — 접속 실패만 3회까지 다시 부른다
     for (var attempt = 1; res == null; attempt++) {
@@ -106,7 +105,7 @@ Future<void> main(List<String> args) async {
 
   stdout.writeln('틀린 키 응답');
   await () async {
-    final uri = Uri.parse('$base/getChemList001?serviceKey=INVALID_KEY_FOR_FIXTURE&searchWrd=50-00-0&searchCnd=1');
+    final uri = msdsRequestUri('INVALID_KEY_FOR_FIXTURE', 'getChemList001', 'searchWrd=50-00-0&searchCnd=1');
     try {
       final res = await client.get(uri).timeout(const Duration(seconds: 30));
       File('$outDir/error_badkey.xml').writeAsBytesSync(res.bodyBytes);

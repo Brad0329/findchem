@@ -151,6 +151,9 @@ MsdsValue parseNumberValue(String raw, {MsdsLog? log}) {
           condition = part;
         } else if (unit == null) {
           unit = part;
+        } else if (classifyUnit(part, null) != UnitKind.unknown && classifyUnit(part, null) == classifyUnit(unit, null)) {
+          // `6 % (vol %)` — 같은 종류 단위의 자세한 표기다. 적용 조건이 아니라 단위로 둔다(원문 표기 그대로)
+          unit = part;
         } else {
           condition = condition == null ? part : '$condition, $part';
         }
@@ -191,7 +194,7 @@ class ExplosionLimits {
 }
 
 /// [raw] 하나를 상한·하한으로 나눈다. 두 값의 [MsdsValue.raw]는 둘 다 원문 전체다.
-/// 단위는 하한 뒤에만 적혀 있다 — 상한에 단위가 없으면 하한의 단위·기준·조건을 그대로 붙인다(새 표기를 만들지 않는다).
+/// 단위는 하한 뒤에만 적혀 있다 — 상한에 단위가 없으면 하한의 **단위만** 붙인다(새 표기를 만들지 않는다).
 /// `-`처럼 숫자가 아니면 그쪽만 unparsed, `/`가 없으면 둘 다 unparsed.
 ExplosionLimits parseExplosionLimits(String raw, {MsdsLog? log}) {
   final (text, origin) = splitOrigin(raw);
@@ -217,7 +220,7 @@ ExplosionLimits parseExplosionLimits(String raw, {MsdsLog? log}) {
   final lower = parseNumberValue(text.substring(slash + 1).trim(), log: log);
   var upper = parseNumberValue(text.substring(0, slash).trim(), log: log);
   final up = upper.parsed, low = lower.parsed;
-  if (up != null && up.unit == null && up.basis == null && up.condition == null && low != null) {
+  if (up != null && up.unit == null && low != null) {
     upper = MsdsValue(
       raw: upper.raw,
       text: upper.text,
@@ -228,8 +231,8 @@ ExplosionLimits parseExplosionLimits(String raw, {MsdsLog? log}) {
         value: up.value,
         unit: low.unit,
         unitKind: low.unitKind,
-        basis: low.basis,
-        condition: low.condition,
+        basis: up.basis,
+        condition: up.condition,
       ),
     );
   }
