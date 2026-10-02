@@ -50,13 +50,19 @@ Future<void> main(List<String> args) async {
 
   Future<String?> get(String path, String query, String file) async {
     final uri = Uri.parse('$base/$path?serviceKey=$k&$query');
-    final http.Response res;
-    try {
-      res = await client.get(uri).timeout(const Duration(seconds: 30));
-    } catch (e) {
-      stderr.writeln('  실패 $file: 접속 ${maskKey('$e', key)}');
-      failures++;
-      return null;
+    http.Response? res;
+    // 클라우드 프록시가 연결을 간헐적으로 끊는다(2026-10-02 실측 9/30) — 접속 실패만 3회까지 다시 부른다
+    for (var attempt = 1; res == null; attempt++) {
+      try {
+        res = await client.get(uri).timeout(const Duration(seconds: 30));
+      } catch (e) {
+        stderr.writeln('  접속 실패 $file (시도 $attempt/3): ${maskKey('$e', key)}');
+        if (attempt >= 3) {
+          failures++;
+          return null;
+        }
+        await Future<void>.delayed(Duration(seconds: 2 * attempt));
+      }
     }
     final body = utf8.decode(res.bodyBytes, allowMalformed: true);
     if (maskKey(body, key) != body) {

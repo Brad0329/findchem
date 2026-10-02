@@ -11,7 +11,7 @@ library;
 typedef MsdsLog = void Function(String message);
 
 enum ValueStatus {
-  /// 숫자를 뽑았다.
+  /// 값이 있다 — 숫자 필드는 [MsdsValue.parsed]가 채워져 있고, 글 필드(성상 등)는 원문만 있다.
   value,
 
   /// 원문이 정확히 `자료없음`.
@@ -174,11 +174,74 @@ MsdsValue parseNumberValue(String raw, {MsdsLog? log}) {
   );
 }
 
+/// 글 값(성상 등) — 숫자로 해석하지 않고 원문·본문·출처만. `자료없음`이면 no_data.
+MsdsValue parseTextValue(String raw) {
+  final (text, origin) = splitOrigin(raw);
+  return MsdsValue(raw: raw, text: text, origin: origin, status: text == noDataText ? ValueStatus.noData : ValueStatus.value);
+}
+
+/// 폭발한계. KOSHA 9절 I20(`인화 또는 폭발 범위의 상한/하한`)은 **한 항목에 `상한 / 하한 단위`** 로 온다
+/// (`7.8 / 1.0 %`, `50 / 6 % (vol %)`, `- / -`, `- / -  (불연성)` — 2026-10-02 녹화 8물질).
+class ExplosionLimits {
+  const ExplosionLimits({required this.upper, required this.lower});
+
+  final MsdsValue upper, lower;
+
+  Map<String, Object?> toJson() => {'upper': upper.toJson(), 'lower': lower.toJson()};
+}
+
+/// [raw] 하나를 상한·하한으로 나눈다. 두 값의 [MsdsValue.raw]는 둘 다 원문 전체다.
+/// 단위는 하한 뒤에만 적혀 있다 — 상한에 단위가 없으면 하한의 단위·기준·조건을 그대로 붙인다(새 표기를 만들지 않는다).
+/// `-`처럼 숫자가 아니면 그쪽만 unparsed, `/`가 없으면 둘 다 unparsed.
+ExplosionLimits parseExplosionLimits(String raw, {MsdsLog? log}) {
+  final (text, origin) = splitOrigin(raw);
+  MsdsValue wrap(MsdsValue piece) => MsdsValue(
+    raw: raw,
+    text: text,
+    origin: origin,
+    status: piece.status,
+    parsed: piece.parsed,
+    parseError: piece.parseError,
+  );
+  if (text == noDataText) {
+    final v = MsdsValue(raw: raw, text: text, origin: origin, status: ValueStatus.noData);
+    return ExplosionLimits(upper: v, lower: v);
+  }
+  final slash = text.indexOf('/');
+  if (slash < 0) {
+    const reason = '상한 / 하한 형식 아님';
+    log?.call('MSDS 폭발한계 해석 실패($reason): "$raw"');
+    final v = MsdsValue(raw: raw, text: text, origin: origin, status: ValueStatus.unparsed, parseError: reason);
+    return ExplosionLimits(upper: v, lower: v);
+  }
+  final lower = parseNumberValue(text.substring(slash + 1).trim(), log: log);
+  var upper = parseNumberValue(text.substring(0, slash).trim(), log: log);
+  final up = upper.parsed, low = lower.parsed;
+  if (up != null && up.unit == null && up.basis == null && up.condition == null && low != null) {
+    upper = MsdsValue(
+      raw: upper.raw,
+      text: upper.text,
+      origin: upper.origin,
+      status: upper.status,
+      parsed: ParsedNumber(
+        number: up.number,
+        value: up.value,
+        unit: low.unit,
+        unitKind: low.unitKind,
+        basis: low.basis,
+        condition: low.condition,
+      ),
+    );
+  }
+  return ExplosionLimits(upper: wrap(upper), lower: wrap(lower));
+}
+
 /// 단위 표기 → 종류. 기준이 `물=1`이면 상대밀도. 모르는 표기·단위 없음은 unknown(단정하지 않는다).
 UnitKind classifyUnit(String? unit, String? basis) {
   if (basis != null) return UnitKind.relativeDensity;
   if (unit == null) return UnitKind.unknown;
-  final u = unit.toLowerCase().replaceAll(' ', '').replaceAll('³', '3');
+  // `㎜`(U+339C)·`㎖`·`㎏`은 한 글자 단위 기호다 — KOSHA 증기압이 `28.4 ㎜Hg`로 온다(2026-10-02 녹화)
+  final u = unit.toLowerCase().replaceAll(' ', '').replaceAll('³', '3').replaceAll('㎜', 'mm').replaceAll('㎖', 'ml').replaceAll('㎏', 'kg');
   const density = {'g/cucm', 'g/cm3', 'g/cc', 'g/ml', 'kg/m3', 'g/l', 'kg/l'};
   const pressure = {'mmhg', 'hpa', 'kpa', 'pa', 'mpa', 'atm', 'bar', 'mbar', 'torr', 'psi'};
   if (density.contains(u)) return UnitKind.density;
