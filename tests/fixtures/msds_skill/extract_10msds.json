@@ -1,0 +1,41 @@
+{
+  "products": [
+    {"product": "AT-2150", "file": "AT-2150(K)MSDS.pdf", "components": [
+      {"name": "부틸 아세테이트", "cas": "123-86-4", "content": "50.0 >"},
+      {"name": "아로마틱 폴리이소시아네이트 레진", "cas": "9017-01-0", "content": "49.01 <"},
+      {"name": "톨루엔 디이소시아네이트", "cas": "26471-62-5", "content": "0.99 >"}
+    ]},
+    {"product": "ESCAT 180b", "file": "[세호] ESCAT 180b MSDS.pdf", "components": [
+      {"name": "Dimethyltin bis(2-ethylhexylmercaptoacetate)", "cas": "57583-35-4", "content": "58-68%"},
+      {"name": "2-ethylhexyl 10-ethyl-4-[[2-[(2-ethylhexyl)oxy]-2-oxoethyl]thio]-4-methyl-7-oxo-8-oxa-3,5-dithia-4-stannatetradecanoate", "cas": "57583-34-3", "content": "16-26%"},
+      {"name": "Methyl isobutyl ketone", "cas": "108-10-1", "content": "15%"}
+    ]},
+    {"product": "MDI(CRUDE)LVPRANATE M-20S", "file": "MDI(CRUDE)LVPRANATE M-20S_KR_1.1.pdf", "components": [
+      {"name": "영업비밀", "cas": "", "content": "60~70", "note": "CAS 칸 표기 '- / -'"},
+      {"name": "다이페닐 메테인 다이아이소사이아네이트", "cas": "101-68-8", "content": "30~40"}
+    ]},
+    {"product": "시클로헥사논", "file": "Anone.pdf", "components": [
+      {"name": "시클로헥사논", "cas": "108-94-1", "content": "100"}
+    ]},
+    {"product": "Benzoic acid technical", "file": "Benzoic acid technical (MSDS) Lanxess 2025최신.pdf", "components": [
+      {"name": "벤조산", "cas": "000065-85-0", "content": ">99-<=100"}
+    ]},
+    {"product": "염화벤죠일(Benezoyl Chloride)", "file": "Benzoyl chloride(염화벤죠일).pdf", "components": [
+      {"name": "염화벤죠일", "cas": "98-88-4", "content": "99-100%"},
+      {"name": "물", "cas": "", "content": "1-0%"}
+    ]},
+    {"product": "MEKO", "file": "MSDS MEKO 2025.pdf", "components": [
+      {"name": "MEKO", "cas": "96-29-7", "content": "≥99%"},
+      {"name": "Water", "cas": "7732-18-5", "content": "≤0.1%"}
+    ]},
+    {"product": "아크릴로니트릴(Acrylonitrile)", "file": "AN모노머 MSDS(KR) (1).pdf", "components": [
+      {"name": "아크릴로니트릴(Acrylonitrile)", "cas": "107-13-1", "content": "99.5% 이상"}
+    ]},
+    {"product": "TEA(TRIETHANOLAMINE)", "file": "TEA(Tri Ethanol Amine) [KPX 한글] 2015.09.pdf", "components": [
+      {"name": "TRIETHANOLAMINE", "cas": "102-71-6", "content": "99% 이상"}
+    ]},
+    {"product": "아이소포론 디아민", "file": "IPDA msds 켐블루 국문 2025.03.12.pdf", "components": [
+      {"name": "아이소포론 디아민", "cas": "2855-13-2", "content": "100%"}
+    ]}
+  ]
+}

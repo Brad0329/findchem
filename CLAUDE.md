@@ -177,6 +177,7 @@ Flutter(Android + 웹 한 벌), 서버 없음, 데이터는 JSON으로 번들해
   docs/                ← REQUIREMENTS.md, SCHEMA.md, design/, playbooks/
   work_log/            ← plan.md, Phase_XXX.md
   scripts/             ← 빌드·유틸 스크립트
+  agent_skills/        ← claude.ai에 올리는 스킬(에이전트 트랙 — .claude/skills는 개발용이라 따로, 2026-10-11 사용자 확인)
   .github/workflows/   ← GitHub Actions (웹을 GitHub Pages에 배포 — Phase 006)
   ```
   루트의 `pubspec.yaml`·`pubspec.lock`·`analysis_options.yaml`·`.metadata`는 Flutter 고정 파일이다.
