@@ -14,7 +14,7 @@ import 'package:findchem/mcp/mcp_http.dart';
 import 'package:findchem/parser/models.dart';
 
 /// 배포 판 구분용. 서버 동작을 바꾸면 올린다.
-const serverVersion = '0.4.0-a004';
+const serverVersion = '0.5.0-a008';
 
 void log(String message) => stderr.writeln(message);
 

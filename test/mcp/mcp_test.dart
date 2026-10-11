@@ -41,11 +41,11 @@ void main() {
       expect(result(call('initialize', {'protocolVersion': '1999-01-01'}))['protocolVersion'], mcpProtocolVersions.first);
     });
 
-    test('tools/list — 앞 두 도구는 assistToolDefinitions와 같고, A-004 계산 도구 2개가 뒤에 붙는다', () {
+    test('tools/list — 앞 두 도구는 assistToolDefinitions와 같고, A-004 계산 도구 2개ㆍA-008 분류 도구가 뒤에 붙는다', () {
       final tools = (result(call('tools/list'))['tools']! as List).cast<Map>();
       final defs = assistToolDefinitions();
       expect(tools.map((t) => t['name']),
-          ['search_chemical', 'get_rule', 'calc_writing_level', 'screen_preliminary_scenarios']);
+          ['search_chemical', 'get_rule', 'calc_writing_level', 'screen_preliminary_scenarios', 'classify_cas']);
       for (var i = 0; i < defs.length; i++) {
         expect(tools[i]['description'], defs[i]['description']);
         expect(jsonEncode(tools[i]['inputSchema']), jsonEncode(defs[i]['input_schema']));
@@ -62,6 +62,22 @@ void main() {
       final expected = searchResponse(SearchIndex(ds, cap: assistSearchCap).search('50-00-0'), ds);
       expect(jsonDecode(text), jsonDecode(jsonEncode(expected)));
       expect((jsonDecode(text) as Map)['coverage']['status'], 'exact');
+    });
+
+    test('tools/call classify_cas — JSON 응답, 형식 오류는 isError', () {
+      final r = result(call('tools/call', {
+        'name': 'classify_cas',
+        'arguments': {
+          'cas': ['107-13-1', '123-86-4'],
+        },
+      }));
+      expect(r['isError'], false);
+      final body = jsonDecode(((r['content']! as List).single as Map)['text'] as String) as Map;
+      expect(body['total'], 2);
+      expect((body['items'] as List).map((i) => (i as Map)['status']), ['listed', 'not_listed']);
+
+      final bad = result(call('tools/call', {'name': 'classify_cas', 'arguments': <String, Object?>{}}));
+      expect(bad['isError'], true);
     });
 
     test('get_rule 없는 주제·알 수 없는 도구 — isError + 사유, 로그에 남는다', () {
@@ -114,7 +130,7 @@ void main() {
       final (s, b, ct) = await send('POST', '/mcp', jsonEncode({'jsonrpc': '2.0', 'id': 7, 'method': 'tools/list'}));
       expect(s, 200);
       expect(ct?.mimeType, 'application/json');
-      expect(((jsonDecode(b) as Map)['result'] as Map)['tools'], hasLength(4));
+      expect(((jsonDecode(b) as Map)['result'] as Map)['tools'], hasLength(5));
 
       final (s2, b2, _) = await send('POST', '/mcp', jsonEncode({'jsonrpc': '2.0', 'method': 'notifications/initialized'}));
       expect(s2, 202);
