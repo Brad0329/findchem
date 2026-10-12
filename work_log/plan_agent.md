@@ -110,7 +110,8 @@
 - [ ] **(master 트랙 F-010) 서버 중계 `POST /assist/messages`** — 웹의 판정(AI) 호출을 이 서버가 Anthropic으로 넘긴다(키는 서버에만).
   스펙·수용 기준의 원본은 `docs/REQUIREMENTS.md` F-010 한 곳이다(서버 항목은 이 브랜치에서 대조 — 그 절의 G11). 번호를 A로 새로 받지 않는다.
   **구현·테스트 완료 2026-10-12**(`lib/mcp/assist_proxy.dart`·`router.dart`, `test/mcp/assist_proxy_test.dart`, 서버 0.6.0-f010 — 서버 수용 기준 13항목 대응).
-  **남은 것: 사용자가 Cloud Run 콘솔 환경 변수에 `ANTHROPIC_API_KEY` 넣기 → 배포(`gcp_auth.sh` → `deploy_mcp.sh`, 제한 시간 300초로 바뀜) → 실측**
+  **배포 2026-10-12**(리비전 `findchem-mcp-00007-8hh`, 서비스 환경 변수 `ANTHROPIC_API_KEY` 이어짐 — 이름만 확인, `/mcp`는 커넥터 `search_chemical`로 정상 확인).
+  **남은 것: 중계 실측**(클라우드 세션 프록시가 `*.run.app`을 막아 curl 불가 — 웹에서 `/assist/messages` 200 스트리밍 확인, 503이면 키 미적용)
   (도구 목록은 그대로라 커넥터 재연결은 필요 없다). 그 뒤 master에서 워크플로 전환(F-010 ⑶)
   - 스펙에 없던 것 둘: Anthropic 접속 실패는 502 / 본문이 상한을 넘어도 끝까지 읽고 413을 준다(도중에 닫으면 상대가 연결 끊김으로 본다 — 테스트에서 실제로 걸렸다)
   - ★ 비용 상한 주의: 요청 하나가 최대 512KB 입력 + 출력 16,000토큰이고 인스턴스당 시간당 200회·인스턴스 2개다. `Origin`은 브라우저 밖에서 꾸밀 수 있어
