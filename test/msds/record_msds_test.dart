@@ -13,6 +13,8 @@ void main() {
       'dart',
       ['run', 'scripts/record_msds.dart', '50-00-0'],
       environment: {'DATA_GO_KR_KEY': ''},
+      // Windows에서는 `dart`가 dart.bat이라 셸을 거쳐야 찾는다(없으면 '지정된 파일을 찾을 수 없습니다').
+      runInShell: Platform.isWindows,
     );
 
     expect(r.exitCode, 2, reason: '${r.stdout}\n${r.stderr}');
