@@ -95,8 +95,9 @@ class _FindChemAppState extends State<FindChemApp> {
         session: AssistSession(
           dataset: _controller.data!.dataset,
           client: _assistClient,
-          // 사용자 키가 우선, 없으면 빌드 기본 키. 테스트만 직접 넣는다.
+          // 사용자 키 > 중계 주소 > 빌드 기본 키(F-010, 순서는 ApiSettingsController). 테스트만 키를 직접 넣는다.
           apiKey: widget.assistKey ?? _apiSettings.effectiveAnthropicKey ?? '',
+          proxyUrl: widget.assistKey == null && _apiSettings.usingAssistProxy ? _apiSettings.assistProxyUrl : null,
           // 보낼 때마다 설정에서 다시 읽는다 — 설정에서 바꾸면 다음 질문부터 그 모델이다.
           modelOf: () => _apiSettings.assistModel,
         ),

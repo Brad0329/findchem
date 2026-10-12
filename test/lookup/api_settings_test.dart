@@ -133,6 +133,47 @@ void main() {
     });
   });
 
+  group('판정 호출의 길 (F-010) — 자기 키 > 중계 주소 > 빌드 키 > 없음', () {
+    const proxy = 'https://proxy.test/assist/messages';
+
+    Future<ApiSettingsController> of({String build = '', String proxyUrl = ''}) async {
+      final c = ApiSettingsController(
+        store: MemoryUpdateStore(),
+        defaultKey: '',
+        defaultAnthropicKey: build,
+        assistProxyUrl: proxyUrl,
+      );
+      await c.load();
+      return c;
+    }
+
+    (String?, bool, bool) routeOf(ApiSettingsController c) =>
+        (c.effectiveAnthropicKey, c.usingAssistProxy, c.usingDefaultAnthropicKey);
+
+    test('아무것도 없으면 길이 없다', () async {
+      expect(routeOf(await of()), (null, false, false));
+    });
+
+    test('빌드 키만 있으면 종전대로 빌드 키로 직접', () async {
+      expect(routeOf(await of(build: 'BUILD')), ('BUILD', false, true));
+    });
+
+    test('중계 주소가 있으면 중계 — 빌드 키가 같이 있어도 중계가 먼저다', () async {
+      expect(routeOf(await of(proxyUrl: proxy)), (null, true, false));
+      final both = await of(build: 'BUILD', proxyUrl: proxy);
+      expect(routeOf(both), (null, true, false));
+      expect(both.assistProxyUrl, proxy);
+    });
+
+    test('자기 키를 저장하면 중계 주소가 있어도 그 키로 직접, 지우면 중계로 돌아간다', () async {
+      final c = await of(build: 'BUILD', proxyUrl: proxy);
+      await c.saveAnthropicKey('MINE');
+      expect(routeOf(c), ('MINE', false, false));
+      await c.deleteAnthropicKey();
+      expect(routeOf(c), (null, true, false));
+    });
+  });
+
   test('모르는 서비스 이름은 무시하고, 빠진 이름은 체크된 것으로 본다', () async {
     final c = await loaded(MemoryUpdateStore(jsonEncode({
       'version': 1,

@@ -49,6 +49,9 @@ class FakeAnthropic {
   final List<Map<String, Object?>> bodies = [];
   final List<Map<String, String>> headers = [];
 
+  /// 요청이 간 주소(직접 호출인지 중계인지 — F-010).
+  final List<Uri> urls = [];
+
   /// 조각을 하나씩 손으로 흘려보내고 싶을 때 쓴다(스트리밍 확인).
   /// [_pending]은 아직 요청이 오지 않은 것, [_active]는 요청이 와서 붙은 것 —
   /// 붙은 뒤에도 [emit]할 수 있어야 하므로 둘을 나눈다.
@@ -85,6 +88,7 @@ class FakeAnthropic {
 
   http.Client get client => MockClient.streaming((request, bodyStream) async {
     headers.add(Map.of(request.headers));
+    urls.add(request.url);
     final raw = await bodyStream.bytesToString();
     bodies.add(jsonDecode(raw) as Map<String, Object?>);
 

@@ -6,7 +6,7 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 
-import '../assist/llm_client.dart' show AssistModel, bundledAnthropicKey;
+import '../assist/llm_client.dart' show AssistModel, bundledAnthropicKey, bundledAssistProxyUrl;
 import '../data/update_store.dart';
 
 /// 조회 기능(CAS 누르기, 설정 카드 1·2)을 켤지. **오늘은 웹만**(2026-09-14 사용자 결정, REQUIREMENTS F-007 '단계') —
@@ -33,8 +33,14 @@ enum ChemService {
 }
 
 class ApiSettingsController extends ChangeNotifier {
-  ApiSettingsController({required this.store, String? defaultKey})
-    : defaultKey = (defaultKey ?? bundledDefaultServiceKey).trim();
+  ApiSettingsController({
+    required this.store,
+    String? defaultKey,
+    String? defaultAnthropicKey,
+    String? assistProxyUrl,
+  }) : defaultKey = (defaultKey ?? bundledDefaultServiceKey).trim(),
+       defaultAnthropicKey = (defaultAnthropicKey ?? bundledAnthropicKey).trim(),
+       assistProxyUrl = (assistProxyUrl ?? bundledAssistProxyUrl).trim();
 
   final UpdateStore store;
 
@@ -71,17 +77,27 @@ class ApiSettingsController extends ChangeNotifier {
   /// 판정에 쓸 모델. 저장된 값이 없거나 모르는 값이면 기본값(Opus 5)이고 그 사실은 로그에 남는다.
   AssistModel get assistModel => _assistModel;
 
-  /// 빌드에 들어간 Anthropic 기본 키(없으면 빈 문자열).
-  String get defaultAnthropicKey => bundledAnthropicKey.trim();
+  // 판정 호출의 길(F-010): **자기 키(직접) > 중계 주소(중계) > 빌드 키(직접) > 없음.** 이 순서는 아래 세 getter가 한다.
+
+  /// 빌드에 들어간 Anthropic 기본 키(없으면 빈 문자열). 테스트만 직접 넣는다.
+  final String defaultAnthropicKey;
+
+  /// 빌드에 들어간 중계 서버 주소(없으면 빈 문자열). 테스트만 직접 넣는다.
+  final String assistProxyUrl;
 
   bool get hasDefaultAnthropicKey => defaultAnthropicKey.isNotEmpty;
 
-  /// 사용자가 저장한 키가 없어 기본 키를 쓰는 중.
-  bool get usingDefaultAnthropicKey => _anthropicKey == null && hasDefaultAnthropicKey;
+  bool get hasAssistProxy => assistProxyUrl.isNotEmpty;
 
-  /// 판정에 쓸 키: 사용자 키가 우선, 없으면 기본 키, 둘 다 없으면 null(질문을 보내지 않는다).
+  /// 사용자가 저장한 키가 없어 중계 서버로 보내는 중. 이때는 이 기기에도 빌드에도 쓰는 키가 없다.
+  bool get usingAssistProxy => _anthropicKey == null && hasAssistProxy;
+
+  /// 사용자가 저장한 키도 중계 주소도 없어 빌드 기본 키를 쓰는 중.
+  bool get usingDefaultAnthropicKey => _anthropicKey == null && !hasAssistProxy && hasDefaultAnthropicKey;
+
+  /// **직접 호출**에 쓸 키: 사용자 키가 우선, 없으면(중계 주소가 없을 때만) 기본 키. 중계로 보내거나 아무 길도 없으면 null.
   String? get effectiveAnthropicKey =>
-      _anthropicKey ?? (hasDefaultAnthropicKey ? defaultAnthropicKey : null);
+      _anthropicKey ?? (usingDefaultAnthropicKey ? defaultAnthropicKey : null);
 
   /// 사용자가 저장한 인증키. 없으면 null(기본 키는 [effectiveKey]).
   String? get serviceKey => _serviceKey;
@@ -136,7 +152,7 @@ class ApiSettingsController extends ChangeNotifier {
     if (_anthropicKey?.isEmpty ?? false) _anthropicKey = null;
     // 모르는 모델 ID는 기본값으로 떨어지고 그 사실이 로그에 남는다(AssistModel.fromId).
     final model = root['assistModel'];
-    _assistModel = AssistModel.fromId(model is String ? model : null);
+    _assistModel = AssistModel.fromId(model is String ? model : null, log: debugPrint);
     _services = next;
   }
 
@@ -193,7 +209,7 @@ class ApiSettingsController extends ChangeNotifier {
     return trimmed.isEmpty ? _write(clearAnthropicKey: true) : _write(anthropicKey: trimmed);
   }
 
-  /// F-008 Anthropic 키만 지운다. 기본 키가 있으면 기본 키로 돌아간다.
+  /// F-008 Anthropic 키만 지운다. 중계 주소가 있으면 중계로, 없고 기본 키가 있으면 기본 키로 돌아간다.
   Future<void> deleteAnthropicKey() => _write(clearAnthropicKey: true);
 
   /// F-008 판정 모델을 바꿔 바로 저장한다.

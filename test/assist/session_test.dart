@@ -162,6 +162,25 @@ void main() {
     expect(session.messages.last.error, AssistText.noKey);
   });
 
+  test('키가 없어도 중계 주소가 있으면 그 주소로 질문을 보낸다(F-010)', () async {
+    const proxy = 'https://proxy.test/assist/messages';
+    final fake = FakeAnthropic(turns: const [FakeTurn(text: ['답'])]);
+    final session = AssistSession(
+      dataset: ds,
+      client: AssistLlmClient(client: fake.client),
+      apiKey: '',
+      proxyUrl: proxy,
+      modelOf: () => AssistModel.opus5,
+    );
+
+    expect(session.canAsk, true);
+    await session.ask('톨루엔 규정수량?');
+
+    expect(fake.urls.single, Uri.parse(proxy));
+    expect(session.messages.last.error, isNull);
+    expect(session.messages.last.text, '답');
+  });
+
   test('도구 호출 왕복이 상한을 넘으면 실패로 끝내되 지금까지의 근거는 남긴다', () async {
     final fake = FakeAnthropic(
       turns: [
