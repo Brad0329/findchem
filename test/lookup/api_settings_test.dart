@@ -119,17 +119,26 @@ void main() {
         File('lib/assist/llm_client.dart').readAsStringSync(),
       ].join('\n');
 
-      final defines = RegExp(r'--dart-define=(\w+)="\$(\w+)"').allMatches(workflow).toList();
+      // Secret에서 오는 주입(`="$X"`)과 값을 그대로 적은 주입(F-010 중계 주소 — 비밀이 아니다)을 둘 다 잡는다.
+      final defines = RegExp(r'--dart-define=(\w+)=("\$(\w+)"|\S+)').allMatches(workflow).toList();
       expect(
         defines.map((m) => m.group(1)),
-        containsAll(['DATA_GO_KR_DEFAULT_KEY', 'ANTHROPIC_DEFAULT_KEY']),
-        reason: '두 기본 키가 모두 빌드 상수로 들어가야 한다',
+        containsAll(['DATA_GO_KR_DEFAULT_KEY', 'ASSIST_PROXY_URL']),
+        reason: '공공데이터 기본 키와 판정 중계 주소가 빌드 상수로 들어가야 한다',
       );
       for (final m in defines) {
-        // 빌드 상수 이름을 읽는 코드가 있어야 하고, 그 값이 오는 Secret도 워크플로에 선언돼 있어야 한다.
+        // 빌드 상수 이름을 읽는 코드가 있어야 하고, Secret에서 오는 값이면 그 Secret도 워크플로에 선언돼 있어야 한다.
         expect(readers, contains("String.fromEnvironment('${m.group(1)}')"));
-        expect(workflow, contains('${m.group(2)}: \${{ secrets.${m.group(2)} }}'));
+        final secret = m.group(3);
+        if (secret != null) expect(workflow, contains('$secret: \${{ secrets.$secret }}'));
       }
+    });
+
+    test('배포 워크플로가 Anthropic 키를 빌드에 넣지 않는다(F-010 — 키는 중계 서버에만, 주석 포함 0건)', () {
+      final workflow = File('.github/workflows/deploy-web.yml').readAsStringSync();
+      expect(workflow, isNot(contains('ANTHROPIC_DEFAULT_KEY')));
+      expect(workflow, isNot(contains('secrets.ANTHROPIC_API_KEY')));
+      expect(workflow, contains('--dart-define=ASSIST_PROXY_URL=https://'));
     });
   });
 

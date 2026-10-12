@@ -44,16 +44,14 @@ jobs:
       # F-007 기본 키: Secret DATA_GO_KR_KEY를 빌드 상수로 넣는다(lib/lookup/api_settings.dart가 같은 이름을 읽는다 —
       # 이름 대조는 test/lookup/api_settings_test.dart). 배포된 JS에서 공개됨을 감수한 결정이다(REQUIREMENTS 비기능 4).
       # Secret이 없으면 빈 값 → 기본 키 없음(사용자가 설정에서 키를 넣는 종전 동작).
-      # F-008 기본 키도 같은 방식(Secret ANTHROPIC_API_KEY → --dart-define=ANTHROPIC_DEFAULT_KEY,
-      # lib/assist/llm_client.dart가 읽는다). 이쪽은 **종량제**라 배포 전에 콘솔에서 지출 한도를 걸어 둔다
-      # (REQUIREMENTS F-008 2단계 '배포 선행 조건'). 사용자가 설정에서 자기 키를 넣으면 그 키가 우선한다.
+      # F-008 판정(AI)은 키를 빌드에 넣지 않는다(F-010) — 키는 Cloud Run 중계 서버에만 있고, 빌드에는 그 서버 주소만 넣는다
+      # (비밀이 아니다 — 배포 JS에 어차피 드러난다. lib/assist/llm_client.dart가 읽는다). 사용자가 설정에서 자기 키를 넣으면 그 키로 직접 부른다.
       - run: |
           flutter build web --base-href /findchem/ \
             --dart-define=DATA_GO_KR_DEFAULT_KEY="$DATA_GO_KR_KEY" \
-            --dart-define=ANTHROPIC_DEFAULT_KEY="$ANTHROPIC_API_KEY"
+            --dart-define=ASSIST_PROXY_URL=https://findchem-mcp-6gnn36agcq-du.a.run.app/assist/messages
         env:
           DATA_GO_KR_KEY: ${{ secrets.DATA_GO_KR_KEY }}
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
 
       - uses: actions/upload-pages-artifact@v3
         with:

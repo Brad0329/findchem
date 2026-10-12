@@ -42,8 +42,9 @@ abstract final class AssistText {
 /// (F-007 CAS 조회는 별개다 — 그쪽은 `apiLookupEnabledByDefault`로 여전히 웹만이다.)
 const bool assistEnabledByDefault = true;
 
-/// 배포 빌드에 들어간 기본 키(`--dart-define=ANTHROPIC_DEFAULT_KEY`). 없으면 빈 문자열 = 키 없음.
-/// **배포된 JS에서 공개된다** — 사용자가 감수한 결정(2026-09-16). 배포 전에 콘솔에서 지출 한도를 건다.
+/// 빌드에 들어간 기본 키(`--dart-define=ANTHROPIC_DEFAULT_KEY`). 없으면 빈 문자열 = 키 없음.
+/// **웹 배포 빌드는 F-010(2026-10-12)부터 넣지 않는다**(중계 주소만 넣는다) — 로컬 개발과 되돌리기용으로 남긴다.
+/// 넣으면 배포된 JS에서 공개된다.
 const String bundledAnthropicKey = String.fromEnvironment('ANTHROPIC_DEFAULT_KEY');
 
 /// 배포 빌드에 들어간 중계 서버 주소(`--dart-define=ASSIST_PROXY_URL`, F-010). 없으면 빈 문자열 = 중계 없음.
