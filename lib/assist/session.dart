@@ -37,14 +37,18 @@ class AssistSession extends ChangeNotifier {
     required Dataset dataset,
     required this.client,
     required this.apiKey,
+    this.proxyUrl,
     required this.modelOf,
   }) : tools = AssistTools(dataset, log: debugPrint);
 
   final AssistTools tools;
   final AssistLlmClient client;
 
-  /// 이 빌드ㆍ이 기기에서 쓸 키. 비어 있으면 질문을 보내지 않는다(호출 0회).
+  /// 이 빌드ㆍ이 기기에서 쓸 키. 이것도 [proxyUrl]도 없으면 질문을 보내지 않는다(호출 0회).
   final String apiKey;
+
+  /// 중계 서버 주소(F-010). 있으면 키 없이 이 주소로 보낸다.
+  final String? proxyUrl;
 
   /// 보낼 때마다 설정에서 다시 읽는다 — 설정에서 모델을 바꾸면 다음 질문부터 바뀐다.
   final AssistModel Function() modelOf;
@@ -62,12 +66,15 @@ class AssistSession extends ChangeNotifier {
 
   bool get hasKey => apiKey.trim().isNotEmpty;
 
+  /// 질문을 보낼 길이 있는가 — 키가 있거나 중계 주소가 있다.
+  bool get canAsk => hasKey || proxyUrl != null;
+
   /// 질문 하나를 보내고 답이 끝날 때까지 도구 루프를 돈다.
   Future<void> ask(String question) async {
     final q = question.trim();
     if (q.isEmpty || _busy) return;
-    if (!hasKey) {
-      // 키가 없으면 **호출하지 않는다**(REQUIREMENTS F-008 2단계).
+    if (!canAsk) {
+      // 키도 중계 주소도 없으면 **호출하지 않는다**(REQUIREMENTS F-008 2단계, F-010).
       messages
         ..add(AssistMessage.question(q))
         ..add(AssistMessage.answer(text: '', evidence: Evidence.empty, error: AssistText.noKey));
@@ -95,6 +102,7 @@ class AssistSession extends ChangeNotifier {
         var firstChunk = true;
         final turn = await client.send(
           apiKey: apiKey,
+          proxyUrl: proxyUrl,
           model: modelOf(),
           messages: _api,
           onText: (chunk) {

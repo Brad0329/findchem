@@ -19,9 +19,17 @@ void main() {
     },
   ];
 
-  Future<LlmTurn> send(FakeAnthropic fake, {AssistModel model = AssistModel.opus5, void Function(String)? onText}) =>
+  const proxy = 'https://proxy.test/assist/messages';
+
+  Future<LlmTurn> send(
+    FakeAnthropic fake, {
+    AssistModel model = AssistModel.opus5,
+    void Function(String)? onText,
+    String? proxyUrl,
+  }) =>
       AssistLlmClient(client: fake.client).send(
-        apiKey: 'test-key',
+        apiKey: proxyUrl == null ? 'test-key' : '',
+        proxyUrl: proxyUrl,
         model: model,
         messages: messages,
         onText: onText ?? (_) {},
@@ -64,6 +72,66 @@ void main() {
       expect(system, contains('수량 행이 둘 이상이면'));
       expect(system, contains('함량기준을 답에 넣는다'));
       expect(system, contains('어느 순간의 최대 체류량'));
+    });
+  });
+
+  group('요청 본문 전체 — 조립 함수를 옮겨도(F-010) 값이 바뀌지 않는다', () {
+    test('직접 호출의 본문이 고정 기대값과 같다', () {
+      expect(AssistLlmClient.requestBody(model: AssistModel.sonnet5, messages: messages), {
+        'model': 'claude-sonnet-5',
+        'max_tokens': 16000,
+        'stream': true,
+        'thinking': {'type': 'adaptive', 'display': 'summarized'},
+        'system': assistSystemPrompt,
+        'tools': assistToolDefinitions(),
+        'messages': messages,
+        'cache_control': {'type': 'ephemeral'},
+      });
+    });
+  });
+
+  group('중계 경로 (F-010)', () {
+    test('중계 주소가 있으면 그 주소로 가고, 키·판·브라우저 헤더가 없고, 본문은 모델과 대화뿐이다', () async {
+      final fake = FakeAnthropic(turns: const [FakeTurn(text: ['답'])]);
+      final turn = await send(fake, proxyUrl: proxy, model: AssistModel.sonnet5);
+
+      expect(fake.urls.single, Uri.parse(proxy));
+      final headers = fake.headers.single;
+      expect(headers.keys, isNot(contains('x-api-key')));
+      expect(headers.keys, isNot(contains('anthropic-version')));
+      expect(headers.keys, isNot(contains(browserAccessHeader)));
+      expect(fake.bodies.single, {'model': 'claude-sonnet-5', 'messages': messages});
+      expect(turn.content.single['text'], '답', reason: '응답(SSE) 해석은 직접 호출과 같은 코드다');
+    });
+
+    test('중계 주소가 없으면 종전대로 api.anthropic.com으로 간다', () async {
+      final fake = FakeAnthropic(turns: const [FakeTurn(text: ['답'])]);
+      await send(fake);
+      expect(fake.urls.single, Uri.parse('https://api.anthropic.com/v1/messages'));
+    });
+
+    test('실패 문구 — 429는 한도, 401·403을 포함한 그 밖은 코드(사용자가 고칠 키가 없다)', () async {
+      Future<String> failureOf(int status) async {
+        try {
+          await send(FakeAnthropic(statusCode: status), proxyUrl: proxy);
+          fail('$status에서 실패하지 않았습니다');
+        } on AssistFailure catch (e) {
+          return e.message;
+        }
+      }
+
+      expect(await failureOf(429), AssistText.overLimit);
+      for (final code in [400, 401, 403, 413, 503]) {
+        expect(await failureOf(code), AssistText.failed(code));
+      }
+    });
+
+    test('접속 실패는 오프라인 안내로 간다', () async {
+      final client = AssistLlmClient(client: _ThrowingClient());
+      await expectLater(
+        client.send(apiKey: '', proxyUrl: proxy, model: AssistModel.opus5, messages: messages, onText: (_) {}),
+        throwsA(isA<AssistFailure>().having((e) => e.message, 'message', AssistText.offline)),
+      );
     });
   });
 
@@ -148,10 +216,13 @@ void main() {
 
   group('모델 저장값 해석', () {
     test('모르는 값·null이면 기본값으로 떨어진다(조용히 넘어가지 않고 로그에 남긴다)', () {
-      expect(AssistModel.fromId(null), AssistModel.opus5);
-      expect(AssistModel.fromId('claude-sonnet-5'), AssistModel.sonnet5);
-      expect(AssistModel.fromId('claude-opus-4-8'), AssistModel.opus5);
-      expect(AssistModel.fromId(''), AssistModel.opus5);
+      final logs = <String>[];
+      expect(AssistModel.fromId(null, log: logs.add), AssistModel.opus5);
+      expect(AssistModel.fromId('claude-sonnet-5', log: logs.add), AssistModel.sonnet5);
+      expect(logs, isEmpty);
+      expect(AssistModel.fromId('claude-opus-4-8', log: logs.add), AssistModel.opus5);
+      expect(AssistModel.fromId('', log: logs.add), AssistModel.opus5);
+      expect(logs, hasLength(2), reason: '모르는 값 둘이 각각 로그에 남는다');
     });
   });
 }

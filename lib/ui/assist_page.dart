@@ -107,7 +107,7 @@ class _AssistPageState extends State<AssistPage> {
         builder: (context, _) {
           return Column(
             children: [
-              if (!session.hasKey)
+              if (!session.canAsk)
                 const _Banner(text: AssistText.noKey)
               else
                 const _Banner(text: AssistPageText.online, subtle: true),

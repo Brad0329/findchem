@@ -28,7 +28,8 @@ abstract final class AssistSettingsText {
   static const verifying = '확인 중…';
   static const defaultMask = '****';
   static const usingDefault = '기본 키 사용 중 — 내 키를 넣고 [저장]하면 그 키를 씁니다';
-  static const noKeyAtAll = '키가 없습니다 — 넣기 전에는 판정 화면에서 질문을 보내지 않습니다';
+  static const usingProxy = '키 없이 쓸 수 있습니다 — 내 키를 넣으면 그 키를 씁니다';
+  static const noKeyAtAll ='키가 없습니다 — 넣기 전에는 판정 화면에서 질문을 보내지 않습니다';
 
   static const modelSection = '판정에 쓸 모델';
   static String modelHint(AssistModel m) => '${m.hint} · ${m.id}';
@@ -106,6 +107,7 @@ class _AssistSettingsCardBodyState extends State<AssistSettingsCardBody> {
   }
 
   /// 입력칸의 키(비었으면 지금 쓰는 키)로 확인한다. **저장하지 않는다**(F-007 [키 인증]과 같다).
+  /// 중계로 보내는 중이면 확인할 키가 없다 — 빈 칸이면 '키를 입력하세요'다(F-010 G9, 서버에 확인 경로를 열지 않는다).
   Future<void> _verify() async {
     final key = _key.text.trim().isNotEmpty ? _key.text.trim() : (_settings.effectiveAnthropicKey ?? '');
     if (key.isEmpty) {
@@ -171,6 +173,11 @@ class _AssistSettingsCardBodyState extends State<AssistSettingsCardBody> {
             Padding(
               padding: const EdgeInsets.only(top: 4),
               child: Text(AssistSettingsText.usingDefault, style: theme.textTheme.bodySmall),
+            )
+          else if (_settings.usingAssistProxy)
+            Padding(
+              padding: const EdgeInsets.only(top: 4),
+              child: Text(AssistSettingsText.usingProxy, style: theme.textTheme.bodySmall),
             )
           else if (_settings.effectiveAnthropicKey == null)
             Padding(

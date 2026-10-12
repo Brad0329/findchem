@@ -1,7 +1,9 @@
 /// F-008 2단계 — Anthropic Messages API 호출(스트리밍 SSE).
 ///
-/// - **서버 프록시가 없다**(2026-09-16 사용자 결정). 앱ㆍ웹이 직접 부른다.
-/// - **웹에서는 `anthropic-dangerous-direct-browser-access` 헤더가 없으면 CORS로 막힌다** — 2026-09-16 실측:
+/// - **길이 둘이다**(F-010, 2026-10-12): 키가 있으면 `api.anthropic.com`을 **직접** 부르고, 중계 주소를 받으면
+///   **중계 서버**(Cloud Run)로 모델ㆍ대화만 보낸다 — 키ㆍ프롬프트ㆍ도구 정의는 서버가 붙인다. 어느 길인지는
+///   부르는 쪽(`ApiSettingsController`)이 정한다. 응답(SSE)은 두 길이 같아 해석 코드는 하나다.
+/// - **직접 호출은 웹에서 `anthropic-dangerous-direct-browser-access` 헤더가 없으면 CORS로 막힌다** — 2026-09-16 실측:
 ///   헤더 없이 부르면 응답 자체가 오지 않아(`TypeError: Failed to fetch`) '접속 실패'로 **오인**되고,
 ///   헤더가 있으면 401이 도달했다. 그래서 이 헤더는 테스트로 건다(`test/assist/llm_client_test.dart`).
 /// - 스트리밍은 `http`의 `Client.send`로 받는다. 새 의존성이 필요 없다 — `http` 1.6.0의 `BrowserClient`가
@@ -15,7 +17,10 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
-import 'prompt.dart';
+import 'llm_request.dart';
+
+// 모델 목록ㆍ요청 조립은 Flutter 없는 `llm_request.dart`에 있다(중계 서버와 같이 쓴다) — 종전 import가 그대로 돌게 다시 내보낸다.
+export 'llm_request.dart' show AssistModel;
 
 /// 화면 문구(테스트가 같은 상수를 본다). REQUIREMENTS F-008 2단계 '오프라인ㆍ실패'.
 abstract final class AssistText {
@@ -31,34 +36,6 @@ abstract final class AssistText {
   static const tooManyRounds = '답을 받지 못했습니다 (도구 호출이 너무 많습니다)';
 }
 
-/// 고른 모델. **선택지는 이 둘뿐이다** — 목록을 일반화하지 않는다(YAGNI, REQUIREMENTS F-008).
-enum AssistModel {
-  opus5('claude-opus-5', 'Opus 5', '더 정확하고 더 비쌈(기본값)'),
-  sonnet5('claude-sonnet-5', 'Sonnet 5', '더 싸고 덜 정확함');
-
-  const AssistModel(this.id, this.label, this.hint);
-
-  /// API에 보내는 모델 ID.
-  final String id;
-
-  /// 설정 화면 표기(제품명 그대로).
-  final String label;
-  final String hint;
-
-  /// 기본값. 1단계에서 **같은 자산으로 두 모델의 답이 갈렸고**(B1) Opus 5만 통과했다.
-  static const fallback = AssistModel.opus5;
-
-  /// 저장된 값 → 모델. 모르는 값이면 [fallback]으로 떨어지고 **그 사실을 로그에 남긴다**(조용히 넘어가지 않는다).
-  static AssistModel fromId(String? id) {
-    if (id == null) return fallback;
-    for (final m in values) {
-      if (m.id == id) return m;
-    }
-    debugPrint('F-008 모르는 모델 ID($id) — 기본값 ${fallback.id}으로 대체합니다');
-    return fallback;
-  }
-}
-
 /// 판정 기능(헤더 메뉴 항목, 화면)을 켤지. **앱ㆍ웹 둘 다**(2026-09-16 사용자 지시 "app도 인터넷 되도록").
 /// 릴리스 `AndroidManifest.xml`에 INTERNET 권한을 같은 날 넣었다 — 종전에는 debugㆍprofile에만 있어
 /// 릴리스 APK에서 호출이 막혔다. 켜고 끄는 분기는 이 값 한 곳이고, 테스트만 직접 넣는다.
@@ -69,8 +46,12 @@ const bool assistEnabledByDefault = true;
 /// **배포된 JS에서 공개된다** — 사용자가 감수한 결정(2026-09-16). 배포 전에 콘솔에서 지출 한도를 건다.
 const String bundledAnthropicKey = String.fromEnvironment('ANTHROPIC_DEFAULT_KEY');
 
-const _endpoint = 'https://api.anthropic.com/v1/messages';
-const _apiVersion = '2023-06-01';
+/// 배포 빌드에 들어간 중계 서버 주소(`--dart-define=ASSIST_PROXY_URL`, F-010). 없으면 빈 문자열 = 중계 없음.
+/// 비밀이 아니다. **웹 빌드에만 넣는다** — 서버가 `Origin`으로 출처를 보는데 앱은 `Origin`을 보내지 않아 403이 된다.
+const String bundledAssistProxyUrl = String.fromEnvironment('ASSIST_PROXY_URL');
+
+const _endpoint = anthropicMessagesEndpoint;
+const _apiVersion = anthropicApiVersion;
 
 /// 웹에서 브라우저 직접 호출을 여는 헤더. 없으면 CORS가 막는다(위 실측).
 const browserAccessHeader = 'anthropic-dangerous-direct-browser-access';
@@ -111,24 +92,10 @@ class AssistLlmClient {
   static Map<String, Object?> requestBody({
     required AssistModel model,
     required List<Map<String, Object?>> messages,
-  }) => {
-    'model': model.id,
-    // 두 모델 모두 thinking이 켜져 있어(adaptive) 생각 토큰도 여기에 든다 — 빠듯하게 잡으면 답이 잘린다.
-    // 잘리면 `stop_reason: max_tokens`로 오고, 그때는 화면에 그 사실을 알린다(조용한 절단 금지).
-    'max_tokens': 16000,
-    'stream': true,
-    // **thinking 블록을 되돌려 보낼 수 있어야 한다.** 두 모델 모두 thinking이 기본으로 켜져 있고,
-    // 도구 호출 뒤 다음 왕복에는 그 턴의 thinking 블록을 **그대로** 실어 보내야 한다.
-    // 기본값 display: omitted는 thinking 본문을 빈 문자열로 주는데, 빈 블록을 되돌리면
-    // `each thinking block must contain thinking`(400)이 난다 — 2026-09-16 실호출로 확인했다.
-    'thinking': {'type': 'adaptive', 'display': 'summarized'},
-    'system': assistSystemPrompt,
-    'tools': assistToolDefinitions(),
-    'messages': messages,
-    // 대화는 왕복마다 통째로 재전송된다 — 프리픽스를 캐시해 누적 재전송 비용을 낮춘다.
-    // 본문 최상위에 두면 마지막 캐시 가능 블록에 자동으로 붙는다(왕복마다 프리픽스가 자란다).
-    'cache_control': {'type': 'ephemeral'},
-  };
+  }) => assistRequestBody(model: model, messages: messages);
+
+  /// 중계 요청의 헤더 — `content-type` 하나다. 키ㆍ판ㆍ브라우저 헤더는 서버가 붙인다(보내면 서버의 CORS 허용 목록에 걸린다).
+  static const proxyHeaders = {'content-type': 'application/json'};
 
   static Map<String, String> headersFor(String key) => {
     'content-type': 'application/json',
@@ -141,15 +108,23 @@ class AssistLlmClient {
   /// 한 왕복을 보낸다. 답 글자는 [onText]로 오는 대로 흘리고, 왕복이 끝나면 [LlmTurn]을 돌려준다.
   ///
   /// 실패는 [AssistFailure]로 던진다 — 화면 문구만 담고 원인은 로그에 남긴다.
+  ///
+  /// [proxyUrl]이 있으면 **중계로 보낸다**(F-010) — [apiKey]는 쓰지 않고, 본문은 모델ㆍ대화뿐이다.
   Future<LlmTurn> send({
     required String apiKey,
+    String? proxyUrl,
     required AssistModel model,
     required List<Map<String, Object?>> messages,
     required void Function(String) onText,
   }) async {
-    final request = http.Request('POST', Uri.parse(_endpoint))
-      ..headers.addAll(headersFor(apiKey))
-      ..body = jsonEncode(requestBody(model: model, messages: messages));
+    final viaProxy = proxyUrl != null;
+    final request = http.Request('POST', Uri.parse(viaProxy ? proxyUrl : _endpoint))
+      ..headers.addAll(viaProxy ? proxyHeaders : headersFor(apiKey))
+      ..body = jsonEncode(
+        viaProxy
+            ? assistProxyBody(model: model, messages: messages)
+            : requestBody(model: model, messages: messages),
+      );
 
     final http.StreamedResponse response;
     try {
@@ -168,7 +143,8 @@ class AssistLlmClient {
       // 상태만 화면에 쓰고 원문은 로그에만(보안 3층 ①). 키는 본문에 없다.
       debugPrint('F-008 LLM 오류 ${response.statusCode}: $body');
       throw AssistFailure(switch (response.statusCode) {
-        401 || 403 => AssistText.badKey,
+        // 중계의 401ㆍ403은 서버 쪽 사정이다(서버 키ㆍ출처 거부) — 사용자가 고칠 키가 없으므로 코드로 보인다.
+        401 || 403 when !viaProxy => AssistText.badKey,
         429 => AssistText.overLimit,
         final code => AssistText.failed(code),
       });

@@ -94,11 +94,18 @@ void main() {
       WidgetTester tester, {
       required FakeAnthropic fake,
       String? stored,
+      String buildKey = '',
+      String proxyUrl = '',
     }) async {
       tester.view.physicalSize = const Size(600, 1400);
       tester.view.devicePixelRatio = 1;
       addTearDown(tester.view.reset);
-      final settings = ApiSettingsController(store: MemoryUpdateStore(stored), defaultKey: '');
+      final settings = ApiSettingsController(
+        store: MemoryUpdateStore(stored),
+        defaultKey: '',
+        defaultAnthropicKey: buildKey,
+        assistProxyUrl: proxyUrl,
+      );
       await settings.load();
       await tester.pumpWidget(
         MaterialApp(
@@ -172,6 +179,20 @@ void main() {
       expect(KeyCheck.badKey.message, isNot(KeyCheck.offline.message));
     });
 
+    testWidgets('중계로 쓰는 중(F-010)에는 빈 칸 [키 확인]이 호출 없이 안내만 한다 — 빌드 키가 있어도', (tester) async {
+      final fake = FakeAnthropic(turns: const [FakeTurn(text: ['x'])]);
+      await pumpCard(tester, fake: fake, buildKey: 'BUILD', proxyUrl: 'https://proxy.test/assist/messages');
+
+      expect(find.text(AssistSettingsText.usingProxy), findsOneWidget);
+      expect(find.text(AssistSettingsText.noKeyAtAll), findsNothing);
+      expect(find.text(AssistSettingsText.usingDefault), findsNothing);
+
+      await tester.tap(find.text(AssistSettingsText.verify));
+      await tester.pumpAndSettle();
+      expect(find.text(AssistSettingsText.enterKey), findsOneWidget);
+      expect(fake.callCount, 0);
+    });
+
     testWidgets('모델 라디오에 실제 모델 ID가 보이고, 고르면 저장된다', (tester) async {
       final settings = await pumpCard(tester, fake: FakeAnthropic());
 
@@ -231,5 +252,60 @@ void main() {
     }
 
     expect(fake.bodies.single['model'], 'claude-sonnet-5');
+  });
+
+  group('앱에서 판정 호출이 가는 길 (F-010)', () {
+    const proxy = 'https://proxy.test/assist/messages';
+
+    /// 앱을 띄워 판정 화면에서 질문 하나를 보낸다. 키는 직접 넣지 않는다(`assistKey` 없음) — 설정이 길을 정한다.
+    Future<FakeAnthropic> askViaApp(WidgetTester tester, {String? stored}) async {
+      tester.view.physicalSize = const Size(600, 1600);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
+
+      final fake = FakeAnthropic(turns: const [FakeTurn(text: ['답'])]);
+      final settings = ApiSettingsController(
+        store: MemoryUpdateStore(stored),
+        defaultKey: '',
+        defaultAnthropicKey: 'BUILD',
+        assistProxyUrl: proxy,
+      );
+      await settings.load();
+      await tester.pumpWidget(
+        FindChemApp(
+          controller: DataController(store: MemoryUpdateStore(), loadBundled: () async => bundled),
+          apiSettings: settings,
+          assistClient: AssistLlmClient(client: fake.client),
+        ),
+      );
+      for (var i = 0; i < 5 && find.byType(SearchPage).evaluate().isEmpty; i++) {
+        await tester.pump();
+      }
+      await tester.tap(find.byIcon(Icons.more_vert));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(HeaderText.assist));
+      await tester.pumpAndSettle();
+      expect(find.text(AssistText.noKey), findsNothing, reason: '길이 있으면 키 없음 배너가 없다');
+
+      await tester.enterText(find.byType(TextField), '톨루엔 규정수량?');
+      await tester.tap(find.text('보내기'));
+      for (var i = 0; i < 200 && fake.callCount == 0; i++) {
+        await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 10)));
+        await tester.pump();
+      }
+      return fake;
+    }
+
+    testWidgets('자기 키가 없으면 중계 주소로 간다 — 키 헤더 없이', (tester) async {
+      final fake = await askViaApp(tester);
+      expect(fake.urls.single, Uri.parse(proxy));
+      expect(fake.headers.single.keys, isNot(contains('x-api-key')));
+    });
+
+    testWidgets('자기 키가 있으면 중계 주소가 있어도 그 키로 직접 부른다', (tester) async {
+      final fake = await askViaApp(tester, stored: '{"version":1,"anthropicKey":"sk-ant-user"}');
+      expect(fake.urls.single, Uri.parse('https://api.anthropic.com/v1/messages'));
+      expect(fake.headers.single['x-api-key'], 'sk-ant-user');
+    });
   });
 }
