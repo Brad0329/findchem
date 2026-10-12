@@ -2,6 +2,8 @@
 //
 //   dart run scripts/mcp_http_server.dart          → PORT(기본 8080)에서 POST /mcp
 //   FINDCHEM_DATA=<번들 JSON 경로>                  → 데이터 위치(기본 assets/data/findchem_data.json)
+//   ANTHROPIC_API_KEY=<키>                         → F-010 중계(POST /assist/messages)에 쓴다. 없으면 중계만 503, /mcp는 그대로
+//                                                    (Cloud Run 콘솔의 환경 변수 — 저장소·스크립트에 두지 않는다)
 //
 // 여기에는 규칙도 문장도 없다 — 프로토콜은 lib/mcp/, 도구는 lib/assist/(앱ㆍ웹과 같은 코드)ㆍlib/calc/(A-004 계산).
 // 로그는 stderr 한 줄씩(Cloud Run이 Cloud Logging으로 모은다).
@@ -9,12 +11,14 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:findchem/mcp/assist_proxy.dart';
 import 'package:findchem/mcp/mcp_handler.dart';
-import 'package:findchem/mcp/mcp_http.dart';
+import 'package:findchem/mcp/router.dart';
 import 'package:findchem/parser/models.dart';
+import 'package:http/http.dart' as http;
 
 /// 배포 판 구분용. 서버 동작을 바꾸면 올린다.
-const serverVersion = '0.5.0-a008';
+const serverVersion = '0.6.0-f010';
 
 void log(String message) => stderr.writeln(message);
 
@@ -30,10 +34,16 @@ Future<void> main() async {
   }
   final port = int.tryParse(Platform.environment['PORT'] ?? '') ?? 8080;
   final handler = McpHandler(ds, version: serverVersion, log: log);
+  // 키가 없어도 뜬다 — 중계만 503으로 닫히고(fail-closed) MCP 도구는 키와 무관하다.
+  final assist = AssistProxy(
+    apiKey: Platform.environment['ANTHROPIC_API_KEY'] ?? '',
+    upstream: http.Client(),
+    log: log,
+  );
   final server = await HttpServer.bind(InternetAddress.anyIPv4, port);
-  log('A-001 MCP: $serverVersion 기동 — 포트 $port, 데이터 $dataPath');
+  log('A-001 MCP: $serverVersion 기동 — 포트 $port, 데이터 $dataPath, 중계 키 ${assist.hasKey ? '있음' : '없음(중계 503)'}');
   await for (final req in server) {
-    // 요청을 기다리지 않고 받는다(동시 요청). 예외는 handleMcpHttp 안에서 로그로 남는다.
-    unawaited(handleMcpHttp(req, handler, log));
+    // 요청을 기다리지 않고 받는다(동시 요청). 예외는 각 처리기 안에서 로그로 남는다.
+    unawaited(routeRequest(req, mcp: handler, assist: assist, log: log));
   }
 }

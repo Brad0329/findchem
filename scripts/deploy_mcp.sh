@@ -8,6 +8,10 @@
 # 이미지 재료는 build/mcp/(gitignore)에 모은다: 이 컨테이너에서 `dart compile exe`한 실행 파일 + 번들 JSON + Dockerfile.
 # 컴파일을 Cloud Build에서 하지 않는 이유: pubspec이 Flutter SDK에 의존해 dart 이미지에서 `pub get`이 안 된다.
 #
+# F-010 중계의 키(ANTHROPIC_API_KEY)는 여기서 넣지 않는다 — 사용자가 Cloud Run 콘솔의 환경 변수에 직접 넣고,
+# 이 배포는 환경 변수 플래그를 주지 않아 서비스에 있던 값이 새 리비전에 그대로 이어진다.
+# --timeout 300: 중계의 스트리밍 답(thinking 포함)이 60초를 넘을 수 있다(F-010 G5).
+#
 # CLOUDSDK_AUTH_ACCESS_TOKEN: 클라우드 세션 환경이 넣는 토큰이 서비스 계정 로그인을 덮어써 인증이 실패한다(2026-10-02 실측)
 # — gcloud 호출에서만 뺀다.
 set -euo pipefail
@@ -45,7 +49,7 @@ env -u CLOUDSDK_AUTH_ACCESS_TOKEN gcloud run deploy "$service" \
   --memory 256Mi \
   --cpu 1 \
   --concurrency 40 \
-  --timeout 60 \
+  --timeout 300 \
   --quiet
 
 url="$(env -u CLOUDSDK_AUTH_ACCESS_TOKEN gcloud run services describe "$service" --region "$region" --format='value(status.url)')"
