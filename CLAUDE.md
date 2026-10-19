@@ -173,7 +173,7 @@ Flutter(Android + 웹 한 벌), 서버 없음, 데이터는 JSON으로 번들해
   lib/                 ← 앱 소스(Dart)
   test/                ← Dart 테스트 (flutter test 기본 위치)
   tests/               ← 동봉 파이썬 도구(훅·측정기) 테스트
-  assets/              ← 원천 PDF 3개·유해성 분류·HCODE·PCODE xlsx(번들 안 함) + data/(번들 JSON, data/ghs/ = GHS 그림문자 — pubspec에는 이 두 폴더만 등록)
+  assets/              ← 원천 PDF 3개·유해성 분류·HCODE·PCODE xlsx(번들 안 함) + data/(번들 JSON, data/ghs/ = GHS 그림문자 — pubspec에는 이 두 폴더만 등록) + form6/(6호서식 물질 상수 A-010 — 원문 raw/·생성물·보정 파일, 번들 안 함)
   android/  web/       ← 플랫폼 (flutter create 생성물. 아이콘은 scripts/make_icons.py가 굽는다. web/download/ = APK 받기 페이지 F-006)
   docs/                ← REQUIREMENTS.md, SCHEMA.md, design/, playbooks/
   work_log/            ← plan.md, Phase_XXX.md

@@ -90,7 +90,7 @@
     기체 급성독성 구분은 제출본 규정수량에서 역추정해 넣었다(MSDS 미확인) — A-007에서는 `get_msds`로.
     전문가 확인용 문서의 "도구 결과와 같음"(실행 전 손 판단)은 실행 결과 문서 기준으로 고쳤다(2026-10-02, S1 3곳·G1 1곳 — OVD-SINTERING·MCVD2 불일치 반영, 실행 결과 문서 끝 메모도 갱신)
 - [ ] **A-002 데이터 출처 조사** — 위험노출수준(ERPG-2·PAC-2), 시나리오 규정수량 기준표(400·100·5kg), 별지1의 규정수량 표기("*400 / -")가
-  고시 별표 2·3과 같은 출처인지. `researcher`로
+  고시 별표 2·3과 같은 출처인지. `researcher`로. **위험노출수준(ERPG·PAC) 부분은 A-010으로 흡수(2026-10-19 사용자 결정) — 조사 결론은 REQUIREMENTS_AGENT A-010**
 - [x] **A-003 물성 조회 도구** — KOSHA MSDS(정식 주소, plan.md 보류 항목 'KOSHA MSDS 조회 서비스 실측')에서 비중·증기압·폭발한계·TWA·GHS·H코드.
   값은 원문 그대로 + 단위를 분리해 돌려준다(자유 문자열 — 파싱 실패는 실패라고 돌려준다).
   **진행 — 1차 완료 2026-10-02**(값 해석·그림문자 보정 `lib/msds/msds_value.dart`, 공통 함수 `lib/lookup/portal.dart`, 녹화 `scripts/record_msds.dart`).
@@ -107,6 +107,11 @@
   **파싱 도구를 만들지 않고 스킬로 한다**(사용자 결정 2026-10-11 — 근거는 아래 전수조사). 정답지 = Drive `FindChem/msds files/`의 10건과 시험 출력 `10msds.xlsx`.
   **스킬ㆍ스크립트ㆍ테스트 완료 2026-10-11**(`agent_skills/msds-composition/`, 표 합치기ㆍ엑셀은 `build_table.py`, 저장 방식은 매번 묻는다).
   **남은 것: 스킬 zip을 claude.ai에 올림 → 새 대화(Sonnet)에서 10건 실측 → 정답지와 칸 대조 → 틀리면 Opus로 같은 대조 → 기본 모델 확정**
+- [ ] **A-010 별지 6호서식 물질 상수 데이터** — 6호의 물질 상수 9칸을 공식 원천에서 CAS별로 모아 `assets/form6/form6_constants.json`(생성물)로.
+  계기: 사용자가 준 인수인계 패키지(`temp/form6_handoff/`, 사업장 실명 자료 — 커밋 안 함). 1단계 = 사고대비물질 103 CAS(사용자 결정 2026-10-19).
+  **8칸 구현 2026-10-19**(KOSHA MSDS + 환경공단 GHS, 원문 515개 커밋). **위험노출수준은 원천 결정 대기** — ERPG(AIHA) 라이선스가
+  비상업 한정이라 사용자 판단 필요, DOE PAC는 한국 IP 차단(조사 결론은 REQUIREMENTS_AGENT A-010). A-002의 ERPGㆍPAC 부분은 여기로 흡수.
+  남은 것: 위험노출수준 원천 → 패키지 28행 대조 보고 → 2단계(MCP 도구로 내보내기) 스펙화
 - [ ] **(master 트랙 F-010) 서버 중계 `POST /assist/messages`** — 웹의 판정(AI) 호출을 이 서버가 Anthropic으로 넘긴다(키는 서버에만).
   스펙·수용 기준의 원본은 `docs/REQUIREMENTS.md` F-010 한 곳이다(서버 항목은 이 브랜치에서 대조 — 그 절의 G11). 번호를 A로 새로 받지 않는다.
   **구현·테스트 완료 2026-10-12**(`lib/mcp/assist_proxy.dart`·`router.dart`, `test/mcp/assist_proxy_test.dart`, 서버 0.6.0-f010 — 서버 수용 기준 13항목 대응).
