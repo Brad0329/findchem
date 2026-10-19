@@ -239,12 +239,25 @@ ExplosionLimits parseExplosionLimits(String raw, {MsdsLog? log}) {
   return ExplosionLimits(upper: wrap(upper), lower: wrap(lower));
 }
 
+/// 단위 표기를 비교용으로 — 소문자, 공백 없음, 한 글자 단위 기호를 풀어 쓴다.
+/// `㎜`(U+339C)·`㎖`·`㎏`은 한 글자 단위 기호다 — KOSHA 증기압이 `28.4 ㎜Hg`로 온다(2026-10-02 녹화).
+/// `㎪`·`㎩`·`㍱`도 같다 — `4.6 ㎪(20℃)`(A-010 수집 2026-10-19).
+String normalizeUnit(String unit) => unit
+    .toLowerCase()
+    .replaceAll(' ', '')
+    .replaceAll('³', '3')
+    .replaceAll('㎜', 'mm')
+    .replaceAll('㎖', 'ml')
+    .replaceAll('㎏', 'kg')
+    .replaceAll('㎪', 'kpa')
+    .replaceAll('㎩', 'pa')
+    .replaceAll('㍱', 'hpa');
+
 /// 단위 표기 → 종류. 기준이 `물=1`이면 상대밀도. 모르는 표기·단위 없음은 unknown(단정하지 않는다).
 UnitKind classifyUnit(String? unit, String? basis) {
   if (basis != null) return UnitKind.relativeDensity;
   if (unit == null) return UnitKind.unknown;
-  // `㎜`(U+339C)·`㎖`·`㎏`은 한 글자 단위 기호다 — KOSHA 증기압이 `28.4 ㎜Hg`로 온다(2026-10-02 녹화)
-  final u = unit.toLowerCase().replaceAll(' ', '').replaceAll('³', '3').replaceAll('㎜', 'mm').replaceAll('㎖', 'ml').replaceAll('㎏', 'kg');
+  final u = normalizeUnit(unit);
   const density = {'g/cucm', 'g/cm3', 'g/cc', 'g/ml', 'kg/m3', 'g/l', 'kg/l'};
   const pressure = {'mmhg', 'hpa', 'kpa', 'pa', 'mpa', 'atm', 'bar', 'mbar', 'torr', 'psi'};
   if (density.contains(u)) return UnitKind.density;

@@ -51,6 +51,15 @@ void main() {
     });
   });
 
+  group('압력 한 글자 기호', () {
+    // A-010 수집에서 발견(2026-10-19): KOSHA 증기압이 `4.6 ㎪(20℃)`·`413 ㎩(20℃)`로 온다 — ㎜Hg처럼 한 글자 기호다
+    test('`10 ㎪(20℃)`·`413 ㎩(20℃)`·`5 ㍱` → 압력', () {
+      for (final raw in ['10 ㎪(20℃)', '413 ㎩(20℃)', '5 ㍱']) {
+        expect(parseNumberValue(raw).parsed!.unitKind, UnitKind.pressure, reason: raw);
+      }
+    });
+  });
+
   group('없음·해석 실패', () {
     test('`자료없음` → no_data, 해석값 없음', () {
       final v = parseNumberValue('자료없음|   ※출처 : ECHA');
