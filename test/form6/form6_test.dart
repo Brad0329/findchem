@@ -232,6 +232,18 @@ void main() {
       expect(jsonEncode(again), jsonEncode(built));
     });
 
+    test('원문이 CRLF로 체크아웃돼도(Windows autocrlf) 같은 결과', () async {
+      final crlf = Directory.systemTemp.createTempSync('form6_crlf');
+      addTearDown(() => crlf.deleteSync(recursive: true));
+      for (final f in Directory(rawDir).listSync(recursive: true).whereType<File>()) {
+        final rel = f.path.substring(rawDir.length + 1);
+        final out = File('${crlf.path}/$rel')..parent.createSync(recursive: true);
+        out.writeAsStringSync(f.readAsStringSync().replaceAll('\r\n', '\n').replaceAll('\n', '\r\n'));
+      }
+      final again = await buildForm6(dataset: ds, rawDir: crlf.path, overrides: const []);
+      expect(jsonEncode(again['substances']), jsonEncode(built['substances']));
+    });
+
     test('커밋된 생성물이 지금 원문으로 만든 것과 같다(생성 스크립트를 돌리지 않고 원문만 바꾸면 잡힌다)', () {
       final onDisk = jsonDecode(File('assets/form6/form6_constants.json').readAsStringSync());
       final overrides = parseOverrides(File('assets/form6/overrides.json').readAsStringSync(), form6TargetsOf(ds).cas.toSet());

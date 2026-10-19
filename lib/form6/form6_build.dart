@@ -86,7 +86,7 @@ Future<Map<String, Object?>> buildForm6({
     ServiceResult? ghs;
     var ghsRaw = '';
     if (ghsFile.existsSync()) {
-      ghsRaw = ghsFile.readAsStringSync();
+      ghsRaw = readRawText(ghsFile);
       try {
         ghs = parseGhsResponse(ghsRaw);
       } on FormatException catch (e) {

@@ -93,6 +93,10 @@ class RecordingClient extends http.BaseClient {
   void close() => _inner.close();
 }
 
+/// 원문 파일 읽기 — CRLF를 LF로 되돌린다. 받은 원문에는 CR이 없는데(2026-10-19 515개 전수) Windows git(`core.autocrlf=true`)이
+/// 체크아웃 때 CRLF로 바꿔 놓아, 그대로 읽으면 같은 원문에서 다른 생성물이 나온다.
+String readRawText(File f) => f.readAsStringSync().replaceAll('\r\n', '\n');
+
 /// 저장본으로 답한다. 없는 파일은 [missing]에 적고 404 — 생성은 이 목록이 비어 있지 않으면 실패한다(빈 값으로 조용히 채우지 않는다).
 class ReplayClient extends http.BaseClient {
   ReplayClient({required this.dir});
@@ -108,7 +112,7 @@ class ReplayClient extends http.BaseClient {
       missing.add(name ?? request.url.toString());
       return http.StreamedResponse(Stream.value(utf8.encode('원문 없음 $name')), 404, request: request);
     }
-    final bytes = f.readAsBytesSync();
+    final bytes = utf8.encode(readRawText(f));
     return http.StreamedResponse(Stream.value(bytes), 200, request: request, contentLength: bytes.length);
   }
 }
