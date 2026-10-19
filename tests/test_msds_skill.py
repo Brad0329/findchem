@@ -2,6 +2,7 @@
 
 import copy
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -135,6 +136,7 @@ def test_xlsx(extract, classify, tmp_path):
 def test_cli_error_exit_code(tmp_path):
     bad = tmp_path / "c.json"
     bad.write_text(json.dumps({"items": []}), encoding="utf-8")
+    # Windows에서는 자식의 stderr 기본 인코딩이 cp949라 utf-8로 읽으면 깨진다 — 자식에게 utf-8로 쓰게 한다
     r = subprocess.run([sys.executable, str(SCRIPT), "table", str(FIX / "extract_10msds.json"), str(bad)],
-                       capture_output=True, text=True, encoding="utf-8")
+                       capture_output=True, text=True, encoding="utf-8", env={**os.environ, "PYTHONIOENCODING": "utf-8"})
     assert r.returncode == 1 and "개수" in r.stderr
