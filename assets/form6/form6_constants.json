@@ -32,13 +32,37 @@
    ]
   },
   {
-   "kind": "위험노출수준 표",
-   "note": "아직 싣지 않음",
+   "kind": "위험노출수준 표 — 별지 주⑨ 순서(ERPG → AEGL → PAC)",
+   "tables": [
+    {
+     "kind": "AIHA ERPG",
+     "file": "aiha_erpg/ERPG.html",
+     "url": "https://erpg.aiha.org/Content/ERPG.cfm",
+     "fetchedAt": "2026-10-19",
+     "license": "AIHA — 비상업·교육·연구·정부용 한정, 원형 배포·고지문 포함·출처 표시(aiha_erpg/Copyright-and-Licensing.html). 사용자 판단 2026-10-19: FindChem은 비상업 용도"
+    },
+    {
+     "kind": "EPA AEGL",
+     "file": "epa_aegl/*.html",
+     "url": "https://www.epa.gov/aegl/access-acute-exposure-guideline-levels-aegls-values (물질별 페이지)",
+     "fetchedAt": "2026-10-19",
+     "license": "미국 연방 저작물"
+    },
+    {
+     "kind": "DOE PAC",
+     "file": "doe_pac/pac_getexcel_20250207.xlsx",
+     "url": "https://web.archive.org/web/20250207154952id_/https://edms3.energy.gov/pac/download/getexcel",
+     "fetchedAt": "2026-10-19",
+     "version": "2025-02-07 Wayback 보관본 — 한국 IP에서 DOE 호스트가 막혀(TLS 리셋) 최신판 미확보. 출처 열이 채워진 마지막 판",
+     "license": "DOE 페이지에 이용조건 문구 없음"
+    }
+   ],
    "fields": [
     "exposure"
    ]
   }
  ],
+ "aihaNotice": "© 2025 American Industrial Hygiene Association (AIHA). All rights reserved.\nThe Emergency Response Planning Guidelines (ERPG®) data are the intellectual property of AIHA and are provided solely for non-commercial, educational, research, and governmental use.\nUsers may download, reproduce, and distribute this data only in its original, unmodified form and must include this notice in any reproduction.\nCommercial use, redistribution, resale, or inclusion of this data in any product or service offered for profit is strictly prohibited without the prior written consent of AIHA.\nTo request permission for commercial use or licensing, contact\n[email protected]\n.\nBy downloading this dataset, you acknowledge and agree that:\nThe ERPG data remain the sole property of AIHA.\nYou will not alter, reproduce, or distribute the data for commercial purposes.\nYou will provide attribution to AIHA when the data are used in reports, models, or databases.\nAIHA reserves the right to require licensing fees or other remuneration for any commercial use.",
  "statusCounts": {
   "state": {
    "확정": 91,
@@ -66,9 +90,9 @@
    "자료없음": 1
   },
   "exposure": {
-   "확정": 0,
-   "확인필요": 103,
-   "자료없음": 0
+   "확정": 98,
+   "확인필요": 0,
+   "자료없음": 5
   },
   "twa": {
    "확정": 70,
@@ -225,19 +249,62 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "ERPG-2",
+       "value": 10.0,
+       "number": "10",
+       "unit": "ppm",
+       "raw": "10 ppm",
+       "source": {
+        "kind": "AIHA ERPG",
+        "id": "Formaldehyde",
+        "version": "Last Update 2011",
+        "attribution": "AIHA ERPG®"
+       },
+       "note": null
+      },
+      {
+       "kind": "AEGL-2(60분)",
+       "value": 14.0,
+       "number": "14",
+       "unit": "ppm",
+       "raw": "14",
+       "source": {
+        "kind": "EPA AEGL",
+        "id": "formaldehyde-results-aegl-program.html",
+        "version": "Interim"
+       },
+       "note": "Interim(확정 전 잠정값)",
+       "needsReview": false
+      },
+      {
+       "kind": "PAC-2",
+       "value": 14.0,
+       "number": "14",
+       "unit": "ppm",
+       "raw": "14",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 1279 Formaldehyde",
+        "version": "2025-02-07"
+       },
+       "note": "근거: AEGL-1, AEGL-2, AEGL-3",
+       "pacSource": "AEGL-1, AEGL-2, AEGL-3"
+      }
+     ],
+     "raw": "ERPG-2: 10 ppm\nAEGL-2(60분): 14\nPAC-2: 14",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: ERPG-2"
     },
     "twa": {
      "value": 0.3,
@@ -429,19 +496,48 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "AEGL-2(60분)",
+       "value": 0.9,
+       "number": "0.90",
+       "unit": "ppm",
+       "raw": "0.90",
+       "source": {
+        "kind": "EPA AEGL",
+        "id": "methyl-hydrazine-results-aegl-program.html",
+        "version": "Final"
+       },
+       "note": null,
+       "needsReview": false
+      },
+      {
+       "kind": "PAC-2",
+       "value": 0.9,
+       "number": "0.90",
+       "unit": "ppm",
+       "raw": "0.90",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 1880 Monomethylhydrazine; (Methyl hydrazine)",
+        "version": "2025-02-07"
+       },
+       "note": "근거: AEGL-2/11, AEGL-2, AEGL-3",
+       "pacSource": "AEGL-2/11, AEGL-2, AEGL-3"
+      }
+     ],
+     "raw": "AEGL-2(60분): 0.90\nPAC-2: 0.90",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: AEGL-2(60분)"
     },
     "twa": {
      "value": 0.01,
@@ -604,19 +700,48 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "ERPG-2",
+       "value": 25.0,
+       "number": "25",
+       "unit": "ppm",
+       "raw": "25 ppm",
+       "source": {
+        "kind": "AIHA ERPG",
+        "id": "Formic Acid",
+        "version": "Last Update 2021",
+        "attribution": "AIHA ERPG®"
+       },
+       "note": null
+      },
+      {
+       "kind": "PAC-2",
+       "value": 25.0,
+       "number": "25",
+       "unit": "ppm",
+       "raw": "25ₑ",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 1283 Formic acid",
+        "version": "2025-02-07"
+       },
+       "note": "근거: ERPG-1, ERPG-2, ERPG-3",
+       "pacSource": "ERPG-1, ERPG-2, ERPG-3"
+      }
+     ],
+     "raw": "ERPG-2: 25 ppm\nPAC-2: 25ₑ",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: ERPG-2"
     },
     "twa": {
      "value": 5.0,
@@ -784,19 +909,62 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "ERPG-2",
+       "value": 1000.0,
+       "number": "1,000",
+       "unit": "ppm",
+       "raw": "1,000 ppm",
+       "source": {
+        "kind": "AIHA ERPG",
+        "id": "Methanol",
+        "version": "Last Update 2017",
+        "attribution": "AIHA ERPG®"
+       },
+       "note": null
+      },
+      {
+       "kind": "AEGL-2(60분)",
+       "value": 2100.0,
+       "number": "2,100",
+       "unit": "ppm",
+       "raw": "2,100",
+       "source": {
+        "kind": "EPA AEGL",
+        "id": "methanol-results-aegl-program.html",
+        "version": "Interim"
+       },
+       "note": "Interim(확정 전 잠정값)",
+       "needsReview": false
+      },
+      {
+       "kind": "PAC-2",
+       "value": 2100.0,
+       "number": "2100",
+       "unit": "ppm",
+       "raw": "2100",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 1729 Methyl alcohol; (Methanol)",
+        "version": "2025-02-07"
+       },
+       "note": "근거: AEGL-1, AEGL-2, AEGL-3",
+       "pacSource": "AEGL-1, AEGL-2, AEGL-3"
+      }
+     ],
+     "raw": "ERPG-2: 1,000 ppm\nAEGL-2(60분): 2,100\nPAC-2: 2100",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: ERPG-2"
     },
     "twa": {
      "value": 200.0,
@@ -980,19 +1148,62 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "ERPG-2",
+       "value": 150.0,
+       "number": "150",
+       "unit": "ppm",
+       "raw": "150 ppm",
+       "source": {
+        "kind": "AIHA ERPG",
+        "id": "Benzene",
+        "version": "Last Update 2015",
+        "attribution": "AIHA ERPG®"
+       },
+       "note": null
+      },
+      {
+       "kind": "AEGL-2(60분)",
+       "value": 800.0,
+       "number": "800",
+       "unit": "ppm",
+       "raw": "800",
+       "source": {
+        "kind": "EPA AEGL",
+        "id": "benzene-results-acute-exposure-guideline-levels-aegl-program.html",
+        "version": "Interim"
+       },
+       "note": "Interim(확정 전 잠정값)",
+       "needsReview": false
+      },
+      {
+       "kind": "PAC-2",
+       "value": 800.0,
+       "number": "800",
+       "unit": "ppm",
+       "raw": "800",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 236 Benzene",
+        "version": "2025-02-07"
+       },
+       "note": "근거: AEGL-1, AEGL-2, AEGL-3",
+       "pacSource": "AEGL-1, AEGL-2, AEGL-3"
+      }
+     ],
+     "raw": "ERPG-2: 150 ppm\nAEGL-2(60분): 800\nPAC-2: 800",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: ERPG-2"
     },
     "twa": {
      "value": 0.5,
@@ -1133,19 +1344,62 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "ERPG-2",
+       "value": 1000.0,
+       "number": "1,000",
+       "unit": "ppm",
+       "raw": "1,000 ppm",
+       "source": {
+        "kind": "AIHA ERPG",
+        "id": "Methyl chloride",
+        "version": "Last Update 2013",
+        "attribution": "AIHA ERPG®"
+       },
+       "note": null
+      },
+      {
+       "kind": "AEGL-2(60분)",
+       "value": 910.0,
+       "number": "910",
+       "unit": "ppm",
+       "raw": "910",
+       "source": {
+        "kind": "EPA AEGL",
+        "id": "methyl-chloride-result-aegl-program.html",
+        "version": "Final"
+       },
+       "note": null,
+       "needsReview": false
+      },
+      {
+       "kind": "PAC-2",
+       "value": 910.0,
+       "number": "910",
+       "unit": "ppm",
+       "raw": "910",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 1735 Methyl chloride",
+        "version": "2025-02-07"
+       },
+       "note": "근거: ERPG-1, AEGL-2, AEGL-3",
+       "pacSource": "ERPG-1, AEGL-2, AEGL-3"
+      }
+     ],
+     "raw": "ERPG-2: 1,000 ppm\nAEGL-2(60분): 910\nPAC-2: 910",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: ERPG-2"
     },
     "twa": {
      "value": 50.0,
@@ -1318,19 +1572,62 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "ERPG-2",
+       "value": 20.0,
+       "number": "20",
+       "unit": "ppm",
+       "raw": "20 ppm",
+       "source": {
+        "kind": "AIHA ERPG",
+        "id": "Monomethylamine",
+        "version": "Last Update 2021",
+        "attribution": "AIHA ERPG®"
+       },
+       "note": null
+      },
+      {
+       "kind": "AEGL-2(60분)",
+       "value": 64.0,
+       "number": "64",
+       "unit": "ppm",
+       "raw": "64",
+       "source": {
+        "kind": "EPA AEGL",
+        "id": "methyl-amine-results-aegl-program.html",
+        "version": "Interim"
+       },
+       "note": "Interim(확정 전 잠정값)",
+       "needsReview": false
+      },
+      {
+       "kind": "PAC-2",
+       "value": 64.0,
+       "number": "64",
+       "unit": "ppm",
+       "raw": "64",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 1879 Monomethylamine; (Methylamine)",
+        "version": "2025-02-07"
+       },
+       "note": "근거: AEGL-1, AEGL-2, AEGL-3",
+       "pacSource": "AEGL-1, AEGL-2, AEGL-3"
+      }
+     ],
+     "raw": "ERPG-2: 20 ppm\nAEGL-2(60분): 64\nPAC-2: 64",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: ERPG-2"
     },
     "twa": {
      "value": 5.0,
@@ -1503,19 +1800,62 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "ERPG-2",
+       "value": 10.0,
+       "number": "10",
+       "unit": "ppm",
+       "raw": "10 ppm",
+       "source": {
+        "kind": "AIHA ERPG",
+        "id": "Hydrogen cyanide",
+        "version": "Last Update 2022",
+        "attribution": "AIHA ERPG®"
+       },
+       "note": null
+      },
+      {
+       "kind": "AEGL-2(60분)",
+       "value": 7.1,
+       "number": "7.1",
+       "unit": "ppm",
+       "raw": "7.1",
+       "source": {
+        "kind": "EPA AEGL",
+        "id": "hydrogen-cyanide-results-aegl-program.html",
+        "version": "Final"
+       },
+       "note": null,
+       "needsReview": false
+      },
+      {
+       "kind": "PAC-2",
+       "value": 7.1,
+       "number": "7.1",
+       "unit": "ppm",
+       "raw": "7.1ₐ",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 1422 Hydrogen cyanide; (Hydrocyanic acid)",
+        "version": "2025-02-07"
+       },
+       "note": "근거: AEGL-1, AEGL-2, AEGL-3",
+       "pacSource": "AEGL-1, AEGL-2, AEGL-3"
+      }
+     ],
+     "raw": "ERPG-2: 10 ppm\nAEGL-2(60분): 7.1\nPAC-2: 7.1ₐ",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: ERPG-2"
     },
     "twa": {
      "value": null,
@@ -1678,19 +2018,62 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "ERPG-2",
+       "value": 5000.0,
+       "number": "5,000",
+       "unit": "ppm",
+       "raw": "5,000 ppm",
+       "source": {
+        "kind": "AIHA ERPG",
+        "id": "Vinyl chloride",
+        "version": "Last Update 2014",
+        "attribution": "AIHA ERPG®"
+       },
+       "note": null
+      },
+      {
+       "kind": "AEGL-2(60분)",
+       "value": 1200.0,
+       "number": "1,200",
+       "unit": "ppm",
+       "raw": "1,200",
+       "source": {
+        "kind": "EPA AEGL",
+        "id": "vinyl-chloride-results-aegl-programs.html",
+        "version": "Final"
+       },
+       "note": null,
+       "needsReview": false
+      },
+      {
+       "kind": "PAC-2",
+       "value": 1200.0,
+       "number": "1200",
+       "unit": "ppm",
+       "raw": "1200",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 3059 Vinyl chloride",
+        "version": "2025-02-07"
+       },
+       "note": "근거: AEGL-1, AEGL-2, AEGL-3",
+       "pacSource": "AEGL-1, AEGL-2, AEGL-3"
+      }
+     ],
+     "raw": "ERPG-2: 5,000 ppm\nAEGL-2(60분): 1,200\nPAC-2: 1200",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: ERPG-2"
     },
     "twa": {
      "value": 1.0,
@@ -1859,19 +2242,62 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "ERPG-2",
+       "value": 50.0,
+       "number": "50",
+       "unit": "ppm",
+       "raw": "50 ppm",
+       "source": {
+        "kind": "AIHA ERPG",
+        "id": "Carbon disulfide",
+        "version": "Last Update 2002",
+        "attribution": "AIHA ERPG®"
+       },
+       "note": null
+      },
+      {
+       "kind": "AEGL-2(60분)",
+       "value": 160.0,
+       "number": "160",
+       "unit": "ppm",
+       "raw": "160",
+       "source": {
+        "kind": "EPA AEGL",
+        "id": "carbon-disulfide-results-aegl-program.html",
+        "version": "Final"
+       },
+       "note": null,
+       "needsReview": false
+      },
+      {
+       "kind": "PAC-2",
+       "value": 160.0,
+       "number": "160",
+       "unit": "ppm",
+       "raw": "160",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 517 Carbon disulfide",
+        "version": "2025-02-07"
+       },
+       "note": "근거: AEGL-1, AEGL-2, AEGL-3",
+       "pacSource": "AEGL-1, AEGL-2, AEGL-3"
+      }
+     ],
+     "raw": "ERPG-2: 50 ppm\nAEGL-2(60분): 160\nPAC-2: 160",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: ERPG-2"
     },
     "twa": {
      "value": 1.0,
@@ -2069,19 +2495,62 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "ERPG-2",
+       "value": 50.0,
+       "number": "50",
+       "unit": "ppm",
+       "raw": "50 ppm",
+       "source": {
+        "kind": "AIHA ERPG",
+        "id": "Ethylene oxide",
+        "version": "Last Update 2016",
+        "attribution": "AIHA ERPG®"
+       },
+       "note": null
+      },
+      {
+       "kind": "AEGL-2(60분)",
+       "value": 45.0,
+       "number": "45",
+       "unit": "ppm",
+       "raw": "45",
+       "source": {
+        "kind": "EPA AEGL",
+        "id": "ethylene-oxide-results-aegl-program.html",
+        "version": "Final"
+       },
+       "note": null,
+       "needsReview": false
+      },
+      {
+       "kind": "PAC-2",
+       "value": 45.0,
+       "number": "45",
+       "unit": "ppm",
+       "raw": "45",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 1204 Ethylene oxide; (Oxirane)",
+        "version": "2025-02-07"
+       },
+       "note": "근거: PEL-STEL, AEGL-2, AEGL-3",
+       "pacSource": "PEL-STEL, AEGL-2, AEGL-3"
+      }
+     ],
+     "raw": "ERPG-2: 50 ppm\nAEGL-2(60분): 45\nPAC-2: 45",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: ERPG-2"
     },
     "twa": {
      "value": 1.0,
@@ -2237,19 +2706,62 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "ERPG-2",
+       "value": 1.5,
+       "number": "1.5",
+       "unit": "ppm",
+       "raw": "1.5 ppm",
+       "source": {
+        "kind": "AIHA ERPG",
+        "id": "Phosgene",
+        "version": "Last Update 2024",
+        "attribution": "AIHA ERPG®"
+       },
+       "note": null
+      },
+      {
+       "kind": "AEGL-2(60분)",
+       "value": 0.3,
+       "number": "0.30",
+       "unit": "ppm",
+       "raw": "0.30",
+       "source": {
+        "kind": "EPA AEGL",
+        "id": "phosgene-results-aegl-program.html",
+        "version": "Final"
+       },
+       "note": null,
+       "needsReview": false
+      },
+      {
+       "kind": "PAC-2",
+       "value": 0.3,
+       "number": "0.30",
+       "unit": "ppm",
+       "raw": "0.30",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 2172 Phosgene",
+        "version": "2025-02-07"
+       },
+       "note": "근거: AEGL-2/11, AEGL-2, AEGL-3",
+       "pacSource": "AEGL-2/11, AEGL-2, AEGL-3"
+      }
+     ],
+     "raw": "ERPG-2: 1.5 ppm\nAEGL-2(60분): 0.30\nPAC-2: 0.30",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: ERPG-2"
     },
     "twa": {
      "value": 0.1,
@@ -2427,19 +2939,62 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "ERPG-2",
+       "value": 100.0,
+       "number": "100",
+       "unit": "ppm",
+       "raw": "100 ppm",
+       "source": {
+        "kind": "AIHA ERPG",
+        "id": "Trimethylamine",
+        "version": "Last Update 2015",
+        "attribution": "AIHA ERPG®"
+       },
+       "note": null
+      },
+      {
+       "kind": "AEGL-2(60분)",
+       "value": 120.0,
+       "number": "120",
+       "unit": "ppm",
+       "raw": "120",
+       "source": {
+        "kind": "EPA AEGL",
+        "id": "trimethyl-amine-results-aegl-program.html",
+        "version": "Interim"
+       },
+       "note": "Interim(확정 전 잠정값)",
+       "needsReview": false
+      },
+      {
+       "kind": "PAC-2",
+       "value": 120.0,
+       "number": "120",
+       "unit": "ppm",
+       "raw": "120",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 2956 Trimethylamine",
+        "version": "2025-02-07"
+       },
+       "note": "근거: AEGL-1, AEGL-2, AEGL-3",
+       "pacSource": "AEGL-1, AEGL-2, AEGL-3"
+      }
+     ],
+     "raw": "ERPG-2: 100 ppm\nAEGL-2(60분): 120\nPAC-2: 120",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: ERPG-2"
     },
     "twa": {
      "value": 5.0,
@@ -2622,19 +3177,62 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "ERPG-2",
+       "value": 250.0,
+       "number": "250",
+       "unit": "ppm",
+       "raw": "250 ppm",
+       "source": {
+        "kind": "AIHA ERPG",
+        "id": "Propylene Oxide",
+        "version": "Last Update 2014",
+        "attribution": "AIHA ERPG®"
+       },
+       "note": null
+      },
+      {
+       "kind": "AEGL-2(60분)",
+       "value": 290.0,
+       "number": "290",
+       "unit": null,
+       "raw": "290",
+       "source": {
+        "kind": "EPA AEGL",
+        "id": "propylene-oxide-results-aegl-program.html",
+        "version": "Final"
+       },
+       "note": "단위 표기를 찾지 못함",
+       "needsReview": true
+      },
+      {
+       "kind": "PAC-2",
+       "value": 290.0,
+       "number": "290",
+       "unit": "ppm",
+       "raw": "290",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 2404 Propylene oxide; (Methyl ethylene oxide)",
+        "version": "2025-02-07"
+       },
+       "note": "근거: AEGL-1, AEGL-2, AEGL-3",
+       "pacSource": "AEGL-1, AEGL-2, AEGL-3"
+      }
+     ],
+     "raw": "ERPG-2: 250 ppm\nAEGL-2(60분): 290\nPAC-2: 290",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: ERPG-2"
     },
     "twa": {
      "value": 2.0,
@@ -2791,19 +3389,48 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "AEGL-2(60분)",
+       "value": 2700.0,
+       "number": "2,700",
+       "unit": "ppm",
+       "raw": "2,700*",
+       "source": {
+        "kind": "EPA AEGL",
+        "id": "methyl-ethyl-ketone-results-aegl-program.html",
+        "version": "Final"
+       },
+       "note": "LEL 표시(*) 있음 — 원문 각주",
+       "needsReview": false
+      },
+      {
+       "kind": "PAC-2",
+       "value": 2700.0,
+       "number": "2700",
+       "unit": "ppm",
+       "raw": "2700",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 403 Butanone, 2-; (Methyl ethyl ketone; MEK)",
+        "version": "2025-02-07"
+       },
+       "note": "근거: AEGL-1, AEGL-2, AEGL-3",
+       "pacSource": "AEGL-1, AEGL-2, AEGL-3"
+      }
+     ],
+     "raw": "AEGL-2(60분): 2,700*\nPAC-2: 2700",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: AEGL-2(60분)"
     },
     "twa": {
      "value": 200.0,
@@ -2975,19 +3602,48 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "AEGL-2(60분)",
+       "value": 1.2,
+       "number": "1.2",
+       "unit": "ppm",
+       "raw": "1.2",
+       "source": {
+        "kind": "EPA AEGL",
+        "id": "methyl-vinyl-ketone-results-aegl-program.html",
+        "version": "Interim"
+       },
+       "note": "Interim(확정 전 잠정값)",
+       "needsReview": false
+      },
+      {
+       "kind": "PAC-2",
+       "value": 1.2,
+       "number": "1.2",
+       "unit": "ppm",
+       "raw": "1.2",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 1770 Methyl vinyl ketone; (3-Buten-2-one)",
+        "version": "2025-02-07"
+       },
+       "note": "근거: AEGL-1, AEGL-2, AEGL-3",
+       "pacSource": "AEGL-1, AEGL-2, AEGL-3"
+      }
+     ],
+     "raw": "AEGL-2(60분): 1.2\nPAC-2: 1.2",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: AEGL-2(60분)"
     },
     "twa": {
      "value": null,
@@ -3164,19 +3820,62 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "ERPG-2",
+       "value": 50.0,
+       "number": "50",
+       "unit": "ppm",
+       "raw": "50 ppm",
+       "source": {
+        "kind": "AIHA ERPG",
+        "id": "Acrylic Acid",
+        "version": "Last Update 2010",
+        "attribution": "AIHA ERPG®"
+       },
+       "note": null
+      },
+      {
+       "kind": "AEGL-2(60분)",
+       "value": 46.0,
+       "number": "46",
+       "unit": "ppm",
+       "raw": "46",
+       "source": {
+        "kind": "EPA AEGL",
+        "id": "acrylic-acid-results-aegl-program.html",
+        "version": "Interim"
+       },
+       "note": "Interim(확정 전 잠정값)",
+       "needsReview": false
+      },
+      {
+       "kind": "PAC-2",
+       "value": 46.0,
+       "number": "46",
+       "unit": "ppm",
+       "raw": "46",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 31 Acrylic acid",
+        "version": "2025-02-07"
+       },
+       "note": "근거: AEGL-1, AEGL-2, AEGL-3",
+       "pacSource": "AEGL-1, AEGL-2, AEGL-3"
+      }
+     ],
+     "raw": "ERPG-2: 50 ppm\nAEGL-2(60분): 46\nPAC-2: 46",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: ERPG-2"
     },
     "twa": {
      "value": 2.0,
@@ -3364,19 +4063,34 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "PAC-2",
+       "value": 170.0,
+       "number": "170",
+       "unit": "ppm",
+       "raw": "170",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 1728 Methyl acrylate",
+        "version": "2025-02-07"
+       },
+       "note": "근거: TLV-TWA x 3, TEEL-3/6, IDLH (1990)",
+       "pacSource": "TLV-TWA x 3, TEEL-3/6, IDLH (1990)"
+      }
+     ],
+     "raw": "PAC-2: 170",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: PAC-2"
     },
     "twa": {
      "value": 2.0,
@@ -3555,19 +4269,34 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "PAC-2",
+       "value": 20.0,
+       "number": "20",
+       "unit": "ppm",
+       "raw": "20",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 1963 Nitrobenzene",
+        "version": "2025-02-07"
+       },
+       "note": "근거: TLV-TWA x 3, LOC, IDLH (1990 and 1994)",
+       "pacSource": "TLV-TWA x 3, LOC, IDLH (1990 and 1994)"
+      }
+     ],
+     "raw": "PAC-2: 20",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: PAC-2"
     },
     "twa": {
      "value": 1.0,
@@ -3728,19 +4457,34 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "PAC-2",
+       "value": 33.0,
+       "number": "33",
+       "unit": "ppm",
+       "raw": "33",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 2001 Nitrotoluene, p-",
+        "version": "2025-02-07"
+       },
+       "note": "근거: TLV-TWA x 3, TEEL-3/6, IDLH (1990 and 1994)",
+       "pacSource": "TLV-TWA x 3, TEEL-3/6, IDLH (1990 and 1994)"
+      }
+     ],
+     "raw": "PAC-2: 33",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: PAC-2"
     },
     "twa": {
      "value": 2.0,
@@ -3929,19 +4673,48 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "ERPG-2",
+       "value": 10.0,
+       "number": "10",
+       "unit": "ppm",
+       "raw": "10 ppm",
+       "source": {
+        "kind": "AIHA ERPG",
+        "id": "Benzyl chloride",
+        "version": "Last Update 2017",
+        "attribution": "AIHA ERPG®"
+       },
+       "note": null
+      },
+      {
+       "kind": "PAC-2",
+       "value": 10.0,
+       "number": "10",
+       "unit": "ppm",
+       "raw": "10ₑ",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 265 Benzyl chloride",
+        "version": "2025-02-07"
+       },
+       "note": "근거: ERPG-1, ERPG-2, ERPG-3",
+       "pacSource": "ERPG-1, ERPG-2, ERPG-3"
+      }
+     ],
+     "raw": "ERPG-2: 10 ppm\nPAC-2: 10ₑ",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: ERPG-2"
     },
     "twa": {
      "value": 1.0,
@@ -4119,19 +4892,62 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "ERPG-2",
+       "value": 0.15,
+       "number": "0.15",
+       "unit": "ppm",
+       "raw": "0.15 ppm",
+       "source": {
+        "kind": "AIHA ERPG",
+        "id": "Acrolein",
+        "version": "Last Update 2017",
+        "attribution": "AIHA ERPG®"
+       },
+       "note": null
+      },
+      {
+       "kind": "AEGL-2(60분)",
+       "value": 0.1,
+       "number": "0.10",
+       "unit": "ppm",
+       "raw": "0.10",
+       "source": {
+        "kind": "EPA AEGL",
+        "id": "acrolein-results-aegl-program.html",
+        "version": "Final"
+       },
+       "note": null,
+       "needsReview": false
+      },
+      {
+       "kind": "PAC-2",
+       "value": 0.1,
+       "number": "0.10",
+       "unit": "ppm",
+       "raw": "0.10",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 28 Acrolein",
+        "version": "2025-02-07"
+       },
+       "note": "근거: AEGL-1, AEGL-2, AEGL-3",
+       "pacSource": "AEGL-1, AEGL-2, AEGL-3"
+      }
+     ],
+     "raw": "ERPG-2: 0.15 ppm\nAEGL-2(60분): 0.10\nPAC-2: 0.10",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: ERPG-2"
     },
     "twa": {
      "value": 0.1,
@@ -4319,19 +5135,62 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "ERPG-2",
+       "value": 40.0,
+       "number": "40",
+       "unit": "ppm",
+       "raw": "40 ppm",
+       "source": {
+        "kind": "AIHA ERPG",
+        "id": "Allyl Chloride",
+        "version": "Last Update 2017",
+        "attribution": "AIHA ERPG®"
+       },
+       "note": null
+      },
+      {
+       "kind": "AEGL-2(60분)",
+       "value": 54.0,
+       "number": "54",
+       "unit": "ppm",
+       "raw": "54",
+       "source": {
+        "kind": "EPA AEGL",
+        "id": "allyl-chloride-results-aegl-program.html",
+        "version": "Interim"
+       },
+       "note": "Interim(확정 전 잠정값)",
+       "needsReview": false
+      },
+      {
+       "kind": "PAC-2",
+       "value": 54.0,
+       "number": "54",
+       "unit": "ppm",
+       "raw": "54",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 57 Allyl chloride",
+        "version": "2025-02-07"
+       },
+       "note": "근거: AEGL-1, AEGL-2, AEGL-3",
+       "pacSource": "AEGL-1, AEGL-2, AEGL-3"
+      }
+     ],
+     "raw": "ERPG-2: 40 ppm\nAEGL-2(60분): 54\nPAC-2: 54",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: ERPG-2"
     },
     "twa": {
      "value": 1.0,
@@ -4525,19 +5384,62 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "ERPG-2",
+       "value": 35.0,
+       "number": "35",
+       "unit": "ppm",
+       "raw": "35 ppm",
+       "source": {
+        "kind": "AIHA ERPG",
+        "id": "Acrylonitrile",
+        "version": "Last Update 2019",
+        "attribution": "AIHA ERPG®"
+       },
+       "note": null
+      },
+      {
+       "kind": "AEGL-2(60분)",
+       "value": 1.7,
+       "number": "1.7",
+       "unit": "ppm",
+       "raw": "1.7",
+       "source": {
+        "kind": "EPA AEGL",
+        "id": "acrylonitrile-results-aegl-results.html",
+        "version": "unstated"
+       },
+       "note": "페이지에 Final/Interim 표시 없음",
+       "needsReview": false
+      },
+      {
+       "kind": "PAC-2",
+       "value": 1.7,
+       "number": "1.7",
+       "unit": "ppm",
+       "raw": "1.7",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 32 Acrylonitrile",
+        "version": "2025-02-07"
+       },
+       "note": "근거: AEGL-2/11, AEGL-2, AEGL-3",
+       "pacSource": "AEGL-2/11, AEGL-2, AEGL-3"
+      }
+     ],
+     "raw": "ERPG-2: 35 ppm\nAEGL-2(60분): 1.7\nPAC-2: 1.7",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: ERPG-2"
     },
     "twa": {
      "value": 2.0,
@@ -4721,19 +5623,48 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "AEGL-2(60분)",
+       "value": 9.7,
+       "number": "9.7",
+       "unit": "ppm",
+       "raw": "9.7",
+       "source": {
+        "kind": "EPA AEGL",
+        "id": "ethylene-diamine-results-aegl-program.html",
+        "version": "Final"
+       },
+       "note": null,
+       "needsReview": false
+      },
+      {
+       "kind": "PAC-2",
+       "value": 9.7,
+       "number": "9.7",
+       "unit": "ppm",
+       "raw": "9.7",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 1207 Ethylenediamine, 1,2-",
+        "version": "2025-02-07"
+       },
+       "note": "근거: AEGL-2/11, AEGL-2, AEGL-3",
+       "pacSource": "AEGL-2/11, AEGL-2, AEGL-3"
+      }
+     ],
+     "raw": "AEGL-2(60분): 9.7\nPAC-2: 9.7",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: AEGL-2(60분)"
     },
     "twa": {
      "value": 10.0,
@@ -4931,19 +5862,48 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "AEGL-2(60분)",
+       "value": 1.7,
+       "number": "1.7",
+       "unit": "ppm",
+       "raw": "1.7",
+       "source": {
+        "kind": "EPA AEGL",
+        "id": "allyl-alcohol-results-aegl-program.html",
+        "version": "Final"
+       },
+       "note": null,
+       "needsReview": false
+      },
+      {
+       "kind": "PAC-2",
+       "value": 1.7,
+       "number": "1.7",
+       "unit": "ppm",
+       "raw": "1.7",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 55 Allyl alcohol",
+        "version": "2025-02-07"
+       },
+       "note": "근거: AEGL-1, AEGL-2, AEGL-3",
+       "pacSource": "AEGL-1, AEGL-2, AEGL-3"
+      }
+     ],
+     "raw": "AEGL-2(60분): 1.7\nPAC-2: 1.7",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: AEGL-2(60분)"
     },
     "twa": {
      "value": 0.5,
@@ -5099,19 +6059,19 @@
      ]
     },
     "exposure": {
-     "value": null,
+     "value": [],
      "raw": "",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "자료없음",
+     "note": "ERPG·AEGL·PAC 모두 없음"
     },
     "twa": {
      "value": 22.0,
@@ -5283,19 +6243,62 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "ERPG-2",
+       "value": 300.0,
+       "number": "300",
+       "unit": "ppm",
+       "raw": "300 ppm",
+       "source": {
+        "kind": "AIHA ERPG",
+        "id": "Toluene",
+        "version": "Last Update 2022",
+        "attribution": "AIHA ERPG®"
+       },
+       "note": null
+      },
+      {
+       "kind": "AEGL-2(60분)",
+       "value": 560.0,
+       "number": "560",
+       "unit": "ppm",
+       "raw": "560",
+       "source": {
+        "kind": "EPA AEGL",
+        "id": "toluene-results-aegl-program.html",
+        "version": "Final"
+       },
+       "note": null,
+       "needsReview": false
+      },
+      {
+       "kind": "PAC-2",
+       "value": 560.0,
+       "number": "560",
+       "unit": "ppm",
+       "raw": "560",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 2846 Toluene",
+        "version": "2025-02-07"
+       },
+       "note": "근거: AEGL-1, AEGL-2, AEGL-3",
+       "pacSource": "AEGL-1, AEGL-2, AEGL-3"
+      }
+     ],
+     "raw": "ERPG-2: 300 ppm\nAEGL-2(60분): 560\nPAC-2: 560",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: ERPG-2"
     },
     "twa": {
      "value": 50.0,
@@ -5473,19 +6476,62 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "ERPG-2",
+       "value": 50.0,
+       "number": "50",
+       "unit": "ppm",
+       "raw": "50 ppm",
+       "source": {
+        "kind": "AIHA ERPG",
+        "id": "Phenol",
+        "version": "Last Update 2013",
+        "attribution": "AIHA ERPG®"
+       },
+       "note": null
+      },
+      {
+       "kind": "AEGL-2(60분)",
+       "value": 23.0,
+       "number": "23",
+       "unit": "ppm",
+       "raw": "23",
+       "source": {
+        "kind": "EPA AEGL",
+        "id": "phenol-results-aegl-program.html",
+        "version": "Final"
+       },
+       "note": null,
+       "needsReview": false
+      },
+      {
+       "kind": "PAC-2",
+       "value": 23.0,
+       "number": "23",
+       "unit": "ppm",
+       "raw": "23",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 2134 Phenol",
+        "version": "2025-02-07"
+       },
+       "note": "근거: AEGL-1, AEGL-2, ERPG-3",
+       "pacSource": "AEGL-1, AEGL-2, ERPG-3"
+      }
+     ],
+     "raw": "ERPG-2: 50 ppm\nAEGL-2(60분): 23\nPAC-2: 23",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: ERPG-2"
     },
     "twa": {
      "value": 5.0,
@@ -5653,19 +6699,34 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "PAC-2",
+       "value": 50.0,
+       "number": "50",
+       "unit": "ppm",
+       "raw": "50",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 437 Butylamine, n-",
+        "version": "2025-02-07"
+       },
+       "note": "근거: MAK-TWA x 3, TEEL-3/6, IDLH (1994)",
+       "pacSource": "MAK-TWA x 3, TEEL-3/6, IDLH (1994)"
+      }
+     ],
+     "raw": "PAC-2: 50",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: PAC-2"
     },
     "twa": {
      "value": null,
@@ -5832,19 +6893,34 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "PAC-2",
+       "value": 170.0,
+       "number": "170",
+       "unit": "ppm",
+       "raw": "170",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 2915 Triethylamine",
+        "version": "2025-02-07"
+       },
+       "note": "근거: TLV-STEL, TEEL-3/6, IDLH (1990)",
+       "pacSource": "TLV-STEL, TEEL-3/6, IDLH (1990)"
+      }
+     ],
+     "raw": "PAC-2: 170",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: PAC-2"
     },
     "twa": {
      "value": 2.0,
@@ -6001,19 +7077,34 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "PAC-2",
+       "value": 1700.0,
+       "number": "1700",
+       "unit": "ppm",
+       "raw": "1700",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 1151 Ethyl acetate",
+        "version": "2025-02-07"
+       },
+       "note": "근거: TLV-TWA x 3, TEEL-3/6, IDLH (1990)",
+       "pacSource": "TLV-TWA x 3, TEEL-3/6, IDLH (1990)"
+      }
+     ],
+     "raw": "PAC-2: 1700",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: PAC-2"
     },
     "twa": {
      "value": 400.0,
@@ -6184,19 +7275,48 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "AEGL-2(60분)",
+       "value": 14.0,
+       "number": "14",
+       "unit": "mg/m3",
+       "raw": "14 mg/m3",
+       "source": {
+        "kind": "EPA AEGL",
+        "id": "sodium-cyanide-results-aegl-program.html",
+        "version": "Final"
+       },
+       "note": null,
+       "needsReview": false
+      },
+      {
+       "kind": "PAC-2",
+       "value": 14.0,
+       "number": "14",
+       "unit": "mg/m3",
+       "raw": "14",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 2535 Sodium cyanide",
+        "version": "2025-02-07"
+       },
+       "note": "근거: AEGL-1, AEGL-2, AEGL-3",
+       "pacSource": "AEGL-1, AEGL-2, AEGL-3"
+      }
+     ],
+     "raw": "AEGL-2(60분): 14 mg/m3\nPAC-2: 14",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: AEGL-2(60분)"
     },
     "twa": {
      "value": 3.0,
@@ -6380,19 +7500,48 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "AEGL-2(60분)",
+       "value": 4.6,
+       "number": "4.6",
+       "unit": "ppm",
+       "raw": "4.6",
+       "source": {
+        "kind": "EPA AEGL",
+        "id": "ethyleneimine-results-aegl-program.html",
+        "version": "Final"
+       },
+       "note": null,
+       "needsReview": false
+      },
+      {
+       "kind": "PAC-2",
+       "value": 4.6,
+       "number": "4.6",
+       "unit": "ppm",
+       "raw": "4.6",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 1215 Ethyleneimine",
+        "version": "2025-02-07"
+       },
+       "note": "근거: TLV-STEL, AEGL-2, AEGL-3",
+       "pacSource": "TLV-STEL, AEGL-2, AEGL-3"
+      }
+     ],
+     "raw": "AEGL-2(60분): 4.6\nPAC-2: 4.6",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: AEGL-2(60분)"
     },
     "twa": {
      "value": 0.5,
@@ -6575,19 +7724,62 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "ERPG-2",
+       "value": 0.15,
+       "number": "0.15",
+       "unit": "ppm",
+       "raw": "0.15 ppm",
+       "source": {
+        "kind": "AIHA ERPG",
+        "id": "toluene 2,4- diisocyanate",
+        "version": "Last Update 2015",
+        "attribution": "AIHA ERPG®"
+       },
+       "note": null
+      },
+      {
+       "kind": "AEGL-2(60분)",
+       "value": 0.083,
+       "number": "0.083",
+       "unit": "ppm",
+       "raw": "0.083",
+       "source": {
+        "kind": "EPA AEGL",
+        "id": "24-toluene-diisocyanate-results-aegl-program.html",
+        "version": "Final"
+       },
+       "note": null,
+       "needsReview": false
+      },
+      {
+       "kind": "PAC-2",
+       "value": 0.083,
+       "number": "0.083",
+       "unit": "ppm",
+       "raw": "0.083",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 2849 Toluene-2,4-diisocyanate; (TDI)",
+        "version": "2025-02-07"
+       },
+       "note": "근거: AEGL-1, AEGL-2, AEGL-3",
+       "pacSource": "AEGL-1, AEGL-2, AEGL-3"
+      }
+     ],
+     "raw": "ERPG-2: 0.15 ppm\nAEGL-2(60분): 0.083\nPAC-2: 0.083",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: ERPG-2"
     },
     "twa": {
      "value": 0.005,
@@ -6756,19 +7948,62 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "ERPG-2",
+       "value": 350.0,
+       "number": "350",
+       "unit": "ppm",
+       "raw": "350 ppm",
+       "source": {
+        "kind": "AIHA ERPG",
+        "id": "Carbon monoxide",
+        "version": "Last Update 2014",
+        "attribution": "AIHA ERPG®"
+       },
+       "note": null
+      },
+      {
+       "kind": "AEGL-2(60분)",
+       "value": 83.0,
+       "number": "83",
+       "unit": "ppm",
+       "raw": "83",
+       "source": {
+        "kind": "EPA AEGL",
+        "id": "carbon-monoxide-results-aegl-program.html",
+        "version": "Final"
+       },
+       "note": null,
+       "needsReview": false
+      },
+      {
+       "kind": "PAC-2",
+       "value": 83.0,
+       "number": "83",
+       "unit": "ppm",
+       "raw": "83",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 518 Carbon monoxide",
+        "version": "2025-02-07"
+       },
+       "note": "근거: TLV-TWA x 3, AEGL-2, AEGL-3",
+       "pacSource": "TLV-TWA x 3, AEGL-2, AEGL-3"
+      }
+     ],
+     "raw": "ERPG-2: 350 ppm\nAEGL-2(60분): 83\nPAC-2: 83",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: ERPG-2"
     },
     "twa": {
      "value": 30.0,
@@ -6923,19 +8158,34 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "PAC-2",
+       "value": 0.9,
+       "number": "0.9",
+       "unit": "mg/m3",
+       "raw": "0.9",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 33 Acrylyl chloride; (Acryloyl chloride)",
+        "version": "2025-02-07"
+       },
+       "note": "근거: TEEL-2/11, LOC, mouse 120-min LC50",
+       "pacSource": "TEEL-2/11, LOC, mouse 120-min LC50"
+      }
+     ],
+     "raw": "PAC-2: 0.9",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: PAC-2"
     },
     "twa": {
      "value": null,
@@ -7094,19 +8344,48 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "AEGL-2(60분)",
+       "value": 1.0,
+       "number": "1.0",
+       "unit": "ppm",
+       "raw": "1.0",
+       "source": {
+        "kind": "EPA AEGL",
+        "id": "zinc-phosphide-results-aegl-program.html",
+        "version": "Final"
+       },
+       "note": null,
+       "needsReview": false
+      },
+      {
+       "kind": "PAC-2",
+       "value": 11.0,
+       "number": "11",
+       "unit": "mg/m3",
+       "raw": "11",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 3111 Zinc phosphide",
+        "version": "2025-02-07"
+       },
+       "note": "근거: AEGL-2/11, AEGL-2, AEGL-3",
+       "pacSource": "AEGL-2/11, AEGL-2, AEGL-3"
+      }
+     ],
+     "raw": "AEGL-2(60분): 1.0\nPAC-2: 11",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: AEGL-2(60분)"
     },
     "twa": {
      "value": null,
@@ -7263,19 +8542,34 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "PAC-2",
+       "value": 20.0,
+       "number": "20",
+       "unit": "ppm",
+       "raw": "20",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 1743 Methyl ethyl ketone peroxide",
+        "version": "2025-02-07"
+       },
+       "note": "근거: TEEL-2/11, TLV-C adjusted based on ratio to toxicity data, rat 240-min LC50",
+       "pacSource": "TEEL-2/11, TLV-C adjusted based on ratio to toxicity data, rat 240-min LC50"
+      }
+     ],
+     "raw": "PAC-2: 20",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: PAC-2"
     },
     "twa": {
      "value": null,
@@ -7448,19 +8742,34 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "PAC-2",
+       "value": 1.2,
+       "number": "1.2",
+       "unit": "mg/m3",
+       "raw": "1.2",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 1511 Isophorone diisocyanate",
+        "version": "2025-02-07"
+       },
+       "note": "근거: REL-STEL, LOC, rat 240-min LC50",
+       "pacSource": "REL-STEL, LOC, rat 240-min LC50"
+      }
+     ],
+     "raw": "PAC-2: 1.2",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: PAC-2"
     },
     "twa": {
      "value": 0.005,
@@ -7611,19 +8920,34 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "PAC-2",
+       "value": 5.0,
+       "number": "5.0",
+       "unit": "mg/m3",
+       "raw": "5.0",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 2497 Sodium",
+        "version": "2025-02-07"
+       },
+       "note": "근거: TEEL-2/11, TEEL-3/6, mouse ip LD50",
+       "pacSource": "TEEL-2/11, TEEL-3/6, mouse ip LD50"
+      }
+     ],
+     "raw": "PAC-2: 5.0",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: PAC-2"
     },
     "twa": {
      "value": null,
@@ -7756,19 +9080,62 @@
      "note": "완전 일치 2건 — 고르지 않음"
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "ERPG-2",
+       "value": 20.0,
+       "number": "20",
+       "unit": "ppm",
+       "raw": "20 ppm",
+       "source": {
+        "kind": "AIHA ERPG",
+        "id": "Hydrogen chloride",
+        "version": "Last Update 2016",
+        "attribution": "AIHA ERPG®"
+       },
+       "note": null
+      },
+      {
+       "kind": "AEGL-2(60분)",
+       "value": 22.0,
+       "number": "22",
+       "unit": "ppm",
+       "raw": "22",
+       "source": {
+        "kind": "EPA AEGL",
+        "id": "hydrogen-chloride-results-aegl-program.html",
+        "version": "Final"
+       },
+       "note": null,
+       "needsReview": false
+      },
+      {
+       "kind": "PAC-2",
+       "value": 22.0,
+       "number": "22",
+       "unit": "ppm",
+       "raw": "22ₐ",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 1421 Hydrogen chloride; (Hydrochloric acid)",
+        "version": "2025-02-07"
+       },
+       "note": "근거: AEGL-1, AEGL-2, AEGL-3",
+       "pacSource": "AEGL-1, AEGL-2, AEGL-3"
+      }
+     ],
+     "raw": "ERPG-2: 20 ppm\nAEGL-2(60분): 22\nPAC-2: 22ₐ",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: ERPG-2"
     },
     "twa": {
      "value": 1.0,
@@ -7929,19 +9296,62 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "ERPG-2",
+       "value": 20.0,
+       "number": "20",
+       "unit": "ppm",
+       "raw": "20 ppm",
+       "source": {
+        "kind": "AIHA ERPG",
+        "id": "Hydrogen fluoride",
+        "version": "Last Update 2024",
+        "attribution": "AIHA ERPG®"
+       },
+       "note": null
+      },
+      {
+       "kind": "AEGL-2(60분)",
+       "value": 24.0,
+       "number": "24",
+       "unit": "ppm",
+       "raw": "24",
+       "source": {
+        "kind": "EPA AEGL",
+        "id": "hydrogen-fluoride-results-aegl-program.html",
+        "version": "Final"
+       },
+       "note": null,
+       "needsReview": false
+      },
+      {
+       "kind": "PAC-2",
+       "value": 24.0,
+       "number": "24",
+       "unit": "ppm",
+       "raw": "24ₐ",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 1423 Hydrogen fluoride; (Hydrofluoric acid)",
+        "version": "2025-02-07"
+       },
+       "note": "근거: AEGL-1, AEGL-2, AEGL-3",
+       "pacSource": "AEGL-1, AEGL-2, AEGL-3"
+      }
+     ],
+     "raw": "ERPG-2: 20 ppm\nAEGL-2(60분): 24\nPAC-2: 24ₐ",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: ERPG-2"
     },
     "twa": {
      "value": 0.5,
@@ -8109,19 +9519,62 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "ERPG-2",
+       "value": 150.0,
+       "number": "150",
+       "unit": "ppm",
+       "raw": "150 ppm",
+       "source": {
+        "kind": "AIHA ERPG",
+        "id": "Ammonia",
+        "version": "Last Update 2014",
+        "attribution": "AIHA ERPG®"
+       },
+       "note": null
+      },
+      {
+       "kind": "AEGL-2(60분)",
+       "value": 160.0,
+       "number": "160",
+       "unit": "ppm",
+       "raw": "160",
+       "source": {
+        "kind": "EPA AEGL",
+        "id": "ammonia-results-aegl-program.html",
+        "version": "Final"
+       },
+       "note": null,
+       "needsReview": false
+      },
+      {
+       "kind": "PAC-2",
+       "value": 160.0,
+       "number": "160",
+       "unit": "ppm",
+       "raw": "160",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 112 Ammonia",
+        "version": "2025-02-07"
+       },
+       "note": "근거: AEGL-1, AEGL-2, AEGL-3",
+       "pacSource": "AEGL-1, AEGL-2, AEGL-3"
+      }
+     ],
+     "raw": "ERPG-2: 150 ppm\nAEGL-2(60분): 160\nPAC-2: 160",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: ERPG-2"
     },
     "twa": {
      "value": 25.0,
@@ -8278,19 +9731,62 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "ERPG-2",
+       "value": 10.0,
+       "number": "10",
+       "unit": "mg/m3",
+       "raw": "10 mg/m3",
+       "source": {
+        "kind": "AIHA ERPG",
+        "id": "Sulfuric acid",
+        "version": "Last Update 2022",
+        "attribution": "AIHA ERPG®"
+       },
+       "note": null
+      },
+      {
+       "kind": "AEGL-2(60분)",
+       "value": 8.7,
+       "number": "8.7",
+       "unit": "mg/m3",
+       "raw": "8.7 mg/m3",
+       "source": {
+        "kind": "EPA AEGL",
+        "id": "sulfuric-acid-results-aegl-program.html",
+        "version": "Interim"
+       },
+       "note": "Interim(확정 전 잠정값)",
+       "needsReview": false
+      },
+      {
+       "kind": "PAC-2",
+       "value": 8.7,
+       "number": "8.7",
+       "unit": "mg/m3",
+       "raw": "8.7",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 2681 Sulfuric acid",
+        "version": "2025-02-07"
+       },
+       "note": "근거: AEGL-1, AEGL-2, AEGL-3",
+       "pacSource": "AEGL-1, AEGL-2, AEGL-3"
+      }
+     ],
+     "raw": "ERPG-2: 10 mg/m3\nAEGL-2(60분): 8.7 mg/m3\nPAC-2: 8.7",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: ERPG-2"
     },
     "twa": {
      "value": 0.2,
@@ -8451,19 +9947,62 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "ERPG-2",
+       "value": 10.0,
+       "number": "10",
+       "unit": "ppm",
+       "raw": "10 ppm",
+       "source": {
+        "kind": "AIHA ERPG",
+        "id": "Nitric acid WFNA",
+        "version": "Last Update 2013",
+        "attribution": "AIHA ERPG®"
+       },
+       "note": null
+      },
+      {
+       "kind": "AEGL-2(60분)",
+       "value": 24.0,
+       "number": "24",
+       "unit": "ppm",
+       "raw": "24",
+       "source": {
+        "kind": "EPA AEGL",
+        "id": "nitric-acid-results-aegl-program.html",
+        "version": "Final"
+       },
+       "note": null,
+       "needsReview": false
+      },
+      {
+       "kind": "PAC-2",
+       "value": 24.0,
+       "number": "24",
+       "unit": "ppm",
+       "raw": "24",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 1951 Nitric acid",
+        "version": "2025-02-07"
+       },
+       "note": "근거: AEGL-1, AEGL-2, AEGL-3",
+       "pacSource": "AEGL-1, AEGL-2, AEGL-3"
+      }
+     ],
+     "raw": "ERPG-2: 10 ppm\nAEGL-2(60분): 24\nPAC-2: 24",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: ERPG-2"
     },
     "twa": {
      "value": 2.0,
@@ -8624,19 +10163,62 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "ERPG-2",
+       "value": 3.0,
+       "number": "3",
+       "unit": "ppm",
+       "raw": "3 ppm",
+       "source": {
+        "kind": "AIHA ERPG",
+        "id": "Phosphorus trichloride",
+        "version": "Last Update 2015",
+        "attribution": "AIHA ERPG®"
+       },
+       "note": null
+      },
+      {
+       "kind": "AEGL-2(60분)",
+       "value": 2.0,
+       "number": "2.0",
+       "unit": "ppm",
+       "raw": "2.0",
+       "source": {
+        "kind": "EPA AEGL",
+        "id": "phosphorus-trichloride-results-aegl-program.html",
+        "version": "Final"
+       },
+       "note": null,
+       "needsReview": false
+      },
+      {
+       "kind": "PAC-2",
+       "value": 2.0,
+       "number": "2.0",
+       "unit": "ppm",
+       "raw": "2.0",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 2196 Phosphorus trichloride",
+        "version": "2025-02-07"
+       },
+       "note": "근거: AEGL-1, AEGL-2, AEGL-3",
+       "pacSource": "AEGL-1, AEGL-2, AEGL-3"
+      }
+     ],
+     "raw": "ERPG-2: 3 ppm\nAEGL-2(60분): 2.0\nPAC-2: 2.0",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: ERPG-2"
     },
     "twa": {
      "value": 0.2,
@@ -8797,19 +10379,62 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "ERPG-2",
+       "value": 5.0,
+       "number": "5",
+       "unit": "ppm",
+       "raw": "5 ppm",
+       "source": {
+        "kind": "AIHA ERPG",
+        "id": "Fluorine",
+        "version": "Last Update 2010",
+        "attribution": "AIHA ERPG®"
+       },
+       "note": null
+      },
+      {
+       "kind": "AEGL-2(60분)",
+       "value": 5.0,
+       "number": "5.0",
+       "unit": "ppm",
+       "raw": "5.0",
+       "source": {
+        "kind": "EPA AEGL",
+        "id": "fluorine-results-aegl-program.html",
+        "version": "Final"
+       },
+       "note": null,
+       "needsReview": false
+      },
+      {
+       "kind": "PAC-2",
+       "value": 5.0,
+       "number": "5",
+       "unit": "ppm",
+       "raw": "5",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 1264 Fluorine",
+        "version": "2025-02-07"
+       },
+       "note": "근거: AEGL-1, AEGL-2, AEGL-3",
+       "pacSource": "AEGL-1, AEGL-2, AEGL-3"
+      }
+     ],
+     "raw": "ERPG-2: 5 ppm\nAEGL-2(60분): 5.0\nPAC-2: 5",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: ERPG-2"
     },
     "twa": {
      "value": 0.1,
@@ -8985,19 +10610,62 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "ERPG-2",
+       "value": 3.0,
+       "number": "3",
+       "unit": "ppm",
+       "raw": "3 ppm",
+       "source": {
+        "kind": "AIHA ERPG",
+        "id": "Chlorine",
+        "version": "Last Update 2017",
+        "attribution": "AIHA ERPG®"
+       },
+       "note": null
+      },
+      {
+       "kind": "AEGL-2(60분)",
+       "value": 2.0,
+       "number": "2.0",
+       "unit": "ppm",
+       "raw": "2.0",
+       "source": {
+        "kind": "EPA AEGL",
+        "id": "chlorine-results-aegl-program.html",
+        "version": "Final"
+       },
+       "note": null,
+       "needsReview": false
+      },
+      {
+       "kind": "PAC-2",
+       "value": 2.0,
+       "number": "2.0",
+       "unit": "ppm",
+       "raw": "2.0",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 563 Chlorine",
+        "version": "2025-02-07"
+       },
+       "note": "근거: AEGL-1, AEGL-2, AEGL-3",
+       "pacSource": "AEGL-1, AEGL-2, AEGL-3"
+      }
+     ],
+     "raw": "ERPG-2: 3 ppm\nAEGL-2(60분): 2.0\nPAC-2: 2.0",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: ERPG-2"
     },
     "twa": {
      "value": 0.5,
@@ -9165,19 +10833,62 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "ERPG-2",
+       "value": 30.0,
+       "number": "30",
+       "unit": "ppm",
+       "raw": "30 ppm",
+       "source": {
+        "kind": "AIHA ERPG",
+        "id": "Hydrogen sulfide",
+        "version": "Last Update 2014",
+        "attribution": "AIHA ERPG®"
+       },
+       "note": null
+      },
+      {
+       "kind": "AEGL-2(60분)",
+       "value": 27.0,
+       "number": "27",
+       "unit": "ppm",
+       "raw": "27",
+       "source": {
+        "kind": "EPA AEGL",
+        "id": "hydrogen-sulfide-results-aegl-program.html",
+        "version": "Final"
+       },
+       "note": null,
+       "needsReview": false
+      },
+      {
+       "kind": "PAC-2",
+       "value": 27.0,
+       "number": "27",
+       "unit": "ppm",
+       "raw": "27",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 1427 Hydrogen sulfide",
+        "version": "2025-02-07"
+       },
+       "note": "근거: AEGL-1, AEGL-2, AEGL-3",
+       "pacSource": "AEGL-1, AEGL-2, AEGL-3"
+      }
+     ],
+     "raw": "ERPG-2: 30 ppm\nAEGL-2(60분): 27\nPAC-2: 27",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: ERPG-2"
     },
     "twa": {
      "value": 10.0,
@@ -9351,19 +11062,62 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "ERPG-2",
+       "value": 0.5,
+       "number": "0.5",
+       "unit": "ppm",
+       "raw": "0.5 ppm",
+       "source": {
+        "kind": "AIHA ERPG",
+        "id": "Arsine",
+        "version": "Last Update 2023",
+        "attribution": "AIHA ERPG®"
+       },
+       "note": null
+      },
+      {
+       "kind": "AEGL-2(60분)",
+       "value": 0.17,
+       "number": "0.17",
+       "unit": "ppm",
+       "raw": "0.17",
+       "source": {
+        "kind": "EPA AEGL",
+        "id": "arsine-results-aegl-program.html",
+        "version": "Final"
+       },
+       "note": null,
+       "needsReview": false
+      },
+      {
+       "kind": "PAC-2",
+       "value": 0.17,
+       "number": "0.17",
+       "unit": "ppm",
+       "raw": "0.17",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 200 Arsine",
+        "version": "2025-02-07"
+       },
+       "note": "근거: AEGL-2/11, AEGL-2, AEGL-3",
+       "pacSource": "AEGL-2/11, AEGL-2, AEGL-3"
+      }
+     ],
+     "raw": "ERPG-2: 0.5 ppm\nAEGL-2(60분): 0.17\nPAC-2: 0.17",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: ERPG-2"
     },
     "twa": {
      "value": 0.005,
@@ -9514,19 +11268,62 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "ERPG-2",
+       "value": 10.0,
+       "number": "10",
+       "unit": "mg/m3",
+       "raw": "10 mg/m3",
+       "source": {
+        "kind": "AIHA ERPG",
+        "id": "Chlorosulfonic acid",
+        "version": "Last Update 2023",
+        "attribution": "AIHA ERPG®"
+       },
+       "note": null
+      },
+      {
+       "kind": "AEGL-2(60분)",
+       "value": 4.4,
+       "number": "4.4",
+       "unit": "mg/m3",
+       "raw": "4.4 mg/m3",
+       "source": {
+        "kind": "EPA AEGL",
+        "id": "chlorosulfonic-acid-results-aegl-program.html",
+        "version": "Interim"
+       },
+       "note": "Interim(확정 전 잠정값)",
+       "needsReview": false
+      },
+      {
+       "kind": "PAC-2",
+       "value": 4.4,
+       "number": "4.4",
+       "unit": "mg/m3",
+       "raw": "4.4",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 632 Chlorosulfonic acid; \n(Chlorosulfuric acid)",
+        "version": "2025-02-07"
+       },
+       "note": "근거: AEGL-1, AEGL-2, AEGL-3",
+       "pacSource": "AEGL-1, AEGL-2, AEGL-3"
+      }
+     ],
+     "raw": "ERPG-2: 10 mg/m3\nAEGL-2(60분): 4.4 mg/m3\nPAC-2: 4.4",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: ERPG-2"
     },
     "twa": {
      "value": null,
@@ -9692,19 +11489,62 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "ERPG-2",
+       "value": 0.5,
+       "number": "0.5",
+       "unit": "ppm",
+       "raw": "0.5 ppm",
+       "source": {
+        "kind": "AIHA ERPG",
+        "id": "Phosphine",
+        "version": "Last Update 2012",
+        "attribution": "AIHA ERPG®"
+       },
+       "note": null
+      },
+      {
+       "kind": "AEGL-2(60분)",
+       "value": 2.0,
+       "number": "2.0",
+       "unit": "ppm",
+       "raw": "2.0",
+       "source": {
+        "kind": "EPA AEGL",
+        "id": "phosphine-results-aeglprogram.html",
+        "version": "Final"
+       },
+       "note": null,
+       "needsReview": false
+      },
+      {
+       "kind": "PAC-2",
+       "value": 2.0,
+       "number": "2.0",
+       "unit": "ppm",
+       "raw": "2.0",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 2176 Phosphine",
+        "version": "2025-02-07"
+       },
+       "note": "근거: TLV-STEL, AEGL-2, AEGL-3",
+       "pacSource": "TLV-STEL, AEGL-2, AEGL-3"
+      }
+     ],
+     "raw": "ERPG-2: 0.5 ppm\nAEGL-2(60분): 2.0\nPAC-2: 2.0",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: ERPG-2"
     },
     "twa": {
      "value": 0.3,
@@ -9866,19 +11706,34 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "PAC-2",
+       "value": 0.48,
+       "number": "0.48",
+       "unit": "ppm",
+       "raw": "0.48",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 2192 Phosphorus oxychloride",
+        "version": "2025-02-07"
+       },
+       "note": "근거: TLV-TWA x 3, LOC, AEGL-3",
+       "pacSource": "TLV-TWA x 3, LOC, AEGL-3"
+      }
+     ],
+     "raw": "PAC-2: 0.48",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: PAC-2; AEGL-2(60분) NR — 권고값 없음(phosphorus-oxychloride-result-aegl-program.html)"
     },
     "twa": {
      "value": 0.1,
@@ -10049,19 +11904,62 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "ERPG-2",
+       "value": 0.5,
+       "number": "0.5",
+       "unit": "ppm",
+       "raw": "0.5 ppm",
+       "source": {
+        "kind": "AIHA ERPG",
+        "id": "Chlorine dioxide",
+        "version": "Last Update 2011",
+        "attribution": "AIHA ERPG®"
+       },
+       "note": null
+      },
+      {
+       "kind": "AEGL-2(60분)",
+       "value": 1.1,
+       "number": "1.1",
+       "unit": "ppm",
+       "raw": "1.1",
+       "source": {
+        "kind": "EPA AEGL",
+        "id": "chlorine-dioxide-results-aegl-program.html",
+        "version": "Final"
+       },
+       "note": null,
+       "needsReview": false
+      },
+      {
+       "kind": "PAC-2",
+       "value": 1.1,
+       "number": "1.1",
+       "unit": "ppm",
+       "raw": "1.1",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 564 Chlorine dioxide",
+        "version": "2025-02-07"
+       },
+       "note": "근거: AEGL-1, AEGL-2, AEGL-3",
+       "pacSource": "AEGL-1, AEGL-2, AEGL-3"
+      }
+     ],
+     "raw": "ERPG-2: 0.5 ppm\nAEGL-2(60분): 1.1\nPAC-2: 1.1",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: ERPG-2"
     },
     "twa": {
      "value": 0.1,
@@ -10222,19 +12120,62 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "ERPG-2",
+       "value": 1.0,
+       "number": "1",
+       "unit": "ppm",
+       "raw": "1 ppm",
+       "source": {
+        "kind": "AIHA ERPG",
+        "id": "Diborane",
+        "version": "Last Update 2013",
+        "attribution": "AIHA ERPG®"
+       },
+       "note": null
+      },
+      {
+       "kind": "AEGL-2(60분)",
+       "value": 1.0,
+       "number": "1.0",
+       "unit": "ppm",
+       "raw": "1.0",
+       "source": {
+        "kind": "EPA AEGL",
+        "id": "diborane-results-aegl-program.html",
+        "version": "Final"
+       },
+       "note": null,
+       "needsReview": false
+      },
+      {
+       "kind": "PAC-2",
+       "value": 1.0,
+       "number": "1.0",
+       "unit": "ppm",
+       "raw": "1.0",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 807 Diborane",
+        "version": "2025-02-07"
+       },
+       "note": "근거: TLV-TWA x 3, AEGL-2, AEGL-3",
+       "pacSource": "TLV-TWA x 3, AEGL-2, AEGL-3"
+      }
+     ],
+     "raw": "ERPG-2: 1 ppm\nAEGL-2(60분): 1.0\nPAC-2: 1.0",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: ERPG-2"
     },
     "twa": {
      "value": 0.1,
@@ -10399,19 +12340,34 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "PAC-2",
+       "value": 12.0,
+       "number": "12",
+       "unit": "ppm",
+       "raw": "12",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 1955 Nitric oxide",
+        "version": "2025-02-07"
+       },
+       "note": "근거: Used nitrogen dioxide (10102-44-0) AEGL values; 다른 물질 값을 빌린 행",
+       "pacSource": "Used nitrogen dioxide (10102-44-0) AEGL values"
+      }
+     ],
+     "raw": "PAC-2: 12",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: PAC-2; AEGL-2(60분) NR — 권고값 없음(nitric-oxide-aegl-program.html)"
     },
     "twa": {
      "value": 25.0,
@@ -10570,19 +12526,34 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "PAC-2",
+       "value": 210.0,
+       "number": "210",
+       "unit": "ppm",
+       "raw": "210",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 1979 Nitromethane",
+        "version": "2025-02-07"
+       },
+       "note": "근거: TLV-TWA x 3, rat 360-min TCLo, IDLH (1990)",
+       "pacSource": "TLV-TWA x 3, rat 360-min TCLo, IDLH (1990)"
+      }
+     ],
+     "raw": "PAC-2: 210",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: PAC-2"
     },
     "twa": {
      "value": 20.0,
@@ -10737,19 +12708,34 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "PAC-2",
+       "value": 73.0,
+       "number": "73",
+       "unit": "mg/m3",
+       "raw": "73",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 144 Ammonium nitrate",
+        "version": "2025-02-07"
+       },
+       "note": "근거: TEEL-2/11, TEEL-3/6, rat oral LD50",
+       "pacSource": "TEEL-2/11, TEEL-3/6, rat oral LD50"
+      }
+     ],
+     "raw": "PAC-2: 73",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: PAC-2"
     },
     "twa": {
      "value": null,
@@ -10898,19 +12884,34 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "PAC-2",
+       "value": 610.0,
+       "number": "610",
+       "unit": "mg/m3",
+       "raw": "610",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 1388 Hexamethylenetetraamine; (Methenamine)",
+        "version": "2025-02-07"
+       },
+       "note": "근거: TEEL-2/11, TEEL-3/6, rat iv LD50",
+       "pacSource": "TEEL-2/11, TEEL-3/6, rat iv LD50"
+      }
+     ],
+     "raw": "PAC-2: 610",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: PAC-2"
     },
     "twa": {
      "value": null,
@@ -11075,19 +13076,48 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "ERPG-2",
+       "value": 50.0,
+       "number": "50",
+       "unit": "ppm",
+       "raw": "50 ppm",
+       "source": {
+        "kind": "AIHA ERPG",
+        "id": "Hydrogen peroxide",
+        "version": "Last Update 2022",
+        "attribution": "AIHA ERPG®"
+       },
+       "note": null
+      },
+      {
+       "kind": "PAC-2",
+       "value": 50.0,
+       "number": "50",
+       "unit": "ppm",
+       "raw": "50ₑ",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 1424 Hydrogen peroxide",
+        "version": "2025-02-07"
+       },
+       "note": "근거: ERPG-1, ERPG-2, ERPG-3",
+       "pacSource": "ERPG-1, ERPG-2, ERPG-3"
+      }
+     ],
+     "raw": "ERPG-2: 50 ppm\nPAC-2: 50ₑ",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: ERPG-2"
     },
     "twa": {
      "value": 1.0,
@@ -11238,19 +13268,34 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "PAC-2",
+       "value": 62.0,
+       "number": "62",
+       "unit": "mg/m3",
+       "raw": "62",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 2297 Potassium chlorate",
+        "version": "2025-02-07"
+       },
+       "note": "근거: TEEL-2/11, TEEL-3/6, rat oral LD50",
+       "pacSource": "TEEL-2/11, TEEL-3/6, rat oral LD50"
+      }
+     ],
+     "raw": "PAC-2: 62",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: PAC-2"
     },
     "twa": {
      "value": null,
@@ -11395,19 +13440,34 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "PAC-2",
+       "value": 120.0,
+       "number": "120",
+       "unit": "mg/m3",
+       "raw": "120",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 2328 Potassium nitrate",
+        "version": "2025-02-07"
+       },
+       "note": "근거: TEEL-2/11, TEEL-3/6, rat oral LD50",
+       "pacSource": "TEEL-2/11, TEEL-3/6, rat oral LD50"
+      }
+     ],
+     "raw": "PAC-2: 120",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: PAC-2"
     },
     "twa": {
      "value": null,
@@ -11562,19 +13622,34 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "PAC-2",
+       "value": 65.0,
+       "number": "65",
+       "unit": "mg/m3",
+       "raw": "65",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 2335 Potassium perchlorate",
+        "version": "2025-02-07"
+       },
+       "note": "근거: Used sodium perchlorate (7601-89-0) PAC values; 다른 물질 값을 빌린 행",
+       "pacSource": "Used sodium perchlorate (7601-89-0) PAC values"
+      }
+     ],
+     "raw": "PAC-2: 65",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: PAC-2"
     },
     "twa": {
      "value": null,
@@ -11739,19 +13814,34 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "PAC-2",
+       "value": 1.3,
+       "number": "1.3",
+       "unit": "mg/m3",
+       "raw": "1.3",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 2337 Potassium permanganate",
+        "version": "2025-02-07"
+       },
+       "note": "근거: MW-adjusted manganese (1317-35-7) REL-STEL and PEL-C, rat oral LD50",
+       "pacSource": "MW-adjusted manganese (1317-35-7) REL-STEL and PEL-C, rat oral LD50"
+      }
+     ],
+     "raw": "PAC-2: 1.3",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: PAC-2"
     },
     "twa": {
      "value": 1.0,
@@ -11899,19 +13989,34 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "PAC-2",
+       "value": 170.0,
+       "number": "170",
+       "unit": "mg/m3",
+       "raw": "170",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 560 Chloric acid, sodium salt; (Sodium chlorate)",
+        "version": "2025-02-07"
+       },
+       "note": "근거: TEEL-2/11, TEEL-3/6, rat oral LD50",
+       "pacSource": "TEEL-2/11, TEEL-3/6, rat oral LD50"
+      }
+     ],
+     "raw": "PAC-2: 170",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: PAC-2"
     },
     "twa": {
      "value": null,
@@ -12057,19 +14162,34 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "PAC-2",
+       "value": 42.0,
+       "number": "42",
+       "unit": "mg/m3",
+       "raw": "42",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 2580 Sodium nitrate",
+        "version": "2025-02-07"
+       },
+       "note": "근거: TEEL-2/11, TEEL-3/6, mouse oral LD50",
+       "pacSource": "TEEL-2/11, TEEL-3/6, mouse oral LD50"
+      }
+     ],
+     "raw": "PAC-2: 42",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: PAC-2"
     },
     "twa": {
      "value": null,
@@ -12222,19 +14342,48 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "AEGL-2(60분)",
+       "value": 0.006,
+       "number": "0.0060",
+       "unit": "ppm",
+       "raw": "0.0060 [0.035]",
+       "source": {
+        "kind": "EPA AEGL",
+        "id": "agent-gb-sarin-results-aegl-program.html",
+        "version": "Final"
+       },
+       "note": null,
+       "needsReview": false
+      },
+      {
+       "kind": "PAC-2",
+       "value": 0.006,
+       "number": "0.0060",
+       "unit": "ppm",
+       "raw": "0.0060",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 1519 Isopropyl methanefluoro-phosphonate; (Sarin; GB)",
+        "version": "2025-02-07"
+       },
+       "note": "근거: AEGL-1, AEGL-2, AEGL-3",
+       "pacSource": "AEGL-1, AEGL-2, AEGL-3"
+      }
+     ],
+     "raw": "AEGL-2(60분): 0.0060 [0.035]\nPAC-2: 0.0060",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: AEGL-2(60분)"
     },
     "twa": {
      "value": null,
@@ -12393,19 +14542,48 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "ERPG-2",
+       "value": 0.05,
+       "number": "0.05",
+       "unit": "ppm",
+       "raw": "0.05 ppm",
+       "source": {
+        "kind": "AIHA ERPG",
+        "id": "Cyanogen chloride",
+        "version": "Last Update 2013",
+        "attribution": "AIHA ERPG®"
+       },
+       "note": null
+      },
+      {
+       "kind": "PAC-2",
+       "value": 0.05,
+       "number": "0.050",
+       "unit": "ppm",
+       "raw": "0.050",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 734 Cyanogen chloride",
+        "version": "2025-02-07"
+       },
+       "note": "근거: ERPG-2/11, ERPG-2, ERPG-3",
+       "pacSource": "ERPG-2/11, ERPG-2, ERPG-3"
+      }
+     ],
+     "raw": "ERPG-2: 0.05 ppm\nPAC-2: 0.050",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: ERPG-2"
     },
     "twa": {
      "value": null,
@@ -12578,19 +14756,48 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "AEGL-2(60분)",
+       "value": 0.036,
+       "number": "0.036",
+       "unit": "ppm",
+       "raw": "0.036",
+       "source": {
+        "kind": "EPA AEGL",
+        "id": "nickel-carbonyl-results-aegl-program.html",
+        "version": "Final"
+       },
+       "note": null,
+       "needsReview": false
+      },
+      {
+       "kind": "PAC-2",
+       "value": 0.036,
+       "number": "0.036",
+       "unit": "ppm",
+       "raw": "0.036",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 1921 Nickel carbonyl",
+        "version": "2025-02-07"
+       },
+       "note": "근거: AEGL-2/11, AEGL-2, AEGL-3",
+       "pacSource": "AEGL-2/11, AEGL-2, AEGL-3"
+      }
+     ],
+     "raw": "AEGL-2(60분): 0.036\nPAC-2: 0.036",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: AEGL-2(60분)"
     },
     "twa": {
      "value": 0.001,
@@ -12745,19 +14952,48 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "AEGL-2(60분)",
+       "value": 0.17,
+       "number": "0.17",
+       "unit": "ppm",
+       "raw": "0.17",
+       "source": {
+        "kind": "EPA AEGL",
+        "id": "germane-results-aegl-program.html",
+        "version": "Interim"
+       },
+       "note": "Interim(확정 전 잠정값)",
+       "needsReview": false
+      },
+      {
+       "kind": "PAC-2",
+       "value": 0.17,
+       "number": "0.17",
+       "unit": "ppm",
+       "raw": "0.17",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 1309 Germane; (Germanium tetrahydride)",
+        "version": "2025-02-07"
+       },
+       "note": "근거: AEGL-2/11, AEGL-2, AEGL-3",
+       "pacSource": "AEGL-2/11, AEGL-2, AEGL-3"
+      }
+     ],
+     "raw": "AEGL-2(60분): 0.17\nPAC-2: 0.17",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: AEGL-2(60분)"
     },
     "twa": {
      "value": 0.2,
@@ -12913,19 +15149,62 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "ERPG-2",
+       "value": 1000.0,
+       "number": "1,000",
+       "unit": "ppm",
+       "raw": "1,000 ppm",
+       "source": {
+        "kind": "AIHA ERPG",
+        "id": "Tetrafluoroethylene",
+        "version": "Last Update 2012",
+        "attribution": "AIHA ERPG®"
+       },
+       "note": null
+      },
+      {
+       "kind": "AEGL-2(60분)",
+       "value": 55.0,
+       "number": "55",
+       "unit": "ppm",
+       "raw": "55",
+       "source": {
+        "kind": "EPA AEGL",
+        "id": "tetrafluoroethylene-results-aegl-program.html",
+        "version": "Final"
+       },
+       "note": null,
+       "needsReview": false
+      },
+      {
+       "kind": "PAC-2",
+       "value": 55.0,
+       "number": "55",
+       "unit": "ppm",
+       "raw": "55",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 2748 Tetrafluoroethylene",
+        "version": "2025-02-07"
+       },
+       "note": "근거: AEGL-1, AEGL-2, AEGL-3",
+       "pacSource": "AEGL-1, AEGL-2, AEGL-3"
+      }
+     ],
+     "raw": "ERPG-2: 1,000 ppm\nAEGL-2(60분): 55\nPAC-2: 55",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: ERPG-2"
     },
     "twa": {
      "value": 2.5,
@@ -13086,19 +15365,62 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "ERPG-2",
+       "value": 30.0,
+       "number": "30",
+       "unit": "mg/m3",
+       "raw": "30 mg/m3",
+       "source": {
+        "kind": "AIHA ERPG",
+        "id": "Boron Trifluoride",
+        "version": "Last Update 2020",
+        "attribution": "AIHA ERPG®"
+       },
+       "note": null
+      },
+      {
+       "kind": "AEGL-2(60분)",
+       "value": 29.0,
+       "number": "29",
+       "unit": "mg/m3",
+       "raw": "29 mg/m3",
+       "source": {
+        "kind": "EPA AEGL",
+        "id": "boron-trifluoride-results-aegl-program.html",
+        "version": "Final"
+       },
+       "note": null,
+       "needsReview": false
+      },
+      {
+       "kind": "PAC-2",
+       "value": 29.0,
+       "number": "29",
+       "unit": "mg/m3",
+       "raw": "29",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 332 Boron trifluoride",
+        "version": "2025-02-07"
+       },
+       "note": "근거: AEGL-1, AEGL-2, AEGL-3",
+       "pacSource": "AEGL-1, AEGL-2, AEGL-3"
+      }
+     ],
+     "raw": "ERPG-2: 30 mg/m3\nAEGL-2(60분): 29 mg/m3\nPAC-2: 29",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: ERPG-2"
     },
     "twa": {
      "value": null,
@@ -13257,19 +15579,34 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "PAC-2",
+       "value": 2.1,
+       "number": "2.1",
+       "unit": "ppm",
+       "raw": "2.1",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 331 Boron trichloride",
+        "version": "2025-02-07"
+       },
+       "note": "근거: TEEL-2/11, LOC, rat 60-min LC50",
+       "pacSource": "TEEL-2/11, LOC, rat 60-min LC50"
+      }
+     ],
+     "raw": "PAC-2: 2.1",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: PAC-2"
     },
     "twa": {
      "value": null,
@@ -13436,19 +15773,19 @@
      ]
     },
     "exposure": {
-     "value": null,
+     "value": [],
      "raw": "",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "자료없음",
+     "note": "ERPG·AEGL·PAC 모두 없음"
     },
     "twa": {
      "value": 2.5,
@@ -13604,19 +15941,62 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "ERPG-2",
+       "value": 0.5,
+       "number": "0.5",
+       "unit": "ppm",
+       "raw": "0.5 ppm",
+       "source": {
+        "kind": "AIHA ERPG",
+        "id": "Bromine",
+        "version": "Last Update 2012",
+        "attribution": "AIHA ERPG®"
+       },
+       "note": null
+      },
+      {
+       "kind": "AEGL-2(60분)",
+       "value": 0.24,
+       "number": "0.24",
+       "unit": "ppm",
+       "raw": "0.24",
+       "source": {
+        "kind": "EPA AEGL",
+        "id": "bromine-results-aegl-program.html",
+        "version": "Final"
+       },
+       "note": null,
+       "needsReview": false
+      },
+      {
+       "kind": "PAC-2",
+       "value": 0.24,
+       "number": "0.24",
+       "unit": "ppm",
+       "raw": "0.24",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 340 Bromine",
+        "version": "2025-02-07"
+       },
+       "note": "근거: AEGL-1, AEGL-2, AEGL-3",
+       "pacSource": "AEGL-1, AEGL-2, AEGL-3"
+      }
+     ],
+     "raw": "ERPG-2: 0.5 ppm\nAEGL-2(60분): 0.24\nPAC-2: 0.24",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: ERPG-2"
     },
     "twa": {
      "value": 0.1,
@@ -13786,19 +16166,62 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "ERPG-2",
+       "value": 0.2,
+       "number": "0.2",
+       "unit": "ppm",
+       "raw": "0.2 ppm",
+       "source": {
+        "kind": "AIHA ERPG",
+        "id": "Hydrogen selenide",
+        "version": "Last Update 2014",
+        "attribution": "AIHA ERPG®"
+       },
+       "note": null
+      },
+      {
+       "kind": "AEGL-2(60분)",
+       "value": 0.11,
+       "number": "0.11",
+       "unit": "ppm",
+       "raw": "0.11",
+       "source": {
+        "kind": "EPA AEGL",
+        "id": "hydrogen-selenide-results-aegl-program.html",
+        "version": "Final"
+       },
+       "note": null,
+       "needsReview": false
+      },
+      {
+       "kind": "PAC-2",
+       "value": 0.11,
+       "number": "0.11",
+       "unit": "ppm",
+       "raw": "0.11",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 1426 Hydrogen selenide",
+        "version": "2025-02-07"
+       },
+       "note": "근거: MAK-TWA x 3, AEGL-2, AEGL-3",
+       "pacSource": "MAK-TWA x 3, AEGL-2, AEGL-3"
+      }
+     ],
+     "raw": "ERPG-2: 0.2 ppm\nAEGL-2(60분): 0.11\nPAC-2: 0.11",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: ERPG-2"
     },
     "twa": {
      "value": 0.05,
@@ -13962,19 +16385,48 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "ERPG-2",
+       "value": 1000.0,
+       "number": "1,000",
+       "unit": "ppm",
+       "raw": "1,000 ppm",
+       "source": {
+        "kind": "AIHA ERPG",
+        "id": "Isoprene",
+        "version": "Last Update 2018",
+        "attribution": "AIHA ERPG®"
+       },
+       "note": null
+      },
+      {
+       "kind": "PAC-2",
+       "value": 1000.0,
+       "number": "1000",
+       "unit": "ppm",
+       "raw": "1000ₑ",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 1513 Isoprene",
+        "version": "2025-02-07"
+       },
+       "note": "근거: ERPG-1, ERPG-2, ERPG-3",
+       "pacSource": "ERPG-1, ERPG-2, ERPG-3"
+      }
+     ],
+     "raw": "ERPG-2: 1,000 ppm\nPAC-2: 1000ₑ",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: ERPG-2"
     },
     "twa": {
      "value": null,
@@ -14136,19 +16588,62 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "ERPG-2",
+       "value": 500.0,
+       "number": "500",
+       "unit": "ppm",
+       "raw": "500 ppm",
+       "source": {
+        "kind": "AIHA ERPG",
+        "id": "1,1,-Dichloroethylene (vinylidene chloride)",
+        "version": "Last Update 2017",
+        "attribution": "AIHA ERPG®"
+       },
+       "note": null
+      },
+      {
+       "kind": "ERPG-2",
+       "value": 500.0,
+       "number": "500",
+       "unit": "ppm",
+       "raw": "500 ppm",
+       "source": {
+        "kind": "AIHA ERPG",
+        "id": "Vinylidene chloride (See 1,1-Dichloroethylene)",
+        "version": "Last Update 2006",
+        "attribution": "AIHA ERPG®"
+       },
+       "note": null
+      },
+      {
+       "kind": "PAC-2",
+       "value": 500.0,
+       "number": "500",
+       "unit": "ppm",
+       "raw": "500ₑ",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 3069 Vinylidene chloride; (1,1-Dichloroethylene)",
+        "version": "2025-02-07"
+       },
+       "note": "근거: ERPG-2/11, ERPG-2, ERPG-3",
+       "pacSource": "ERPG-2/11, ERPG-2, ERPG-3"
+      }
+     ],
+     "raw": "ERPG-2: 500 ppm\nERPG-2: 500 ppm\nPAC-2: 500ₑ",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: ERPG-2"
     },
     "twa": {
      "value": 5.0,
@@ -14305,19 +16800,34 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "PAC-2",
+       "value": 140.0,
+       "number": "140",
+       "unit": "ppm",
+       "raw": "140",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 1383 Hexamethyldisiloxane",
+        "version": "2025-02-07"
+       },
+       "note": "근거: TEEL-2/11, rat 360-min TCLo, mouse ip LD50",
+       "pacSource": "TEEL-2/11, rat 360-min TCLo, mouse ip LD50"
+      }
+     ],
+     "raw": "PAC-2: 140",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: PAC-2"
     },
     "twa": {
      "value": null,
@@ -14483,19 +16993,48 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "AEGL-2(60분)",
+       "value": 0.06,
+       "number": "0.060",
+       "unit": "ppm",
+       "raw": "0.060",
+       "source": {
+        "kind": "EPA AEGL",
+        "id": "iron-pentacarbonyl-results-aegl-program.html",
+        "version": "Final"
+       },
+       "note": null,
+       "needsReview": false
+      },
+      {
+       "kind": "PAC-2",
+       "value": 0.06,
+       "number": "0.060",
+       "unit": "ppm",
+       "raw": "0.060",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 1480 Iron pentacarbonyl",
+        "version": "2025-02-07"
+       },
+       "note": "근거: AEGL-2/11, AEGL-2, AEGL-3",
+       "pacSource": "AEGL-2/11, AEGL-2, AEGL-3"
+      }
+     ],
+     "raw": "AEGL-2(60분): 0.060\nPAC-2: 0.060",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: AEGL-2(60분)"
     },
     "twa": {
      "value": 0.1,
@@ -14650,19 +17189,48 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "AEGL-2(60분)",
+       "value": 0.17,
+       "number": "0.17",
+       "unit": "ppm",
+       "raw": "0.17",
+       "source": {
+        "kind": "EPA AEGL",
+        "id": "bromine-pentafluoride-results-aegl-program.html",
+        "version": "Final"
+       },
+       "note": null,
+       "needsReview": false
+      },
+      {
+       "kind": "PAC-2",
+       "value": 0.17,
+       "number": "0.17",
+       "unit": "ppm",
+       "raw": "0.17",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 342 Bromine pentafluoride",
+        "version": "2025-02-07"
+       },
+       "note": "근거: AEGL-2/11, AEGL-2, AEGL-3",
+       "pacSource": "AEGL-2/11, AEGL-2, AEGL-3"
+      }
+     ],
+     "raw": "AEGL-2(60분): 0.17\nPAC-2: 0.17",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: AEGL-2(60분)"
     },
     "twa": {
      "value": 0.1,
@@ -14823,19 +17391,62 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "ERPG-2",
+       "value": 2.5,
+       "number": "2.5",
+       "unit": "ppm",
+       "raw": "2.5 ppm",
+       "source": {
+        "kind": "AIHA ERPG",
+        "id": "Thionyl chloride",
+        "version": "Last Update 2017",
+        "attribution": "AIHA ERPG®"
+       },
+       "note": null
+      },
+      {
+       "kind": "AEGL-2(60분)",
+       "value": 2.4,
+       "number": "2.4",
+       "unit": "ppm",
+       "raw": "2.4",
+       "source": {
+        "kind": "EPA AEGL",
+        "id": "thionyl-chloride-results-aegl-program.html",
+        "version": "Interim"
+       },
+       "note": "Interim(확정 전 잠정값)",
+       "needsReview": false
+      },
+      {
+       "kind": "PAC-2",
+       "value": 2.4,
+       "number": "2.4",
+       "unit": "ppm",
+       "raw": "2.4",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 2808 Thionyl chloride",
+        "version": "2025-02-07"
+       },
+       "note": "근거: ERPG-1, AEGL-2, AEGL-3",
+       "pacSource": "ERPG-1, AEGL-2, AEGL-3"
+      }
+     ],
+     "raw": "ERPG-2: 2.5 ppm\nAEGL-2(60분): 2.4\nPAC-2: 2.4",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: ERPG-2"
     },
     "twa": {
      "value": null,
@@ -14984,19 +17595,62 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "ERPG-2",
+       "value": 20.0,
+       "number": "20",
+       "unit": "mg/m3",
+       "raw": "20 mg/m3",
+       "source": {
+        "kind": "AIHA ERPG",
+        "id": "Titatium tetrachloride",
+        "version": "Last Update 2016",
+        "attribution": "AIHA ERPG®"
+       },
+       "note": null
+      },
+      {
+       "kind": "AEGL-2(60분)",
+       "value": 1.0,
+       "number": "1.0",
+       "unit": "ppm",
+       "raw": "1.0",
+       "source": {
+        "kind": "EPA AEGL",
+        "id": "titanium-tetrachloride-results-aegl-program.html",
+        "version": "Interim"
+       },
+       "note": "Interim(확정 전 잠정값)",
+       "needsReview": false
+      },
+      {
+       "kind": "PAC-2",
+       "value": 1.0,
+       "number": "1",
+       "unit": "ppm",
+       "raw": "1ₐ",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 2842 Titanium tetrachloride",
+        "version": "2025-02-07"
+       },
+       "note": "근거: ERPG-1, AEGL-2, AEGL-3",
+       "pacSource": "ERPG-1, AEGL-2, AEGL-3"
+      }
+     ],
+     "raw": "ERPG-2: 20 mg/m3\nAEGL-2(60분): 1.0\nPAC-2: 1ₐ",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: ERPG-2"
     },
     "twa": {
      "value": null,
@@ -15166,19 +17820,62 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "ERPG-2",
+       "value": 0.15,
+       "number": "0.15",
+       "unit": "ppm",
+       "raw": "0.15 ppm",
+       "source": {
+        "kind": "AIHA ERPG",
+        "id": "Chloropicrin",
+        "version": "Last Update 2011",
+        "attribution": "AIHA ERPG®"
+       },
+       "note": null
+      },
+      {
+       "kind": "AEGL-2(60분)",
+       "value": 0.15,
+       "number": "0.15",
+       "unit": "ppm",
+       "raw": "0.15",
+       "source": {
+        "kind": "EPA AEGL",
+        "id": "chloropicrin-results-aegl-program.html",
+        "version": "Interim"
+       },
+       "note": "Interim(확정 전 잠정값)",
+       "needsReview": false
+      },
+      {
+       "kind": "PAC-2",
+       "value": 0.15,
+       "number": "0.15",
+       "unit": "ppm",
+       "raw": "0.15",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 622 Chloropicrin; (Trichloronitromethane)",
+        "version": "2025-02-07"
+       },
+       "note": "근거: AEGL-1, AEGL-2, AEGL-3",
+       "pacSource": "AEGL-1, AEGL-2, AEGL-3"
+      }
+     ],
+     "raw": "ERPG-2: 0.15 ppm\nAEGL-2(60분): 0.15\nPAC-2: 0.15",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: ERPG-2"
     },
     "twa": {
      "value": 0.1,
@@ -15329,19 +18026,34 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "PAC-2",
+       "value": 110.0,
+       "number": "110",
+       "unit": "ppm",
+       "raw": "110",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 3060 Vinyl ethyl ether; (Ethoxy ethene)",
+        "version": "2025-02-07"
+       },
+       "note": "근거: TEEL-2/11, TEEL-3/6, rat 240-min LCLo",
+       "pacSource": "TEEL-2/11, TEEL-3/6, rat 240-min LCLo"
+      }
+     ],
+     "raw": "PAC-2: 110",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: PAC-2"
     },
     "twa": {
      "value": null,
@@ -15496,19 +18208,48 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "AEGL-2(60분)",
+       "value": 130.0,
+       "number": "130",
+       "unit": "ppm",
+       "raw": "130",
+       "source": {
+        "kind": "EPA AEGL",
+        "id": "silane-results-aegl-program.html",
+        "version": "Interim"
+       },
+       "note": "Interim(확정 전 잠정값)",
+       "needsReview": false
+      },
+      {
+       "kind": "PAC-2",
+       "value": 130.0,
+       "number": "130",
+       "unit": "ppm",
+       "raw": "130",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 2468 Silane; (Silicon tetrahydride)",
+        "version": "2025-02-07"
+       },
+       "note": "근거: AEGL-1, AEGL-2, AEGL-3",
+       "pacSource": "AEGL-1, AEGL-2, AEGL-3"
+      }
+     ],
+     "raw": "AEGL-2(60분): 130\nPAC-2: 130",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: AEGL-2(60분)"
     },
     "twa": {
      "value": 5.0,
@@ -15655,19 +18396,19 @@
      ]
     },
     "exposure": {
-     "value": null,
+     "value": [],
      "raw": "",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "자료없음",
+     "note": "ERPG·AEGL·PAC 모두 없음"
     },
     "twa": {
      "value": null,
@@ -15824,19 +18565,48 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "AEGL-2(60분)",
+       "value": 11.0,
+       "number": "11",
+       "unit": "ppm",
+       "raw": "11",
+       "source": {
+        "kind": "EPA AEGL",
+        "id": "dichlorosilane-results-aegl-program.html",
+        "version": "Final"
+       },
+       "note": null,
+       "needsReview": false
+      },
+      {
+       "kind": "PAC-2",
+       "value": 11.0,
+       "number": "11",
+       "unit": "ppm",
+       "raw": "11",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 870 Dichlorosilane",
+        "version": "2025-02-07"
+       },
+       "note": "근거: AEGL-1, AEGL-2, AEGL-3",
+       "pacSource": "AEGL-1, AEGL-2, AEGL-3"
+      }
+     ],
+     "raw": "AEGL-2(60분): 11\nPAC-2: 11",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: AEGL-2(60분)"
     },
     "twa": {
      "value": null,
@@ -16002,19 +18772,62 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "ERPG-2",
+       "value": 3.0,
+       "number": "3",
+       "unit": "ppm",
+       "raw": "3 ppm",
+       "source": {
+        "kind": "AIHA ERPG",
+        "id": "Silane, Trichloro",
+        "version": "Last Update 2022",
+        "attribution": "AIHA ERPG®"
+       },
+       "note": null
+      },
+      {
+       "kind": "AEGL-2(60분)",
+       "value": 7.3,
+       "number": "7.3",
+       "unit": "ppm",
+       "raw": "7.3",
+       "source": {
+        "kind": "EPA AEGL",
+        "id": "trichlorosilane-results-aegl-program.html",
+        "version": "Final"
+       },
+       "note": null,
+       "needsReview": false
+      },
+      {
+       "kind": "PAC-2",
+       "value": 7.3,
+       "number": "7.3",
+       "unit": "ppm",
+       "raw": "7.3",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 2905 Trichlorosilane",
+        "version": "2025-02-07"
+       },
+       "note": "근거: AEGL-1, AEGL-2, AEGL-3",
+       "pacSource": "AEGL-1, AEGL-2, AEGL-3"
+      }
+     ],
+     "raw": "ERPG-2: 3 ppm\nAEGL-2(60분): 7.3\nPAC-2: 7.3",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: ERPG-2"
     },
     "twa": {
      "value": null,
@@ -16179,19 +18992,48 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "AEGL-2(60분)",
+       "value": 11.0,
+       "number": "11",
+       "unit": "ppm",
+       "raw": "11",
+       "source": {
+        "kind": "EPA AEGL",
+        "id": "methyl-dichlorosilane-results-aegl-program.html",
+        "version": "Final"
+       },
+       "note": null,
+       "needsReview": false
+      },
+      {
+       "kind": "PAC-2",
+       "value": 11.0,
+       "number": "11",
+       "unit": "ppm",
+       "raw": "11",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 1740 Methyl dichlorosilane; (Dichloromethylsilane)",
+        "version": "2025-02-07"
+       },
+       "note": "근거: AEGL-1, AEGL-2, AEGL-3",
+       "pacSource": "AEGL-1, AEGL-2, AEGL-3"
+      }
+     ],
+     "raw": "AEGL-2(60분): 11\nPAC-2: 11",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: AEGL-2(60분)"
     },
     "twa": {
      "value": null,
@@ -16357,19 +19199,62 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "ERPG-2",
+       "value": 3.0,
+       "number": "3",
+       "unit": "ppm",
+       "raw": "3 ppm",
+       "source": {
+        "kind": "AIHA ERPG",
+        "id": "Silane, Methyltrichloro",
+        "version": "Last Update 2016",
+        "attribution": "AIHA ERPG®"
+       },
+       "note": null
+      },
+      {
+       "kind": "AEGL-2(60분)",
+       "value": 7.3,
+       "number": "7.3",
+       "unit": "ppm",
+       "raw": "7.3",
+       "source": {
+        "kind": "EPA AEGL",
+        "id": "trichloromethyl-silane-results-aegl-program.html",
+        "version": "Final"
+       },
+       "note": null,
+       "needsReview": false
+      },
+      {
+       "kind": "PAC-2",
+       "value": 7.3,
+       "number": "7.3",
+       "unit": "ppm",
+       "raw": "7.3",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 1843 Methyltrichlorosilane; (Trichloromethyl silane)",
+        "version": "2025-02-07"
+       },
+       "note": "근거: AEGL-1, AEGL-2, AEGL-3",
+       "pacSource": "AEGL-1, AEGL-2, AEGL-3"
+      }
+     ],
+     "raw": "ERPG-2: 3 ppm\nAEGL-2(60분): 7.3\nPAC-2: 7.3",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: ERPG-2"
     },
     "twa": {
      "value": null,
@@ -16534,19 +19419,62 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "ERPG-2",
+       "value": 5.0,
+       "number": "5",
+       "unit": "ppm",
+       "raw": "5 ppm",
+       "source": {
+        "kind": "AIHA ERPG",
+        "id": "Silane, Vinyl trichloro-",
+        "version": "Last Update 2017",
+        "attribution": "AIHA ERPG®"
+       },
+       "note": null
+      },
+      {
+       "kind": "AEGL-2(60분)",
+       "value": 7.3,
+       "number": "7.3",
+       "unit": "ppm",
+       "raw": "7.3",
+       "source": {
+        "kind": "EPA AEGL",
+        "id": "vinyltrichlorosilane-result-aegl-program.html",
+        "version": "Final"
+       },
+       "note": null,
+       "needsReview": false
+      },
+      {
+       "kind": "PAC-2",
+       "value": 7.3,
+       "number": "7.3",
+       "unit": "ppm",
+       "raw": "7.3",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 3064 Vinyl trichlorosilane",
+        "version": "2025-02-07"
+       },
+       "note": "근거: AEGL-1, AEGL-2, AEGL-3",
+       "pacSource": "AEGL-1, AEGL-2, AEGL-3"
+      }
+     ],
+     "raw": "ERPG-2: 5 ppm\nAEGL-2(60분): 7.3\nPAC-2: 7.3",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: ERPG-2"
     },
     "twa": {
      "value": null,
@@ -16699,19 +19627,48 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "AEGL-2(60분)",
+       "value": 7.3,
+       "number": "7.3",
+       "unit": "ppm",
+       "raw": "7.3",
+       "source": {
+        "kind": "EPA AEGL",
+        "id": "ethyltrichlorosilane-results-aegl-program.html",
+        "version": "Final"
+       },
+       "note": null,
+       "needsReview": false
+      },
+      {
+       "kind": "PAC-2",
+       "value": 7.3,
+       "number": "7.3",
+       "unit": "ppm",
+       "raw": "7.3",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 2891 Trichloroethylsilane; (Ethyl trichlorosilane)",
+        "version": "2025-02-07"
+       },
+       "note": "근거: AEGL-1, AEGL-2, AEGL-3",
+       "pacSource": "AEGL-1, AEGL-2, AEGL-3"
+      }
+     ],
+     "raw": "AEGL-2(60분): 7.3\nPAC-2: 7.3",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: AEGL-2(60분)"
     },
     "twa": {
      "value": null,
@@ -16861,19 +19818,34 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "PAC-2",
+       "value": 130.0,
+       "number": "130",
+       "unit": "ppm",
+       "raw": "130",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 2773 Tetramethylsilane",
+        "version": "2025-02-07"
+       },
+       "note": "근거: Used MW-adjusted silane (7803-62-5) AEGL values; 다른 물질 값을 빌린 행",
+       "pacSource": "Used MW-adjusted silane (7803-62-5) AEGL values"
+      }
+     ],
+     "raw": "PAC-2: 130",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: PAC-2"
     },
     "twa": {
      "value": null,
@@ -17032,19 +20004,62 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "ERPG-2",
+       "value": 5.0,
+       "number": "5",
+       "unit": "ppm",
+       "raw": "5 ppm",
+       "source": {
+        "kind": "AIHA ERPG",
+        "id": "Silane, Tetrachloro",
+        "version": "Last Update 2023",
+        "attribution": "AIHA ERPG®"
+       },
+       "note": null
+      },
+      {
+       "kind": "AEGL-2(60분)",
+       "value": 5.5,
+       "number": "5.5",
+       "unit": "ppm",
+       "raw": "5.5",
+       "source": {
+        "kind": "EPA AEGL",
+        "id": "tetrachlorosilane-results-aegl-program.html",
+        "version": "Final"
+       },
+       "note": null,
+       "needsReview": false
+      },
+      {
+       "kind": "PAC-2",
+       "value": 5.5,
+       "number": "5.5",
+       "unit": "ppm",
+       "raw": "5.5",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 2731 Tetrachlorosilane; (Silicon chloride)",
+        "version": "2025-02-07"
+       },
+       "note": "근거: AEGL-1, AEGL-2, AEGL-3",
+       "pacSource": "AEGL-1, AEGL-2, AEGL-3"
+      }
+     ],
+     "raw": "ERPG-2: 5 ppm\nAEGL-2(60분): 5.5\nPAC-2: 5.5",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: ERPG-2"
     },
     "twa": {
      "value": null,
@@ -17197,19 +20212,48 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "AEGL-2(60분)",
+       "value": 3.3,
+       "number": "3.3",
+       "unit": "ppm",
+       "raw": "3.3",
+       "source": {
+        "kind": "EPA AEGL",
+        "id": "silicon-tetrafluoride-results-aegl-program.html",
+        "version": "Interim"
+       },
+       "note": "Interim(확정 전 잠정값)",
+       "needsReview": false
+      },
+      {
+       "kind": "PAC-2",
+       "value": 3.3,
+       "number": "3.3",
+       "unit": "ppm",
+       "raw": "3.3",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 2483 Silicon tetrafluoride; (Tetrafluorosilane)",
+        "version": "2025-02-07"
+       },
+       "note": "근거: AEGL-1, AEGL-2, AEGL-3",
+       "pacSource": "AEGL-1, AEGL-2, AEGL-3"
+      }
+     ],
+     "raw": "AEGL-2(60분): 3.3\nPAC-2: 3.3",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: AEGL-2(60분)"
     },
     "twa": {
      "value": 2.5,
@@ -17392,19 +20436,48 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "AEGL-2(60분)",
+       "value": 920.0,
+       "number": "920",
+       "unit": "ppm",
+       "raw": "920*",
+       "source": {
+        "kind": "EPA AEGL",
+        "id": "xylenes-results-aegl-program.html",
+        "version": "Final"
+       },
+       "note": "LEL 표시(*) 있음 — 원문 각주",
+       "needsReview": false
+      },
+      {
+       "kind": "PAC-2",
+       "value": 920.0,
+       "number": "920",
+       "unit": "ppm",
+       "raw": "920",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 3079 Xylenes",
+        "version": "2025-02-07"
+       },
+       "note": "근거: AEGL-1, AEGL-2, AEGL-3",
+       "pacSource": "AEGL-1, AEGL-2, AEGL-3"
+      }
+     ],
+     "raw": "AEGL-2(60분): 920*\nPAC-2: 920",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: AEGL-2(60분)"
     },
     "twa": {
      "value": 100.0,
@@ -17592,19 +20665,19 @@
      ]
     },
     "exposure": {
-     "value": null,
+     "value": [],
      "raw": "",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "자료없음",
+     "note": "ERPG·AEGL·PAC 모두 없음"
     },
     "twa": {
      "value": 100.0,
@@ -17792,19 +20865,19 @@
      ]
     },
     "exposure": {
-     "value": null,
+     "value": [],
      "raw": "",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "자료없음",
+     "note": "ERPG·AEGL·PAC 모두 없음"
     },
     "twa": {
      "value": 100.0,
@@ -17992,19 +21065,34 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "PAC-2",
+       "value": 920.0,
+       "number": "920",
+       "unit": "ppm",
+       "raw": "920",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 3078 Xylene, m- (inlcudes o- (95-47-6) and p- (106-42-3) isomers)",
+        "version": "2025-02-07"
+       },
+       "note": "근거: TLV-STEL, EEGL-60 min, IDLH (1990)",
+       "pacSource": "TLV-STEL, EEGL-60 min, IDLH (1990)"
+      }
+     ],
+     "raw": "PAC-2: 920",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: PAC-2"
     },
     "twa": {
      "value": 100.0,
@@ -18193,19 +21281,62 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "ERPG-2",
+       "value": 250.0,
+       "number": "250",
+       "unit": "ppm",
+       "raw": "250 ppm",
+       "source": {
+        "kind": "AIHA ERPG",
+        "id": "Styrene",
+        "version": "Last Update 2010",
+        "attribution": "AIHA ERPG®"
+       },
+       "note": null
+      },
+      {
+       "kind": "AEGL-2(60분)",
+       "value": 130.0,
+       "number": "130",
+       "unit": "ppm",
+       "raw": "130",
+       "source": {
+        "kind": "EPA AEGL",
+        "id": "styrene-results-aegl-program.html",
+        "version": "Interim"
+       },
+       "note": "Interim(확정 전 잠정값)",
+       "needsReview": false
+      },
+      {
+       "kind": "PAC-2",
+       "value": 130.0,
+       "number": "130",
+       "unit": "ppm",
+       "raw": "130",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 2659 Styrene",
+        "version": "2025-02-07"
+       },
+       "note": "근거: AEGL-1, AEGL-2, AEGL-3",
+       "pacSource": "AEGL-1, AEGL-2, AEGL-3"
+      }
+     ],
+     "raw": "ERPG-2: 250 ppm\nAEGL-2(60분): 130\nPAC-2: 130",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: ERPG-2"
     },
     "twa": {
      "value": 20.0,
@@ -18368,19 +21499,62 @@
      ]
     },
     "exposure": {
-     "value": null,
-     "raw": "",
+     "value": [
+      {
+       "kind": "ERPG-2",
+       "value": 500.0,
+       "number": "500",
+       "unit": "ppm",
+       "raw": "500 ppm",
+       "source": {
+        "kind": "AIHA ERPG",
+        "id": "1,3-Butadiene",
+        "version": "Last Update 2015",
+        "attribution": "AIHA ERPG®"
+       },
+       "note": null
+      },
+      {
+       "kind": "AEGL-2(60분)",
+       "value": 5300.0,
+       "number": "5300",
+       "unit": "ppm",
+       "raw": "5300*",
+       "source": {
+        "kind": "EPA AEGL",
+        "id": "13-butadiene-results-aegl-program.html",
+        "version": "Interim"
+       },
+       "note": "Interim(확정 전 잠정값); LEL 표시(*) 있음 — 원문 각주",
+       "needsReview": false
+      },
+      {
+       "kind": "PAC-2",
+       "value": 5300.0,
+       "number": "5300",
+       "unit": "ppm",
+       "raw": "5300",
+       "source": {
+        "kind": "DOE PAC",
+        "id": "No. 387 Butadiene, 1,3-",
+        "version": "2025-02-07"
+       },
+       "note": "근거: AEGL-1, AEGL-2, AEGL-3",
+       "pacSource": "AEGL-1, AEGL-2, AEGL-3"
+      }
+     ],
+     "raw": "ERPG-2: 500 ppm\nAEGL-2(60분): 5300*\nPAC-2: 5300",
      "unit": null,
      "condition": null,
      "source": {
-      "kind": "위험노출수준 표",
+      "kind": "위험노출수준 표(AIHA ERPG·EPA AEGL·DOE PAC)",
       "id": null,
       "version": null,
       "section": null,
-      "collectedAt": null
+      "collectedAt": "2026-10-19"
      },
-     "status": "확인필요",
-     "note": "위험노출수준 원천 표를 아직 싣지 않음"
+     "status": "확정",
+     "note": "별지 주⑨ 순서(ERPG → AEGL → PAC)로 늘어놓음 — 첫 항목: ERPG-2"
     },
     "twa": {
      "value": 2.0,

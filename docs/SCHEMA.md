@@ -156,7 +156,8 @@
 
 ### 6호서식 물질 상수(A-010, 에이전트 트랙) — 확정 2026-10-19
 - **무엇**: 별지 6호서식의 물질 상수 9칸을 CAS별로 담은 새 생성물 `assets/form6/form6_constants.json`.
-  원천은 공공 API 응답 원문(`assets/form6/raw/`)이고, 사람이 고친 값은 `assets/form6/overrides.json`에 따로 둔다. 상세 결정은 REQUIREMENTS_AGENT A-010
+  원천은 공공 API 응답 원문(`assets/form6/raw/`)이고, 사람이 고친 값은 `assets/form6/overrides.json`에 따로 둔다. 상세 결정은 REQUIREMENTS_AGENT A-010.
+  위험노출수준 원천(AIHA·EPA·DOE 파일 원형)은 `raw/exposure/`, 거기서 원문 문자열만 뽑은 중간 표는 `exposure_tables.json`(2026-10-19 — 칸 모양은 아래 `exposure[]` 그대로)
 - **키 = CAS**: 위 '핵심 엔티티'에서 CAS가 키가 못 된 이유는 고시 **항목**(묶음ㆍ여러 CAS)이었기 때문이다. 여기 값은 **물질의 성질**(비중ㆍ증기압 등)이라
   CAS 하나에 값 하나가 맞다. 고시 항목과의 연결은 저장하지 않고, 채울 때 번들에서 CAS로 찾는다(고유번호ㆍ물질구분을 두 곳에 두지 않는다)
 - **모양(안)**: 파일 머리 = `{generatedAt, notice: 제2026-19호 별지6, sources[]: 원천별 판ㆍ수집 시각, targets: {casCount, noCasEntries[]}}` /

@@ -13,7 +13,7 @@ import '../lookup/chem_parse.dart';
 import '../msds/msds_client.dart';
 import '../parser/models.dart';
 import 'form6_builder.dart';
-import 'pac_table.dart';
+import 'exposure_tables.dart';
 import 'raw_store.dart';
 import 'targets.dart';
 
@@ -66,8 +66,7 @@ Future<Map<String, Object?>> buildForm6({
   required Dataset dataset,
   required String rawDir,
   required List<Form6Override> overrides,
-  PacTable? pac,
-  Map<String, Object?> pacInfo = const {},
+  ExposureTables? exposure,
   void Function(String)? log,
 }) async {
   final targets = form6TargetsOf(dataset);
@@ -96,7 +95,7 @@ Future<Map<String, Object?>> buildForm6({
     } else {
       replay.missing.add(rawNameOf(Uri.parse('$ghsEndpoint?${casJsonQuery(cas)}'))!);
     }
-    substances.add(buildSubstance(cas: cas, kosha: kosha, ghs: ghs, ghsRaw: ghsRaw, pac: pac, collectedAt: at, log: log));
+    substances.add(buildSubstance(cas: cas, kosha: kosha, ghs: ghs, ghsRaw: ghsRaw, exposure: exposure, collectedAt: at, log: log));
   }
   if (replay.missing.isNotEmpty) {
     throw Form6BuildError('원문이 없는 요청 ${replay.missing.length}건 — collect_form6.dart로 받는다', replay.missing);
@@ -131,8 +130,13 @@ Future<Map<String, Object?>> buildForm6({
     'sources': [
       {'kind': 'KOSHA MSDS', 'provider': 'data.go.kr 15157612', 'endpoint': msdsEndpoint, 'fields': ['state', 'specificGravity', 'lel', 'uel', 'twa', 'vaporPressure']},
       {'kind': '한국환경공단 유독물 GHS', 'provider': 'data.go.kr 15149423', 'endpoint': ghsEndpoint, 'fields': ['ghs', 'corrosive']},
-      {'kind': '위험노출수준 표', ...pacInfo, 'fields': ['exposure']},
+      {
+        'kind': '위험노출수준 표 — 별지 주⑨ 순서(ERPG → AEGL → PAC)',
+        'tables': exposure?.sources ?? '싣지 않음',
+        'fields': ['exposure'],
+      },
     ],
+    if (exposure != null) 'aihaNotice': exposure.aihaNotice,
     'statusCounts': _counts(substances),
     'overrideCount': overrides.length,
     'substances': substances,

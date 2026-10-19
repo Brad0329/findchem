@@ -9,7 +9,7 @@ library;
 import '../lookup/chem_parse.dart';
 import '../msds/msds_client.dart';
 import '../msds/msds_value.dart';
-import 'pac_table.dart';
+import 'exposure_tables.dart';
 
 enum Form6Status {
   confirmed('확정'),
@@ -371,17 +371,17 @@ List<GhsHazard>? exactGhsHazards(String cas, ServiceResult? ghs) {
 }
 
 /// 위험노출수준 — 있는 값 전부(D6). 고르기는 채울 때 별지 주⑨ 순서(ERPG → AEGL → PAC → IDLH)로.
-Map<String, Object?> exposureField(String cas, PacTable? pac) {
-  if (pac == null) {
+Map<String, Object?> exposureField(String cas, ExposureTables? exposure) {
+  if (exposure == null) {
     return _field(
       value: null,
       raw: '',
       source: {'kind': '위험노출수준 표', 'id': null, 'version': null, 'section': null, 'collectedAt': null},
       status: Form6Status.needsReview,
-      note: '위험노출수준 원천 표를 아직 싣지 않음',
+      note: '위험노출수준 원천 표를 싣지 않고 만들었음',
     );
   }
-  return pac.fieldOf(cas);
+  return exposure.fieldOf(cas);
 }
 
 /// 한 CAS의 9칸.
@@ -390,7 +390,7 @@ Map<String, Object?> buildSubstance({
   required MsdsResult kosha,
   required ServiceResult? ghs,
   required String ghsRaw,
-  required PacTable? pac,
+  required ExposureTables? exposure,
   required String? collectedAt,
   MsdsLog? log,
 }) {
@@ -404,7 +404,7 @@ Map<String, Object?> buildSubstance({
       'lel': m,
       'uel': m,
       'ghs': g,
-      'exposure': exposureField(cas, pac),
+      'exposure': exposureField(cas, exposure),
       'twa': m,
       'vaporPressure': m,
       'corrosive': c,
@@ -418,7 +418,7 @@ Map<String, Object?> buildSubstance({
       'lel': lel,
       'uel': uel,
       'ghs': g,
-      'exposure': exposureField(cas, pac),
+      'exposure': exposureField(cas, exposure),
       'twa': twaField(kosha, collectedAt),
       'vaporPressure': vaporPressureField(kosha, collectedAt, log: log),
       'corrosive': c,

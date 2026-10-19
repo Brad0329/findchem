@@ -4,6 +4,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:findchem/form6/exposure_tables.dart';
 import 'package:findchem/form6/form6_build.dart';
 import 'package:findchem/form6/form6_builder.dart';
 import 'package:findchem/form6/targets.dart';
@@ -15,6 +16,7 @@ import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
 
 const rawDir = 'assets/form6/raw';
+final exposure = loadExposureTables('assets/form6/exposure_tables.json')!;
 final ds = Dataset.fromJson((jsonDecode(File('assets/data/findchem_data.json').readAsStringSync()) as Map).cast<String, Object?>());
 
 String xmlOk(String body) =>
@@ -66,7 +68,7 @@ void main() {
   late List<Map<String, Object?>> subs;
 
   setUpAll(() async {
-    built = await buildForm6(dataset: ds, rawDir: rawDir, overrides: const []);
+    built = await buildForm6(dataset: ds, rawDir: rawDir, overrides: const [], exposure: exposure);
     subs = (built['substances'] as List).cast<Map<String, Object?>>();
   });
 
@@ -218,7 +220,7 @@ void main() {
     test('KOSHA에 같은 CAS가 2건이면 KOSHA 원천 칸 전부 확인필요 + 후보', () async {
       final r = await fakeKosha(rows: 2);
       expect(r.status, MsdsStatus.ambiguous);
-      final s = buildSubstance(cas: '11-11-1', kosha: r, ghs: null, ghsRaw: '', pac: null, collectedAt: null);
+      final s = buildSubstance(cas: '11-11-1', kosha: r, ghs: null, ghsRaw: '', exposure: null, collectedAt: null);
       for (final n in ['state', 'specificGravity', 'lel', 'uel', 'twa', 'vaporPressure']) {
         expect(f(s, n)['status'], '확인필요', reason: n);
         expect(f(s, n)['note'] as String, contains('000000 가짜0'), reason: n);
@@ -226,9 +228,92 @@ void main() {
     });
   });
 
+  group('위험노출수준', () {
+    /// PAC 근거 열(`AEGL-1, AEGL-2, AEGL-3`)의 둘째 조각 = PAC-2의 근거. 모양이 다르면 빈 문자열.
+    String pac2Basis(Map<String, Object?> e) {
+      final parts = (e['pacSource'] as String).split(',');
+      return parts.length == 3 ? parts[1].trim() : '';
+    }
+
+    List<Map<String, Object?>> entriesOf(String cas) =>
+        [for (final e in f(subs.firstWhere((s) => s['cas'] == cas), 'exposure')['value'] as List) (e as Map).cast<String, Object?>()];
+
+    test('톨루엔: ERPG-2 300 ppm → AEGL-2(60분) 560 ppm → PAC-2 560 ppm 순(별지 주⑨), 확정', () {
+      final t = subs.firstWhere((s) => s['cas'] == '108-88-3');
+      expect(f(t, 'exposure')['status'], '확정');
+      expect([for (final e in entriesOf('108-88-3')) '${e['kind']} ${e['raw']} ${e['unit']}'], [
+        'ERPG-2 300 ppm ppm',
+        'AEGL-2(60분) 560 ppm',
+        'PAC-2 560 ppm',
+      ]);
+    });
+
+    test('ERPG 항목에 AIHA 출처 표시, 생성물 머리에 AIHA 고지문 원문', () {
+      final e = entriesOf('108-88-3').first;
+      expect((e['source'] as Map)['attribution'], 'AIHA ERPG®');
+      expect(built['aihaNotice'] as String, contains('non-commercial, educational, research, and governmental use'));
+      expect(built['aihaNotice'] as String, contains('original, unmodified form'));
+    });
+
+    test('AEGL Interim은 메모, NR은 값으로 싣지 않고 메모', () {
+      final m = entriesOf('67-56-1').firstWhere((e) => e['kind'] == 'AEGL-2(60분)');
+      expect((m['source'] as Map)['version'], 'Interim');
+      expect(m['note'] as String, contains('Interim'));
+      final no = subs.firstWhere((s) => s['cas'] == '10102-43-9'); // 일산화질소 — AEGL 전부 NR
+      expect(entriesOf('10102-43-9').where((e) => e['kind'] == 'AEGL-2(60분)'), isEmpty);
+      expect(f(no, 'exposure')['note'] as String, contains('NR'));
+    });
+
+    test('지어낸 숫자 0건 — 모든 항목의 숫자 문자열이 원문 안에 있고 값과 같다', () {
+      var n = 0;
+      for (final s in subs) {
+        for (final e in entriesOf(s['cas'] as String)) {
+          n++;
+          expect(e['raw'] as String, contains(e['number'] as String), reason: '${s['cas']} ${e['kind']}');
+          expect(e['value'], double.parse((e['number'] as String).replaceAll(',', '')), reason: '${s['cas']} ${e['kind']}');
+        }
+      }
+      expect(n, greaterThan(200));
+    });
+
+    test('세 원천 모두 없는 CAS만 자료없음(2026-10-19 원천: m-크레졸·헥사플루오로부타디엔·디실란·o-/p-자일렌 개별 CAS)', () {
+      final none = [for (final s in subs) if (f(s, 'exposure')['status'] == '자료없음') s['cas']];
+      expect(none, unorderedEquals(['108-39-4', '685-63-2', '1590-87-0', '95-47-6', '106-42-3']));
+    });
+
+    // 두 원천 대조 — PAC 표가 근거로 적은 AEGL·ERPG 값이 각 원천에서 뽑은 값과 같다(추출이 틀리면 어긋난다)
+    test('대조: PAC-2 근거가 AEGL-2면 EPA AEGL-2(60분)과 같다(단위가 같을 때)', () {
+      var n = 0;
+      for (final s in subs) {
+        final es = entriesOf(s['cas'] as String);
+        final aegl = es.where((e) => e['kind'] == 'AEGL-2(60분)').toList();
+        for (final p in es.where((e) => e['kind'] == 'PAC-2' && pac2Basis(e).startsWith('AEGL-2'))) {
+          final same = aegl.where((a) => a['unit'] == p['unit']).toList();
+          if (same.isEmpty) continue;
+          n++;
+          expect(same.map((a) => a['value']), contains(p['value']), reason: '${s['cas']}');
+        }
+      }
+      expect(n, greaterThan(50));
+    });
+
+    test('대조: PAC-2 근거가 ERPG-2면 AIHA ERPG-2와 같다', () {
+      var n = 0;
+      for (final s in subs) {
+        final es = entriesOf(s['cas'] as String);
+        final erpg = es.where((e) => e['kind'] == 'ERPG-2').map((e) => e['value']).toList();
+        for (final p in es.where((e) => e['kind'] == 'PAC-2' && pac2Basis(e).startsWith('ERPG-2'))) {
+          n++;
+          expect(erpg, contains(p['value']), reason: '${s['cas']}');
+        }
+      }
+      expect(n, 6); // 2026-10-19 조사: PAC-2 근거가 ERPG인 물질 6종
+    });
+  });
+
   group('생성', () {
     test('같은 원문으로 두 번 만들면 같은 결과', () async {
-      final again = await buildForm6(dataset: ds, rawDir: rawDir, overrides: const []);
+      final again = await buildForm6(dataset: ds, rawDir: rawDir, overrides: const [], exposure: exposure);
       expect(jsonEncode(again), jsonEncode(built));
     });
 
@@ -237,10 +322,12 @@ void main() {
       addTearDown(() => crlf.deleteSync(recursive: true));
       for (final f in Directory(rawDir).listSync(recursive: true).whereType<File>()) {
         final rel = f.path.substring(rawDir.length + 1);
+        // exposure/는 파이썬 추출기(universal newline)만 읽는다 — 생성기가 읽는 KOSHA·GHS 원문만 바꾼다
+        if (rel.startsWith('exposure')) continue;
         final out = File('${crlf.path}/$rel')..parent.createSync(recursive: true);
         out.writeAsStringSync(f.readAsStringSync().replaceAll('\r\n', '\n').replaceAll('\n', '\r\n'));
       }
-      final again = await buildForm6(dataset: ds, rawDir: crlf.path, overrides: const []);
+      final again = await buildForm6(dataset: ds, rawDir: crlf.path, overrides: const [], exposure: exposure);
       expect(jsonEncode(again['substances']), jsonEncode(built['substances']));
     });
 

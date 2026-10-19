@@ -1,0 +1,24 @@
+[
+ {
+  "kind": "AIHA ERPG",
+  "file": "aiha_erpg/ERPG.html",
+  "url": "https://erpg.aiha.org/Content/ERPG.cfm",
+  "fetchedAt": "2026-10-19",
+  "license": "AIHA — 비상업·교육·연구·정부용 한정, 원형 배포·고지문 포함·출처 표시(aiha_erpg/Copyright-and-Licensing.html). 사용자 판단 2026-10-19: FindChem은 비상업 용도"
+ },
+ {
+  "kind": "EPA AEGL",
+  "file": "epa_aegl/*.html",
+  "url": "https://www.epa.gov/aegl/access-acute-exposure-guideline-levels-aegls-values (물질별 페이지)",
+  "fetchedAt": "2026-10-19",
+  "license": "미국 연방 저작물"
+ },
+ {
+  "kind": "DOE PAC",
+  "file": "doe_pac/pac_getexcel_20250207.xlsx",
+  "url": "https://web.archive.org/web/20250207154952id_/https://edms3.energy.gov/pac/download/getexcel",
+  "fetchedAt": "2026-10-19",
+  "version": "2025-02-07 Wayback 보관본 — 한국 IP에서 DOE 호스트가 막혀(TLS 리셋) 최신판 미확보. 출처 열이 채워진 마지막 판",
+  "license": "DOE 페이지에 이용조건 문구 없음"
+ }
+]

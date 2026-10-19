@@ -1,0 +1,2923 @@
+{
+ "generatedBy": "scripts/extract_exposure.py",
+ "sources": [
+  {
+   "kind": "AIHA ERPG",
+   "file": "aiha_erpg/ERPG.html",
+   "url": "https://erpg.aiha.org/Content/ERPG.cfm",
+   "fetchedAt": "2026-10-19",
+   "license": "AIHA — 비상업·교육·연구·정부용 한정, 원형 배포·고지문 포함·출처 표시(aiha_erpg/Copyright-and-Licensing.html). 사용자 판단 2026-10-19: FindChem은 비상업 용도"
+  },
+  {
+   "kind": "EPA AEGL",
+   "file": "epa_aegl/*.html",
+   "url": "https://www.epa.gov/aegl/access-acute-exposure-guideline-levels-aegls-values (물질별 페이지)",
+   "fetchedAt": "2026-10-19",
+   "license": "미국 연방 저작물"
+  },
+  {
+   "kind": "DOE PAC",
+   "file": "doe_pac/pac_getexcel_20250207.xlsx",
+   "url": "https://web.archive.org/web/20250207154952id_/https://edms3.energy.gov/pac/download/getexcel",
+   "fetchedAt": "2026-10-19",
+   "version": "2025-02-07 Wayback 보관본 — 한국 IP에서 DOE 호스트가 막혀(TLS 리셋) 최신판 미확보. 출처 열이 채워진 마지막 판",
+   "license": "DOE 페이지에 이용조건 문구 없음"
+  }
+ ],
+ "aihaNotice": "© 2025 American Industrial Hygiene Association (AIHA). All rights reserved.\nThe Emergency Response Planning Guidelines (ERPG®) data are the intellectual property of AIHA and are provided solely for non-commercial, educational, research, and governmental use.\nUsers may download, reproduce, and distribute this data only in its original, unmodified form and must include this notice in any reproduction.\nCommercial use, redistribution, resale, or inclusion of this data in any product or service offered for profit is strictly prohibited without the prior written consent of AIHA.\nTo request permission for commercial use or licensing, contact\n[email protected]\n.\nBy downloading this dataset, you acknowledge and agree that:\nThe ERPG data remain the sole property of AIHA.\nYou will not alter, reproduce, or distribute the data for commercial purposes.\nYou will provide attribution to AIHA when the data are used in reports, models, or databases.\nAIHA reserves the right to require licensing fees or other remuneration for any commercial use.",
+ "erpg": {
+  "100-42-5": [
+   {
+    "name": "Styrene",
+    "casCell": "100-42-5",
+    "erpg2": "250 ppm",
+    "lastUpdate": "2010"
+   }
+  ],
+  "100-44-7": [
+   {
+    "name": "Benzyl chloride",
+    "casCell": "100-44-7",
+    "erpg2": "10 ppm",
+    "lastUpdate": "2017"
+   }
+  ],
+  "10025-78-2": [
+   {
+    "name": "Silane, Trichloro",
+    "casCell": "10025-78-2",
+    "erpg2": "3 ppm",
+    "lastUpdate": "2022"
+   }
+  ],
+  "10026-04-7": [
+   {
+    "name": "Silane, Tetrachloro",
+    "casCell": "10026-04-7",
+    "erpg2": "5 ppm",
+    "lastUpdate": "2023"
+   }
+  ],
+  "10049-04-4": [
+   {
+    "name": "Chlorine dioxide",
+    "casCell": "10049-04-4",
+    "erpg2": "0.5 ppm",
+    "lastUpdate": "2011"
+   }
+  ],
+  "101-68-8": [
+   {
+    "name": "Lithium hydride",
+    "casCell": "101-68-8",
+    "erpg2": "0.1 mg/m3",
+    "lastUpdate": "2016"
+   },
+   {
+    "name": "Methyl diphenyl diisocyanate (MDI)",
+    "casCell": "101-68-8",
+    "erpg2": "5 mg/m3",
+    "lastUpdate": "2010"
+   }
+  ],
+  "10102-44-0": [
+   {
+    "name": "Nitrogen dioxide",
+    "casCell": "10102-44-0",
+    "erpg2": "15 ppm",
+    "lastUpdate": "2016"
+   }
+  ],
+  "103-71-9": [
+   {
+    "name": "Phenyl isocyanate",
+    "casCell": "103-71-9",
+    "erpg2": "0.4 ppm",
+    "lastUpdate": "2016"
+   }
+  ],
+  "104-76-7": [
+   {
+    "name": "2-ethyl hexanol",
+    "casCell": "104-76-7",
+    "erpg2": "120 ppm",
+    "lastUpdate": "2017"
+   }
+  ],
+  "106-89-8": [
+   {
+    "name": "Epichlorohydrin",
+    "casCell": "106-89-8",
+    "erpg2": "20 ppm",
+    "lastUpdate": "2017"
+   }
+  ],
+  "106-99-0": [
+   {
+    "name": "1,3-Butadiene",
+    "casCell": "106-99-0",
+    "erpg2": "500 ppm",
+    "lastUpdate": "2015"
+   }
+  ],
+  "107-02-8": [
+   {
+    "name": "Acrolein",
+    "casCell": "107-02-8",
+    "erpg2": "0.15 ppm",
+    "lastUpdate": "2017"
+   }
+  ],
+  "107-05-1": [
+   {
+    "name": "Allyl Chloride",
+    "casCell": "107-05-1",
+    "erpg2": "40 ppm",
+    "lastUpdate": "2017"
+   }
+  ],
+  "107-06-2": [
+   {
+    "name": "1,2-Dichloroethane",
+    "casCell": "107-06-2",
+    "erpg2": "200 ppm",
+    "lastUpdate": "2014"
+   }
+  ],
+  "107-13-1": [
+   {
+    "name": "Acrylonitrile",
+    "casCell": "107-13-1",
+    "erpg2": "35 ppm",
+    "lastUpdate": "2019"
+   }
+  ],
+  "107-30-2": [
+   {
+    "name": "Chloromethyl methyl ether",
+    "casCell": "107-30-2",
+    "erpg2": "1 ppm",
+    "lastUpdate": "2023"
+   }
+  ],
+  "108-05-4": [
+   {
+    "name": "Vinyl acetate",
+    "casCell": "108-05-4",
+    "erpg2": "75 ppm",
+    "lastUpdate": "2016"
+   }
+  ],
+  "108-23-6": [
+   {
+    "name": "Isopropyl chloroformate",
+    "casCell": "108-23-6",
+    "erpg2": "5 ppm",
+    "lastUpdate": "2012"
+   }
+  ],
+  "108-24-7": [
+   {
+    "name": "Acetic Anhydride",
+    "casCell": "108-24-7",
+    "erpg2": "15 ppm",
+    "lastUpdate": "2019"
+   }
+  ],
+  "108-65-6": [
+   {
+    "name": "Propylene glycol methyl ether acetate",
+    "casCell": "108-65-6 and 70657-70-4",
+    "erpg2": "1,000 ppm",
+    "lastUpdate": "2023"
+   }
+  ],
+  "108-88-3": [
+   {
+    "name": "Toluene",
+    "casCell": "108-88-3",
+    "erpg2": "300 ppm",
+    "lastUpdate": "2022"
+   }
+  ],
+  "108-95-2": [
+   {
+    "name": "Phenol",
+    "casCell": "108-95-2",
+    "erpg2": "50 ppm",
+    "lastUpdate": "2013"
+   }
+  ],
+  "109-99-9": [
+   {
+    "name": "Tetrahydrofuran",
+    "casCell": "109-99-9",
+    "erpg2": "500 ppm",
+    "lastUpdate": "2017"
+   }
+  ],
+  "111-30-8": [
+   {
+    "name": "Glutaraldehyde",
+    "casCell": "111-30-8",
+    "erpg2": "1 ppm",
+    "lastUpdate": "2015"
+   }
+  ],
+  "111-36-4": [
+   {
+    "name": "n-Butyl Isocyanate",
+    "casCell": "111-36-4",
+    "erpg2": "0.2 ppm",
+    "lastUpdate": "2020"
+   }
+  ],
+  "111-66-0": [
+   {
+    "name": "1-Octene",
+    "casCell": "111-66-0",
+    "erpg2": "800 ppm",
+    "lastUpdate": "2017"
+   }
+  ],
+  "111-87-5": [
+   {
+    "name": "1-Octanol",
+    "casCell": "111-87-5",
+    "erpg2": "20 ppm",
+    "lastUpdate": "2022"
+   }
+  ],
+  "116-14-3": [
+   {
+    "name": "Tetrafluoroethylene",
+    "casCell": "116-14-3",
+    "erpg2": "1,000 ppm",
+    "lastUpdate": "2012"
+   }
+  ],
+  "116-15-4": [
+   {
+    "name": "Hexafluoropropylene",
+    "casCell": "116-15-4",
+    "erpg2": "50 ppm",
+    "lastUpdate": "2009"
+   }
+  ],
+  "120-83-2": [
+   {
+    "name": "2,4-Dichlorophenol",
+    "casCell": "120-83-2",
+    "erpg2": "2 ppm",
+    "lastUpdate": "2006"
+   }
+  ],
+  "123-86-4": [
+   {
+    "name": "n-Butyl Acetate",
+    "casCell": "123-86-4",
+    "erpg2": "200 ppm",
+    "lastUpdate": "2014"
+   }
+  ],
+  "124-40-3": [
+   {
+    "name": "Dimethylamine",
+    "casCell": "124-40-3",
+    "erpg2": "100 ppm",
+    "lastUpdate": "2015"
+   }
+  ],
+  "127-18-4": [
+   {
+    "name": "Perchloroethylene",
+    "casCell": "127-18-4",
+    "erpg2": "200 ppm",
+    "lastUpdate": "2007"
+   }
+  ],
+  "1310-73-2": [
+   {
+    "name": "Sodium hydroxide",
+    "casCell": "1310-73-2",
+    "erpg2": "5 mg/m3",
+    "lastUpdate": "2020"
+   }
+  ],
+  "1314-56-3": [
+   {
+    "name": "Phosphorus pentoxide and its degredation products",
+    "casCell": "1314-56-3",
+    "erpg2": "10 mg/m3",
+    "lastUpdate": "2026"
+   }
+  ],
+  "1344-57-6": [
+   {
+    "name": "Uranium dioxide",
+    "casCell": "1344-57-6",
+    "erpg2": "10 mg/m3",
+    "lastUpdate": "2003"
+   }
+  ],
+  "1344-58-7": [
+   {
+    "name": "Uranium Trioxide",
+    "casCell": "1344-58-7",
+    "erpg2": "0.5 mg/m3",
+    "lastUpdate": "2008"
+   }
+  ],
+  "1344-59-8": [
+   {
+    "name": "Triuranium octaoxide",
+    "casCell": "1344-59-8",
+    "erpg2": "10 mg/m3",
+    "lastUpdate": "2004"
+   }
+  ],
+  "140-88-5": [
+   {
+    "name": "Ethyl Acrylate",
+    "casCell": "140-88-5",
+    "erpg2": "30 ppm",
+    "lastUpdate": "2016"
+   }
+  ],
+  "141-32-2": [
+   {
+    "name": "n-Butyl Acrylate",
+    "casCell": "141-32-2",
+    "erpg2": "25 ppm",
+    "lastUpdate": "2005"
+   }
+  ],
+  "141-43-5": [
+   {
+    "name": "Monoethanolamine",
+    "casCell": "141-43-5",
+    "erpg2": "50 mg/m3",
+    "lastUpdate": ""
+   }
+  ],
+  "16219-75-3": [
+   {
+    "name": "Ethylidine Norbornene",
+    "casCell": "16219-75-3",
+    "erpg2": "100 ppm",
+    "lastUpdate": "2016"
+   }
+  ],
+  "1634-04-4": [
+   {
+    "name": "Methyl tert-butylether )MTBE)",
+    "casCell": "1634-04-4",
+    "erpg2": "1,000 ppm",
+    "lastUpdate": "2013"
+   }
+  ],
+  "16842-03-8": [
+   {
+    "name": "Cobalt Hydrocarbonyl (as colbalt)",
+    "casCell": "16842-03-8",
+    "erpg2": "0.9 mg/m3",
+    "lastUpdate": "2010"
+   }
+  ],
+  "19287-45-7": [
+   {
+    "name": "Diborane",
+    "casCell": "19287-45-7",
+    "erpg2": "1 ppm",
+    "lastUpdate": "2013"
+   }
+  ],
+  "2487-90-3": [
+   {
+    "name": "Silane, Trimethoxy-",
+    "casCell": "2487-90-3",
+    "erpg2": "2 ppm",
+    "lastUpdate": "2019"
+   }
+  ],
+  "25340-17-4": [
+   {
+    "name": "Diethylbenzene mixed isomers, Dowtherm J",
+    "casCell": "25340-17-4",
+    "erpg2": "100 ppm",
+    "lastUpdate": "2016"
+   }
+  ],
+  "2698-41-1": [
+   {
+    "name": "CS (o-Chlorobenzylidene Malonitrile)",
+    "casCell": "2698-41-1",
+    "erpg2": "0.1 mg/m3",
+    "lastUpdate": "2018"
+   }
+  ],
+  "2837-89-0": [
+   {
+    "name": "2-Chloro-1,1,1,2-Tetrafluoroethane (HCFC-124)",
+    "casCell": "2837-89-0",
+    "erpg2": "5,000 ppm",
+    "lastUpdate": "2019"
+   }
+  ],
+  "29118-24-9": [
+   {
+    "name": "1,3,3,3-Tetrafluoropropylene (HFO-1234ze)",
+    "casCell": "29118-24-9",
+    "erpg2": "15,000 ppm",
+    "lastUpdate": "2012"
+   }
+  ],
+  "302-01-2": [
+   {
+    "name": "Hydrazine",
+    "casCell": "302-01-2",
+    "erpg2": "5 ppm",
+    "lastUpdate": "2013"
+   }
+  ],
+  "306-83-2": [
+   {
+    "name": "2,2-Dichloro-1,1,1-Trifluoroethane (HCFC-123)",
+    "casCell": "306-83-2",
+    "erpg2": "1,000 ppm",
+    "lastUpdate": "2017"
+   }
+  ],
+  "30674-80-7": [
+   {
+    "name": "2-Isocyanatoethyl methacrylate",
+    "casCell": "30674-80-7",
+    "erpg2": "0.1 ppm",
+    "lastUpdate": "2004"
+   }
+  ],
+  "382-21-8": [
+   {
+    "name": "Perfluoroisobutylene",
+    "casCell": "382-21-8",
+    "erpg2": "0.1 ppm",
+    "lastUpdate": "2019"
+   }
+  ],
+  "4170-30-3": [
+   {
+    "name": "Crotonaldehyde",
+    "casCell": "4170-30-3",
+    "erpg2": "5 ppm",
+    "lastUpdate": "2007"
+   }
+  ],
+  "50-00-0": [
+   {
+    "name": "Formaldehyde",
+    "casCell": "50-00-0",
+    "erpg2": "10 ppm",
+    "lastUpdate": "2011"
+   }
+  ],
+  "506-77-4": [
+   {
+    "name": "Cyanogen chloride",
+    "casCell": "506-77-4",
+    "erpg2": "0.05 ppm",
+    "lastUpdate": "2013"
+   }
+  ],
+  "541-41-3": [
+   {
+    "name": "Ethyl chloroformate",
+    "casCell": "541-41-3",
+    "erpg2": "5 ppm",
+    "lastUpdate": "2017"
+   }
+  ],
+  "542-88-1": [
+   {
+    "name": "Bis(Chloromethyl) Ether",
+    "casCell": "542-88-1",
+    "erpg2": "0.1 ppm",
+    "lastUpdate": "2023"
+   }
+  ],
+  "56-23-5": [
+   {
+    "name": "Carbon tetrachloride",
+    "casCell": "56-23-5",
+    "erpg2": "100 ppm",
+    "lastUpdate": "2014"
+   }
+  ],
+  "584-84-9": [
+   {
+    "name": "toluene 2,4- diisocyanate",
+    "casCell": "584-84-9",
+    "erpg2": "0.15 ppm",
+    "lastUpdate": "2015"
+   }
+  ],
+  "592-41-6": [
+   {
+    "name": "1-Hexene",
+    "casCell": "592-41-6",
+    "erpg2": "500 ppm",
+    "lastUpdate": "2019"
+   }
+  ],
+  "624-83-9": [
+   {
+    "name": "Methyl isocyanate",
+    "casCell": "624-83-9",
+    "erpg2": "0.25 ppm",
+    "lastUpdate": "2016"
+   }
+  ],
+  "624-92-0": [
+   {
+    "name": "Dimethyl disulfide",
+    "casCell": "624-92-0",
+    "erpg2": "50 ppm",
+    "lastUpdate": "1996"
+   }
+  ],
+  "630-08-0": [
+   {
+    "name": "Carbon monoxide",
+    "casCell": "630-08-0",
+    "erpg2": "350 ppm",
+    "lastUpdate": "2014"
+   }
+  ],
+  "64-17-5": [
+   {
+    "name": "Ethanol",
+    "casCell": "64-17-5",
+    "erpg2": "3300",
+    "lastUpdate": "2021"
+   }
+  ],
+  "64-18-6": [
+   {
+    "name": "Formic Acid",
+    "casCell": "64-18-6",
+    "erpg2": "25 ppm",
+    "lastUpdate": "2021"
+   }
+  ],
+  "64-19-7": [
+   {
+    "name": "Acetic Acid",
+    "casCell": "64-19-7",
+    "erpg2": "35 ppm",
+    "lastUpdate": "2011"
+   }
+  ],
+  "67-56-1": [
+   {
+    "name": "Methanol",
+    "casCell": "67-56-1",
+    "erpg2": "1,000 ppm",
+    "lastUpdate": "2017"
+   }
+  ],
+  "67-66-3": [
+   {
+    "name": "Chloroform",
+    "casCell": "67-66-3",
+    "erpg2": "50 ppm",
+    "lastUpdate": "2022"
+   }
+  ],
+  "674-82-8": [
+   {
+    "name": "Diketene",
+    "casCell": "674-82-8",
+    "erpg2": "5 ppm",
+    "lastUpdate": "2013"
+   }
+  ],
+  "68-12-2": [
+   {
+    "name": "Dimethylformamide",
+    "casCell": "68-12-2",
+    "erpg2": "100 ppm",
+    "lastUpdate": "2007"
+   }
+  ],
+  "681-84-5": [
+   {
+    "name": "Silane, Tetramethoxy-",
+    "casCell": "681-84-5",
+    "erpg2": "10 ppm",
+    "lastUpdate": "2012"
+   }
+  ],
+  "68334-30-5": [
+   {
+    "name": "Diesel Fuel and Other Middle Distallate Fuels",
+    "casCell": "68334-30-5",
+    "erpg2": "1,000 mg/m3",
+    "lastUpdate": "2016"
+   }
+  ],
+  "684-16-2": [
+   {
+    "name": "Hexafluoroacetone",
+    "casCell": "684-16-2",
+    "erpg2": "1 ppm",
+    "lastUpdate": "2016"
+   }
+  ],
+  "68987-42-8": [
+   {
+    "name": "Diphenylethane and alkylated aromatic mixture, Dowtherm Q",
+    "casCell": "68987-42-8",
+    "erpg2": "150 ppm",
+    "lastUpdate": "2017"
+   }
+  ],
+  "70657-70-4": [
+   {
+    "name": "Propylene glycol methyl ether acetate",
+    "casCell": "108-65-6 and 70657-70-4",
+    "erpg2": "1,000 ppm",
+    "lastUpdate": "2023"
+   }
+  ],
+  "71-43-2": [
+   {
+    "name": "Benzene",
+    "casCell": "71-43-2",
+    "erpg2": "150 ppm",
+    "lastUpdate": "2015"
+   }
+  ],
+  "71-55-6": [
+   {
+    "name": "1,1,1-Trichloroethane",
+    "casCell": "71-55-6",
+    "erpg2": "700 ppm",
+    "lastUpdate": "2012"
+   }
+  ],
+  "74-83-9": [
+   {
+    "name": "Methyl bromide",
+    "casCell": "74-83-9",
+    "erpg2": "100 ppm",
+    "lastUpdate": "2020"
+   }
+  ],
+  "74-87-3": [
+   {
+    "name": "Methyl chloride",
+    "casCell": "74-87-3",
+    "erpg2": "1,000 ppm",
+    "lastUpdate": "2013"
+   }
+  ],
+  "74-88-4": [
+   {
+    "name": "Methyl iodide",
+    "casCell": "74-88-4",
+    "erpg2": "50 ppm",
+    "lastUpdate": "2013"
+   }
+  ],
+  "74-89-5": [
+   {
+    "name": "Monomethylamine",
+    "casCell": "74-89-5",
+    "erpg2": "20 ppm",
+    "lastUpdate": "2021"
+   }
+  ],
+  "74-90-8": [
+   {
+    "name": "Hydrogen cyanide",
+    "casCell": "74-90-8",
+    "erpg2": "10 ppm",
+    "lastUpdate": "2022"
+   }
+  ],
+  "74-93-1": [
+   {
+    "name": "Methyl mercaptan",
+    "casCell": "74-93-1",
+    "erpg2": "30 ppm",
+    "lastUpdate": "2019"
+   }
+  ],
+  "7439-97-6": [
+   {
+    "name": "Maleic anhydride",
+    "casCell": "7439-97-6",
+    "erpg2": "5 ppm",
+    "lastUpdate": "2016"
+   },
+   {
+    "name": "Mercury vapor",
+    "casCell": "7439-97-6",
+    "erpg2": "0.25 ppm",
+    "lastUpdate": "2002"
+   }
+  ],
+  "7440-41-7": [
+   {
+    "name": "Beryllium",
+    "casCell": "7440-41-7",
+    "erpg2": "25 µg/m3",
+    "lastUpdate": "2010"
+   }
+  ],
+  "7446-09-5": [
+   {
+    "name": "Sulfur dioxide",
+    "casCell": "7446-09-5",
+    "erpg2": "3 ppm",
+    "lastUpdate": "2011"
+   }
+  ],
+  "7446-11-9": [
+   {
+    "name": "Sulfur trioxide",
+    "casCell": "7446-11-9",
+    "erpg2": "10 mg/m3",
+    "lastUpdate": "2022"
+   }
+  ],
+  "75-01-4": [
+   {
+    "name": "Vinyl chloride",
+    "casCell": "75-01-4",
+    "erpg2": "5,000 ppm",
+    "lastUpdate": "2014"
+   }
+  ],
+  "75-07-0": [
+   {
+    "name": "Acetaldehyde",
+    "casCell": "75-07-0",
+    "erpg2": "200 ppm",
+    "lastUpdate": "2012"
+   }
+  ],
+  "75-09-2": [
+   {
+    "name": "Methylene chloride",
+    "casCell": "75-09-2",
+    "erpg2": "750 ppm",
+    "lastUpdate": "2008"
+   }
+  ],
+  "75-15-0": [
+   {
+    "name": "Carbon disulfide",
+    "casCell": "75-15-0",
+    "erpg2": "50 ppm",
+    "lastUpdate": "2002"
+   }
+  ],
+  "75-18-3": [
+   {
+    "name": "Dimethylsulfide",
+    "casCell": "75-18-3",
+    "erpg2": "1,000 ppm",
+    "lastUpdate": "2016"
+   }
+  ],
+  "75-21-8": [
+   {
+    "name": "Ethylene oxide",
+    "casCell": "75-21-8",
+    "erpg2": "50 ppm",
+    "lastUpdate": "2016"
+   }
+  ],
+  "75-35-4": [
+   {
+    "name": "1,1,-Dichloroethylene (vinylidene chloride)",
+    "casCell": "75-35-4",
+    "erpg2": "500 ppm",
+    "lastUpdate": "2017"
+   },
+   {
+    "name": "Vinylidene chloride (See 1,1-Dichloroethylene)",
+    "casCell": "75-35-4",
+    "erpg2": "500 ppm",
+    "lastUpdate": "2006"
+   }
+  ],
+  "75-37-6": [
+   {
+    "name": "1,1-Difluoroethane (HFC-152a)",
+    "casCell": "75-37-6",
+    "erpg2": "15,000 ppm",
+    "lastUpdate": "2018"
+   }
+  ],
+  "75-44-5": [
+   {
+    "name": "Phosgene",
+    "casCell": "75-44-5",
+    "erpg2": "1.5 ppm",
+    "lastUpdate": "2024"
+   }
+  ],
+  "75-50-3": [
+   {
+    "name": "Trimethylamine",
+    "casCell": "75-50-3",
+    "erpg2": "100 ppm",
+    "lastUpdate": "2015"
+   }
+  ],
+  "75-56-9": [
+   {
+    "name": "Propylene Oxide",
+    "casCell": "75-56-9",
+    "erpg2": "250 ppm",
+    "lastUpdate": "2014"
+   }
+  ],
+  "75-68-3": [
+   {
+    "name": "1-Chloro-1,1-Difluoroethane (HCFC-142b)",
+    "casCell": "75-68-3",
+    "erpg2": "15,000 ppm",
+    "lastUpdate": "2014"
+   }
+  ],
+  "75-77-4": [
+   {
+    "name": "Silane, Trimethylchloro-",
+    "casCell": "75-77-4",
+    "erpg2": "20 ppm",
+    "lastUpdate": "2012"
+   }
+  ],
+  "75-78-5": [
+   {
+    "name": "Silane, Dimethyldichloro",
+    "casCell": "75-78-5",
+    "erpg2": "10 ppm",
+    "lastUpdate": "2014"
+   }
+  ],
+  "75-79-6": [
+   {
+    "name": "Silane, Methyltrichloro",
+    "casCell": "75-79-6",
+    "erpg2": "3 ppm",
+    "lastUpdate": "2016"
+   }
+  ],
+  "75-94-5": [
+   {
+    "name": "Silane, Vinyl trichloro-",
+    "casCell": "75-94-5",
+    "erpg2": "5 ppm",
+    "lastUpdate": "2017"
+   }
+  ],
+  "754-12-1": [
+   {
+    "name": "2,3,3,3-Tetrafluoropropene (HFO-1234yf)",
+    "casCell": "754-12-1",
+    "erpg2": "24,000 ppm",
+    "lastUpdate": "2012"
+   }
+  ],
+  "7550-45-0": [
+   {
+    "name": "Titatium tetrachloride",
+    "casCell": "7550-45-0",
+    "erpg2": "20 mg/m3",
+    "lastUpdate": "2016"
+   }
+  ],
+  "7553-56-2": [
+   {
+    "name": "Iodine",
+    "casCell": "7553-56-2",
+    "erpg2": "0.5 ppm",
+    "lastUpdate": "2024"
+   }
+  ],
+  "76-06-2": [
+   {
+    "name": "Chloropicrin",
+    "casCell": "76-06-2",
+    "erpg2": "0.15 ppm",
+    "lastUpdate": "2011"
+   }
+  ],
+  "7637-07-2": [
+   {
+    "name": "Boron Trifluoride",
+    "casCell": "7637-07-2",
+    "erpg2": "30 mg/m3",
+    "lastUpdate": "2020"
+   }
+  ],
+  "7647-01-0": [
+   {
+    "name": "Hydrogen chloride",
+    "casCell": "7647-01-0",
+    "erpg2": "20 ppm",
+    "lastUpdate": "2016"
+   }
+  ],
+  "7664-38-2": [
+   {
+    "name": "Phosphoric acid",
+    "casCell": "7664-38-2",
+    "erpg2": "30 mg/m3",
+    "lastUpdate": "2023"
+   }
+  ],
+  "7664-39-3": [
+   {
+    "name": "Hydrogen fluoride",
+    "casCell": "7664-39-3",
+    "erpg2": "20 ppm",
+    "lastUpdate": "2024"
+   }
+  ],
+  "7664-41-7": [
+   {
+    "name": "Ammonia",
+    "casCell": "7664-41-7",
+    "erpg2": "150 ppm",
+    "lastUpdate": "2014"
+   }
+  ],
+  "7664-93-9": [
+   {
+    "name": "Sulfuric acid",
+    "casCell": "7664-93-9",
+    "erpg2": "10 mg/m3",
+    "lastUpdate": "2022"
+   }
+  ],
+  "7697-37-2": [
+   {
+    "name": "Nitric acid WFNA",
+    "casCell": "7697-37-2",
+    "erpg2": "10 ppm",
+    "lastUpdate": "2013"
+   }
+  ],
+  "77-73-6": [
+   {
+    "name": "Dicyclopenadiene",
+    "casCell": "77-73-6",
+    "erpg2": "5 ppm",
+    "lastUpdate": "2017"
+   }
+  ],
+  "7719-09-7": [
+   {
+    "name": "Thionyl chloride",
+    "casCell": "7719-09-7",
+    "erpg2": "2.5 ppm",
+    "lastUpdate": "2017"
+   }
+  ],
+  "7719-12-2": [
+   {
+    "name": "Phosphorus trichloride",
+    "casCell": "7719-12-2",
+    "erpg2": "3 ppm",
+    "lastUpdate": "2015"
+   }
+  ],
+  "7722-84-1": [
+   {
+    "name": "Hydrogen peroxide",
+    "casCell": "7722-84-1",
+    "erpg2": "50 ppm",
+    "lastUpdate": "2022"
+   }
+  ],
+  "7726-95-6": [
+   {
+    "name": "Bromine",
+    "casCell": "7726-95-6",
+    "erpg2": "0.5 ppm",
+    "lastUpdate": "2012"
+   }
+  ],
+  "7782-41-4": [
+   {
+    "name": "Fluorine",
+    "casCell": "7782-41-4",
+    "erpg2": "5 ppm",
+    "lastUpdate": "2010"
+   }
+  ],
+  "7782-50-5": [
+   {
+    "name": "Chlorine",
+    "casCell": "7782-50-5",
+    "erpg2": "3 ppm",
+    "lastUpdate": "2017"
+   }
+  ],
+  "7783-06-4": [
+   {
+    "name": "Hydrogen sulfide",
+    "casCell": "7783-06-4",
+    "erpg2": "30 ppm",
+    "lastUpdate": "2014"
+   }
+  ],
+  "7783-07-5": [
+   {
+    "name": "Hydrogen selenide",
+    "casCell": "7783-07-5",
+    "erpg2": "0.2 ppm",
+    "lastUpdate": "2014"
+   }
+  ],
+  "7783-54-2": [
+   {
+    "name": "Nitrogen trifluoride",
+    "casCell": "7783-54-2",
+    "erpg2": "400 ppm",
+    "lastUpdate": "2016"
+   }
+  ],
+  "7783-81-5": [
+   {
+    "name": "Uranium Hexafluoride",
+    "casCell": "7783-81-5",
+    "erpg2": "15 mg/m3",
+    "lastUpdate": "2019"
+   }
+  ],
+  "7784-42-1": [
+   {
+    "name": "Arsine",
+    "casCell": "7784-42-1",
+    "erpg2": "0.5 ppm",
+    "lastUpdate": "2023"
+   }
+  ],
+  "7789-21-1": [
+   {
+    "name": "Fluorosulfonic acid",
+    "casCell": "7789-21-1",
+    "erpg2": "10 mg/m3",
+    "lastUpdate": "2019"
+   }
+  ],
+  "7790-91-2": [
+   {
+    "name": "Chlorine trifloride",
+    "casCell": "7790-91-2",
+    "erpg2": "1 ppm",
+    "lastUpdate": "2016"
+   }
+  ],
+  "7790-94-5": [
+   {
+    "name": "Chlorosulfonic acid",
+    "casCell": "7790-94-5",
+    "erpg2": "10 mg/m3",
+    "lastUpdate": "2023"
+   }
+  ],
+  "7791-25-5": [
+   {
+    "name": "Sulfuryl chloride",
+    "casCell": "7791-25-5",
+    "erpg2": "3 ppm",
+    "lastUpdate": "2009"
+   }
+  ],
+  "78-10-4": [
+   {
+    "name": "Silane, Tetraethoxy-",
+    "casCell": "78-10-4",
+    "erpg2": "100 ppm",
+    "lastUpdate": "2010"
+   }
+  ],
+  "78-79-5": [
+   {
+    "name": "Isoprene",
+    "casCell": "78-79-5",
+    "erpg2": "1,000 ppm",
+    "lastUpdate": "2018"
+   }
+  ],
+  "78-82-0": [
+   {
+    "name": "Isobutyronitrile",
+    "casCell": "78-82-0",
+    "erpg2": "30 ppm",
+    "lastUpdate": "2014"
+   }
+  ],
+  "7803-51-2": [
+   {
+    "name": "Phosphine",
+    "casCell": "7803-51-2",
+    "erpg2": "0.5 ppm",
+    "lastUpdate": "2012"
+   }
+  ],
+  "7803-52-3": [
+   {
+    "name": "Stibine",
+    "casCell": "7803-52-3",
+    "erpg2": "0.5 ppm",
+    "lastUpdate": "2009"
+   }
+  ],
+  "79-01-6": [
+   {
+    "name": "Trichloroethylene",
+    "casCell": "79-01-6",
+    "erpg2": "500 ppm",
+    "lastUpdate": "2023"
+   }
+  ],
+  "79-04-9": [
+   {
+    "name": "Chloroacetyl chloride",
+    "casCell": "79-04-9",
+    "erpg2": "1.5 ppm",
+    "lastUpdate": "2022"
+   }
+  ],
+  "79-10-7": [
+   {
+    "name": "Acrylic Acid",
+    "casCell": "79-10-7",
+    "erpg2": "50 ppm",
+    "lastUpdate": "2010"
+   }
+  ],
+  "79-22-1": [
+   {
+    "name": "Methyl chloroformate",
+    "casCell": "79-22-1",
+    "erpg2": "2 ppm",
+    "lastUpdate": "2017"
+   }
+  ],
+  "79-38-9": [
+   {
+    "name": "Chlorotrifluoroethylene",
+    "casCell": "79-38-9",
+    "erpg2": "100 ppm",
+    "lastUpdate": "2011"
+   }
+  ],
+  "8002-05-9": [
+   {
+    "name": "Crude Oil HC volatiles",
+    "casCell": "8002-05-9",
+    "erpg2": "1,000 ppm",
+    "lastUpdate": "2019"
+   }
+  ],
+  "8014-95-7": [
+   {
+    "name": "Oleum",
+    "casCell": "8014-95-7",
+    "erpg2": "10 mg/m3",
+    "lastUpdate": "2022"
+   }
+  ],
+  "86290-81-5": [
+   {
+    "name": "Gasoline",
+    "casCell": "86290-81-5",
+    "erpg2": "1,000 ppm",
+    "lastUpdate": "2010"
+   }
+  ],
+  "87-68-3": [
+   {
+    "name": "Hexachlorobutadiene",
+    "casCell": "87-68-3",
+    "erpg2": "3 ppm",
+    "lastUpdate": "2004"
+   }
+  ],
+  "91-08-7": [
+   {
+    "name": "toluene 2,6- diisocyanate",
+    "casCell": "91-08-7",
+    "erpg2": "0.15 ppm",
+    "lastUpdate": "2015"
+   }
+  ],
+  "98-01-1": [
+   {
+    "name": "Furfural",
+    "casCell": "98-01-1",
+    "erpg2": "10 ppm",
+    "lastUpdate": "2016"
+   }
+  ],
+  "98-88-4": [
+   {
+    "name": "Benzoyl chloride",
+    "casCell": "98-88-4",
+    "erpg2": "5 ppm",
+    "lastUpdate": "2019"
+   }
+  ],
+  "998-30-1": [
+   {
+    "name": "Silane, Triethoxy-",
+    "casCell": "998-30-1",
+    "erpg2": "4 ppm",
+    "lastUpdate": "2022"
+   }
+  ]
+ },
+ "aegl": {
+  "100-42-5": [
+   {
+    "status": "Interim",
+    "unit": "ppm",
+    "aegl2_60": "130",
+    "unitRow": "ppm (12/12/06)",
+    "footnote": "Lower Explosive Limit (LEL) = 9,000 ppm * = >10% LEL For values denoted as * safety considerations against the hazard(s) of explosion(s) must be taken into account. Level of Distinct Odor Awareness = 0.54 ppm IMPORTANT NOTE: Interim AEGLs are established following review and consideration by the Nat",
+    "page": "styrene-results-aegl-program.html"
+   }
+  ],
+  "10025-78-2": [
+   {
+    "status": "Final",
+    "unit": "ppm",
+    "aegl2_60": "7.3",
+    "unitRow": "ppm",
+    "footnote": "Chlorosilanes AEGL Technical Support Document (pdf) (560.09 KB) Acute Exposure Guideline Levels Open Sidenav Menu Close Sidenav Menu About AEGLsexpand or collapse the child menuHistory of AEGLs Access AEGLs by Chemical Name, CAS Number or AEGL Status AEGL Chemical Priority Lists How AEGLs are Develo",
+    "page": "trichlorosilane-results-aegl-program.html"
+   }
+  ],
+  "10025-87-3": [
+   {
+    "status": "Final",
+    "unit": "ppm",
+    "aegl2_60": "NR",
+    "unitRow": "ppm",
+    "footnote": "NR = Not recommended due to insufficient data Phosphorus oxychloride AEGL Technical Support Document (pdf) (199.82 KB) Acute Exposure Guideline Levels Open Sidenav Menu Close Sidenav Menu About AEGLsexpand or collapse the child menuHistory of AEGLs Access AEGLs by Chemical Name, CAS Number or AEGL S",
+    "page": "phosphorus-oxychloride-result-aegl-program.html"
+   }
+  ],
+  "10026-04-7": [
+   {
+    "status": "Final",
+    "unit": "ppm",
+    "aegl2_60": "5.5",
+    "unitRow": "ppm",
+    "footnote": "Chlorosilanes AEGL Technical Support Document (pdf) (560.09 KB) Acute Exposure Guideline Levels Open Sidenav Menu Close Sidenav Menu About AEGLsexpand or collapse the child menuHistory of AEGLs Access AEGLs by Chemical Name, CAS Number or AEGL Status AEGL Chemical Priority Lists How AEGLs are Develo",
+    "page": "tetrachlorosilane-results-aegl-program.html"
+   }
+  ],
+  "10049-04-4": [
+   {
+    "status": "Final",
+    "unit": "ppm",
+    "aegl2_60": "1.1",
+    "unitRow": "ppm",
+    "footnote": "Chlorinedioxide AEGL Technical Support Document (pdf) (4.63 MB) Acute Exposure Guideline Levels Open Sidenav Menu Close Sidenav Menu About AEGLsexpand or collapse the child menuHistory of AEGLs Access AEGLs by Chemical Name, CAS Number or AEGL Status AEGL Chemical Priority Lists How AEGLs are Develo",
+    "page": "chlorine-dioxide-results-aegl-program.html"
+   }
+  ],
+  "10102-43-9": [
+   {
+    "status": "Final",
+    "unit": "ppm",
+    "aegl2_60": "NR",
+    "unitRow": "ppm",
+    "footnote": "NR = Not recommended due to insufficient data Short-term exposures to below 80 ppm NO should not constitute a health hazard * AEGL values for nitrogen dioxide should be used for emergency planning. Nitrogen oxides AEGL Technical Support Document (pdf) (786.72 KB) Acute Exposure Guideline Levels Open",
+    "page": "nitric-oxide-aegl-program.html"
+   }
+  ],
+  "106-99-0": [
+   {
+    "status": "Interim",
+    "unit": "ppm",
+    "aegl2_60": "5300*",
+    "unitRow": "(ppm) 11/13/06",
+    "footnote": "Level of Distinct Odor Awareness (LOA) = 3.7ppm Lower Explosive Limit (LEL) = 20,000ppm * = >10% LEL; **>50% LEL; *** = > 100% LEL For values denoted as * safety considerations against the hazard(s) of explosion(s) must be taken into account. For values denoted as ** and *** extreme safety considera",
+    "page": "13-butadiene-results-aegl-program.html"
+   }
+  ],
+  "107-02-8": [
+   {
+    "status": "Final",
+    "unit": "ppm",
+    "aegl2_60": "0.10",
+    "unitRow": "ppm",
+    "footnote": "Acrolein AEGL Technical Support Document (pdf) (528.11 KB) Acute Exposure Guideline Levels Open Sidenav Menu Close Sidenav Menu About AEGLsexpand or collapse the child menuHistory of AEGLs Access AEGLs by Chemical Name, CAS Number or AEGL Status AEGL Chemical Priority Lists How AEGLs are Developedex",
+    "page": "acrolein-results-aegl-program.html"
+   }
+  ],
+  "107-05-1": [
+   {
+    "status": "Interim",
+    "unit": "ppm",
+    "aegl2_60": "54",
+    "unitRow": "ppm (05/16/08)",
+    "footnote": "IMPORTANT NOTE: Interim AEGLs are established following review and consideration by the National Advisory Committee for AEGLs (NAC/AEGL) of public comments on Proposed AEGLs. Interim AEGLs are available for use by organizations while awaiting NRC/NAS peer review and publication of Final AEGLs. Chang",
+    "page": "allyl-chloride-results-aegl-program.html"
+   }
+  ],
+  "107-13-1": [
+   {
+    "status": "unstated",
+    "unit": "ppm",
+    "aegl2_60": "1.7",
+    "unitRow": "ppm",
+    "footnote": "Acrylonitrile AEGL Technical Support Document (pdf) (1.25 MB) Acute Exposure Guideline Levels Open Sidenav Menu Close Sidenav Menu About AEGLsexpand or collapse the child menuHistory of AEGLs Access AEGLs by Chemical Name, CAS Number or AEGL Status AEGL Chemical Priority Lists How AEGLs are Develope",
+    "page": "acrylonitrile-results-aegl-results.html"
+   }
+  ],
+  "107-15-3": [
+   {
+    "status": "Final",
+    "unit": "ppm",
+    "aegl2_60": "9.7",
+    "unitRow": "ppm",
+    "footnote": "NR = Not recommended due to insufficient data. Ethylene diamine AEGL Technical Support Document (pdf) (4.67 MB) Acute Exposure Guideline Levels Open Sidenav Menu Close Sidenav Menu About AEGLsexpand or collapse the child menuHistory of AEGLs Access AEGLs by Chemical Name, CAS Number or AEGL Status A",
+    "page": "ethylene-diamine-results-aegl-program.html"
+   }
+  ],
+  "107-18-6": [
+   {
+    "status": "Final",
+    "unit": "ppm",
+    "aegl2_60": "1.7",
+    "unitRow": "ppm",
+    "footnote": "Ally alcohol AEGL Technical Support Document (pdf) (524 KB) Acute Exposure Guideline Levels Open Sidenav Menu Close Sidenav Menu About AEGLsexpand or collapse the child menuHistory of AEGLs Access AEGLs by Chemical Name, CAS Number or AEGL Status AEGL Chemical Priority Lists How AEGLs are Developede",
+    "page": "allyl-alcohol-results-aegl-program.html"
+   }
+  ],
+  "107-44-8": [
+   {
+    "status": "Final",
+    "unit": "ppm",
+    "aegl2_60": "0.0060 [0.035]",
+    "unitRow": "ppm [mg/m3]",
+    "footnote": "Agent GB (Sarin) AEGL Technical Support Document (Pages 1-88) (pdf) (842.49 KB) Agent GB (Sarin) AEGL Technical Support Document (Pages 89-194 (pdf) (930.76 KB) Agent GB (Sarin) AEGL Technical Support Document (Pages 195-300) (pdf) (12.35 MB) Acute Exposure Guideline Levels Open Sidenav Menu Close S",
+    "page": "agent-gb-sarin-results-aegl-program.html"
+   }
+  ],
+  "108-88-3": [
+   {
+    "status": "Final",
+    "unit": "ppm",
+    "aegl2_60": "560",
+    "unitRow": "ppm",
+    "footnote": "Lower Explosive Limit (LEL) = 14,000 ppm * = > 10% LEL; ** = > 50% LEL AEGL 3 - 10 min = **10,000 ppm For values denoted as * safety considerations against the hazard(s) of explosion(s) must be taken into account. For values denoted as ** extreme safety considerations against the hazard(s) of explos",
+    "page": "toluene-results-aegl-program.html"
+   }
+  ],
+  "108-95-2": [
+   {
+    "status": "Final",
+    "unit": "ppm",
+    "aegl2_60": "23",
+    "unitRow": "ppm",
+    "footnote": "NR = Not recommended due to insufficient data Level of Distinct Odor Awareness (LOA) = 0.25 ppm Phenol AEGL Technical Support Document (pdf) (522.15 KB) Acute Exposure Guideline Levels Open Sidenav Menu Close Sidenav Menu About AEGLsexpand or collapse the child menuHistory of AEGLs Access AEGLs by C",
+    "page": "phenol-results-aegl-program.html"
+   }
+  ],
+  "115-21-9": [
+   {
+    "status": "Final",
+    "unit": "ppm",
+    "aegl2_60": "7.3",
+    "unitRow": "ppm",
+    "footnote": "Chlorosilanes AEGL Technical Support Document (pdf) (560.09 KB) Acute Exposure Guideline Levels Open Sidenav Menu Close Sidenav Menu About AEGLsexpand or collapse the child menuHistory of AEGLs Access AEGLs by Chemical Name, CAS Number or AEGL Status AEGL Chemical Priority Lists How AEGLs are Develo",
+    "page": "ethyltrichlorosilane-results-aegl-program.html"
+   }
+  ],
+  "116-14-3": [
+   {
+    "status": "Final",
+    "unit": "ppm",
+    "aegl2_60": "55",
+    "unitRow": "(ppm) (04/01/15)",
+    "footnote": "Tetrafluoroethylene AEGL Technical Support Document (pdf) (810.55 KB) Acute Exposure Guideline Levels Open Sidenav Menu Close Sidenav Menu About AEGLsexpand or collapse the child menuHistory of AEGLs Access AEGLs by Chemical Name, CAS Number or AEGL Status AEGL Chemical Priority Lists How AEGLs are ",
+    "page": "tetrafluoroethylene-results-aegl-program.html"
+   }
+  ],
+  "1314-84-7": [
+   {
+    "status": "Final",
+    "unit": "ppm",
+    "aegl2_60": "1.0",
+    "unitRow": "ppm",
+    "footnote": "NR = Not recommended due to insufficient data Phosphine metal phosphides AEGL Technical Support Document (pdf) (793.98 KB) Acute Exposure Guideline Levels Open Sidenav Menu Close Sidenav Menu About AEGLsexpand or collapse the child menuHistory of AEGLs Access AEGLs by Chemical Name, CAS Number or AE",
+    "page": "zinc-phosphide-results-aegl-program.html"
+   }
+  ],
+  "1330-20-7": [
+   {
+    "status": "Final",
+    "unit": "ppm",
+    "aegl2_60": "920*",
+    "unitRow": "ppm",
+    "footnote": "Lower Explosive Limit (LEL) = 9,000 ppm * = >10% LEL ** = >50% LEL AEGL 3 - 10 min = ** 7,200 ppm For values denoted as * safety considerations against the hazard(s) of explosion(s) must be taken into account. For values denoted as ** extreme safety considerations against the hazard(s) of explosion(",
+    "page": "xylenes-results-aegl-program.html"
+   }
+  ],
+  "13463-39-3": [
+   {
+    "status": "Final",
+    "unit": "ppm",
+    "aegl2_60": "0.036",
+    "unitRow": "ppm",
+    "footnote": "NR = Not recommended due to insufficient data Nickel Carbonyl AEGL Technical Support Document (pdf) (575.19 KB) Acute Exposure Guideline Levels Open Sidenav Menu Close Sidenav Menu About AEGLsexpand or collapse the child menuHistory of AEGLs Access AEGLs by Chemical Name, CAS Number or AEGL Status A",
+    "page": "nickel-carbonyl-results-aegl-program.html"
+   }
+  ],
+  "13463-40-6": [
+   {
+    "status": "Final",
+    "unit": "ppm",
+    "aegl2_60": "0.060",
+    "unitRow": "ppm",
+    "footnote": "NR = Not recommended due to insufficient data Iron pentacarbonyl AEGL Technical Support Document (pdf) (502.51 KB) Acute Exposure Guideline Levels Open Sidenav Menu Close Sidenav Menu About AEGLsexpand or collapse the child menuHistory of AEGLs Access AEGLs by Chemical Name, CAS Number or AEGL Statu",
+    "page": "iron-pentacarbonyl-results-aegl-program.html"
+   }
+  ],
+  "143-33-9": [
+   {
+    "status": "Final",
+    "unit": "",
+    "aegl2_60": "14 mg/m3",
+    "unitRow": "",
+    "footnote": "NOTE THAT VALUES ARE IN mg/m3, NOT ppm. Sodium cyanide AEGL Technical Support Document (pdf) (724.26 KB) Acute Exposure Guideline Levels Open Sidenav Menu Close Sidenav Menu About AEGLsexpand or collapse the child menuHistory of AEGLs Access AEGLs by Chemical Name, CAS Number or AEGL Status AEGL Che",
+    "page": "sodium-cyanide-results-aegl-program.html"
+   }
+  ],
+  "151-56-4": [
+   {
+    "status": "Final",
+    "unit": "ppm",
+    "aegl2_60": "4.6",
+    "unitRow": "ppm",
+    "footnote": "NR = Not recommended due to insufficient data Level of Distinct Odor Awareness = 10.9 ppm Ethylenemine AEGL Technical Support Document (pdf) (563.63 KB) Acute Exposure Guideline Levels Open Sidenav Menu Close Sidenav Menu About AEGLsexpand or collapse the child menuHistory of AEGLs Access AEGLs by C",
+    "page": "ethyleneimine-results-aegl-program.html"
+   }
+  ],
+  "19287-45-7": [
+   {
+    "status": "Final",
+    "unit": "ppm",
+    "aegl2_60": "1.0",
+    "unitRow": "ppm",
+    "footnote": "NR=Not recommended due to insufficient data Diborane AEGL Technical Support Document (pdf) (740.3 KB) Acute Exposure Guideline Levels Open Sidenav Menu Close Sidenav Menu About AEGLsexpand or collapse the child menuHistory of AEGLs Access AEGLs by Chemical Name, CAS Number or AEGL Status AEGL Chemic",
+    "page": "diborane-results-aegl-program.html"
+   }
+  ],
+  "4109-96-0": [
+   {
+    "status": "Final",
+    "unit": "ppm",
+    "aegl2_60": "11",
+    "unitRow": "(ppm)",
+    "footnote": "Chlorosilanes AEGL Technical Support Document (pdf) (560.09 KB) Acute Exposure Guideline Levels Open Sidenav Menu Close Sidenav Menu About AEGLsexpand or collapse the child menuHistory of AEGLs Access AEGLs by Chemical Name, CAS Number or AEGL Status AEGL Chemical Priority Lists How AEGLs are Develo",
+    "page": "dichlorosilane-results-aegl-program.html"
+   }
+  ],
+  "50-00-0": [
+   {
+    "status": "Interim",
+    "unit": "ppm",
+    "aegl2_60": "14",
+    "unitRow": "ppm (12/12/06)",
+    "footnote": "IMPORTANT NOTE: Interim AEGLs are established following review and consideration by the National Advisory Committee for AEGLs (NAC/AEGL) of public comments on Proposed AEGLs. Interim AEGLs are available for use by organizations while awaiting NRC/NAS peer review and publication of Final AEGLs. Chang",
+    "page": "formaldehyde-results-aegl-program.html"
+   }
+  ],
+  "584-84-9": [
+   {
+    "status": "Final",
+    "unit": "ppm",
+    "aegl2_60": "0.083",
+    "unitRow": "ppm",
+    "footnote": "2,4-Toluene Disocyanate AEGL Technical Document (pdf) (1.25 MB) Acute Exposure Guideline Levels Open Sidenav Menu Close Sidenav Menu About AEGLsexpand or collapse the child menuHistory of AEGLs Access AEGLs by Chemical Name, CAS Number or AEGL Status AEGL Chemical Priority Lists How AEGLs are Develo",
+    "page": "24-toluene-diisocyanate-results-aegl-program.html"
+   }
+  ],
+  "60-34-4": [
+   {
+    "status": "Final",
+    "unit": "ppm",
+    "aegl2_60": "0.90",
+    "unitRow": "ppm",
+    "footnote": "NR = Not recommended due to insufficient data Methyl hydrazine AEGL Technical Support Document (pdf) (631.78 KB) Documentation for 10-min values (pdf) (378.14 KB) Acute Exposure Guideline Levels Open Sidenav Menu Close Sidenav Menu About AEGLsexpand or collapse the child menuHistory of AEGLs Access ",
+    "page": "methyl-hydrazine-results-aegl-program.html"
+   }
+  ],
+  "630-08-0": [
+   {
+    "status": "Final",
+    "unit": "ppm",
+    "aegl2_60": "83",
+    "unitRow": "ppm",
+    "footnote": "NR = Not recommended due to insufficient data Carbon monoxide AEGL Technical Support Document (pdf) (849.72 KB) Acute Exposure Guideline Levels Open Sidenav Menu Close Sidenav Menu About AEGLsexpand or collapse the child menuHistory of AEGLs Access AEGLs by Chemical Name, CAS Number or AEGL Status A",
+    "page": "carbon-monoxide-results-aegl-program.html"
+   }
+  ],
+  "67-56-1": [
+   {
+    "status": "Interim",
+    "unit": "ppm",
+    "aegl2_60": "2,100",
+    "unitRow": "ppm 4/20/04",
+    "footnote": "Lower Explosion Limit (LEL) = 55,000 ppm * = > 10% LEL; ** = > 50% LEL AEGL 3 - 10 min = ** 40,000 ppm For values denoted as * safety consideration against the hazard(s) of explosion(s) must be taken into account For values denoted as ** extreme safety considerations against the hazard(s) of explosi",
+    "page": "methanol-results-aegl-program.html"
+   }
+  ],
+  "71-43-2": [
+   {
+    "status": "Interim",
+    "unit": "ppm",
+    "aegl2_60": "800",
+    "unitRow": "ppm (12/12/06)",
+    "footnote": "Lower Explosive Limit (LEL) = 14,000 ppm * = >10% LEL; ** = >50% LEL AEGL 3 - 10 mins = ** 9,700 ppm For values denoted as * safety considerations against the hazard(s) of explosion(s) must be taken into account. For values denoted as ** extreme safety considerations against the hazard(s) of explosi",
+    "page": "benzene-results-acute-exposure-guideline-levels-aegl-program.html"
+   }
+  ],
+  "74-87-3": [
+   {
+    "status": "Final",
+    "unit": "ppm",
+    "aegl2_60": "910",
+    "unitRow": "ppm",
+    "footnote": "NR = Not recommended due to insufficient data Methyl chloride AEGL Technical Support Document (pdf) (681.06 KB) Acute Exposure Guideline Levels Open Sidenav Menu Close Sidenav Menu About AEGLsexpand or collapse the child menuHistory of AEGLs Access AEGLs by Chemical Name, CAS Number or AEGL Status A",
+    "page": "methyl-chloride-result-aegl-program.html"
+   }
+  ],
+  "74-89-5": [
+   {
+    "status": "Interim",
+    "unit": "ppm",
+    "aegl2_60": "64",
+    "unitRow": "ppm (05/16/08)",
+    "footnote": "Level of Distinct Odor Awareness = 0.56 ppm IMPORTANT NOTE: Interim AEGLs are established following review and consideration by the National Advisory Committee for AEGLs (NAC/AEGL) of public comments on Proposed AEGLs. Interim AEGLs are available for use by organizations while awaiting NRC/NAS peer ",
+    "page": "methyl-amine-results-aegl-program.html"
+   }
+  ],
+  "74-90-8": [
+   {
+    "status": "Final",
+    "unit": "ppm",
+    "aegl2_60": "7.1",
+    "unitRow": "ppm",
+    "footnote": "Hydrogen cyanide AEGL Technical Support Document (pdf) (1.5 MB) Acute Exposure Guideline Levels Open Sidenav Menu Close Sidenav Menu About AEGLsexpand or collapse the child menuHistory of AEGLs Access AEGLs by Chemical Name, CAS Number or AEGL Status AEGL Chemical Priority Lists How AEGLs are Develo",
+    "page": "hydrogen-cyanide-results-aegl-program.html"
+   }
+  ],
+  "75-01-4": [
+   {
+    "status": "Final",
+    "unit": "ppm",
+    "aegl2_60": "1,200",
+    "unitRow": "ppm",
+    "footnote": "Lower Explosion Limit (LEL) range= 38,000 ppm to 293,000 ppm * = >10% LEL For values denoted as * safety considerations against hazard(s) of explosion(s) must be taken into account. Vinyl chloride volume11 AEGL Technical Support Document (pdf) (727.82 KB) Acute Exposure Guideline Levels Open Sidenav",
+    "page": "vinyl-chloride-results-aegl-programs.html"
+   }
+  ],
+  "75-15-0": [
+   {
+    "status": "Final",
+    "unit": "ppm",
+    "aegl2_60": "160",
+    "unitRow": "ppm",
+    "footnote": "Carbon disulfide AEGL Technical Support Document (pdf) (906.65 KB) Acute Exposure Guideline Levels Open Sidenav Menu Close Sidenav Menu About AEGLsexpand or collapse the child menuHistory of AEGLs Access AEGLs by Chemical Name, CAS Number or AEGL Status AEGL Chemical Priority Lists How AEGLs are Dev",
+    "page": "carbon-disulfide-results-aegl-program.html"
+   }
+  ],
+  "75-21-8": [
+   {
+    "status": "Final",
+    "unit": "ppm",
+    "aegl2_60": "45",
+    "unitRow": "ppm",
+    "footnote": "NR=Not recommended Ethylene oxide AEGL Technical Support Document (pdf) (688.52 KB) Acute Exposure Guideline Levels Open Sidenav Menu Close Sidenav Menu About AEGLsexpand or collapse the child menuHistory of AEGLs Access AEGLs by Chemical Name, CAS Number or AEGL Status AEGL Chemical Priority Lists ",
+    "page": "ethylene-oxide-results-aegl-program.html"
+   }
+  ],
+  "75-44-5": [
+   {
+    "status": "Final",
+    "unit": "ppm",
+    "aegl2_60": "0.30",
+    "unitRow": "ppm",
+    "footnote": "NR = Not recommended due to insufficient data Phosgene AEGL Technical Support Document (pdf) (635.17 KB) Acute Exposure Guideline Levels Open Sidenav Menu Close Sidenav Menu About AEGLsexpand or collapse the child menuHistory of AEGLs Access AEGLs by Chemical Name, CAS Number or AEGL Status AEGL Che",
+    "page": "phosgene-results-aegl-program.html"
+   }
+  ],
+  "75-50-3": [
+   {
+    "status": "Interim",
+    "unit": "ppm",
+    "aegl2_60": "120",
+    "unitRow": "ppm (05/16/08)",
+    "footnote": "Level of Distinct Odor Awareness = 0.00051 ppm IMPORTANT NOTE: Interim AEGLs are established following review and consideration by the National Advisory Committee for AEGLs (NAC/AEGL) of public comments on Proposed AEGLs. Interim AEGLs are available for use by organizations while awaiting NRC/NAS pe",
+    "page": "trimethyl-amine-results-aegl-program.html"
+   }
+  ],
+  "75-54-7": [
+   {
+    "status": "Final",
+    "unit": "ppm",
+    "aegl2_60": "11",
+    "unitRow": "ppm",
+    "footnote": "Chlorosilanes AEGL Technical Support Document (pdf) (560.09 KB) Acute Exposure Guideline Levels Open Sidenav Menu Close Sidenav Menu About AEGLsexpand or collapse the child menuHistory of AEGLs Access AEGLs by Chemical Name, CAS Number or AEGL Status AEGL Chemical Priority Lists How AEGLs are Develo",
+    "page": "methyl-dichlorosilane-results-aegl-program.html"
+   }
+  ],
+  "75-56-9": [
+   {
+    "status": "Final",
+    "unit": "",
+    "aegl2_60": "290",
+    "unitRow": "",
+    "footnote": "Level of Distinct Odor Awareness (LOA) = 21 ppm Propylene oxide AEGL Technical Support Document (pdf) (579.73 KB) Acute Exposure Guideline Levels Open Sidenav Menu Close Sidenav Menu About AEGLsexpand or collapse the child menuHistory of AEGLs Access AEGLs by Chemical Name, CAS Number or AEGL Status",
+    "page": "propylene-oxide-results-aegl-program.html"
+   }
+  ],
+  "75-79-6": [
+   {
+    "status": "Final",
+    "unit": "ppm",
+    "aegl2_60": "7.3",
+    "unitRow": "ppm",
+    "footnote": "Chlorosilanes AEGL Technical Support Document (pdf) (560.09 KB) Acute Exposure Guideline Levels Open Sidenav Menu Close Sidenav Menu About AEGLsexpand or collapse the child menuHistory of AEGLs Access AEGLs by Chemical Name, CAS Number or AEGL Status AEGL Chemical Priority Lists How AEGLs are Develo",
+    "page": "trichloromethyl-silane-results-aegl-program.html"
+   }
+  ],
+  "75-94-5": [
+   {
+    "status": "Final",
+    "unit": "ppm",
+    "aegl2_60": "7.3",
+    "unitRow": "ppm",
+    "footnote": "Chlorosilanes AEGL Technical Support Document (pdf) (560.09 KB) Acute Exposure Guideline Levels Open Sidenav Menu Close Sidenav Menu About AEGLsexpand or collapse the child menuHistory of AEGLs Access AEGLs by Chemical Name, CAS Number or AEGL Status AEGL Chemical Priority Lists How AEGLs are Develo",
+    "page": "vinyltrichlorosilane-result-aegl-program.html"
+   }
+  ],
+  "7550-45-0": [
+   {
+    "status": "Interim",
+    "unit": "ppm",
+    "aegl2_60": "1.0",
+    "unitRow": "ppm (12/12/06)",
+    "footnote": "NR = Not recommended due to insufficient data IMPORTANT NOTE: Interim AEGLs are established following review and consideration by the National Advisory Committee for AEGLs (NAC/AEGL) of public comments on Proposed AEGLs. Interim AEGLs are available for use by organizations while awaiting NRC/NAS pee",
+    "page": "titanium-tetrachloride-results-aegl-program.html"
+   }
+  ],
+  "76-06-2": [
+   {
+    "status": "Interim",
+    "unit": "ppm",
+    "aegl2_60": "0.15",
+    "unitRow": "ppm (05/16/08)",
+    "footnote": "IMPORTANT NOTE: Interim AEGLs are established following review and consideration by the National Advisory Committee for AEGLs (NAC/AEGL) of public comments on Proposed AEGLs. Interim AEGLs are available for use by organizations while awaiting NRC/NAS peer review and publication of Final AEGLs. Chang",
+    "page": "chloropicrin-results-aegl-program.html"
+   }
+  ],
+  "7637-07-2": [
+   {
+    "status": "Final",
+    "unit": "mg/m3",
+    "aegl2_60": "29 mg/m3",
+    "unitRow": "(mg/m3)",
+    "footnote": "NOTE THAT VALUES ARE IN mg/m3, NOT ppm. Boron trifluoride AEGL Technical Support Document (pdf) (1.41 MB) Acute Exposure Guideline Levels Open Sidenav Menu Close Sidenav Menu About AEGLsexpand or collapse the child menuHistory of AEGLs Access AEGLs by Chemical Name, CAS Number or AEGL Status AEGL Ch",
+    "page": "boron-trifluoride-results-aegl-program.html"
+   }
+  ],
+  "7647-01-0": [
+   {
+    "status": "Final",
+    "unit": "ppm",
+    "aegl2_60": "22",
+    "unitRow": "ppm",
+    "footnote": "Hydrogen Chloride AEGL Technical Support Document (pdf) (1.09 MB) Acute Exposure Guideline Levels Open Sidenav Menu Close Sidenav Menu About AEGLsexpand or collapse the child menuHistory of AEGLs Access AEGLs by Chemical Name, CAS Number or AEGL Status AEGL Chemical Priority Lists How AEGLs are Deve",
+    "page": "hydrogen-chloride-results-aegl-program.html"
+   }
+  ],
+  "7664-39-3": [
+   {
+    "status": "Final",
+    "unit": "ppm",
+    "aegl2_60": "24",
+    "unitRow": "ppm",
+    "footnote": "Hydrogen Fluoride AEGL Technical Support Document (pdf) (1.34 MB) Acute Exposure Guideline Levels Open Sidenav Menu Close Sidenav Menu About AEGLsexpand or collapse the child menuHistory of AEGLs Access AEGLs by Chemical Name, CAS Number or AEGL Status AEGL Chemical Priority Lists How AEGLs are Deve",
+    "page": "hydrogen-fluoride-results-aegl-program.html"
+   }
+  ],
+  "7664-41-7": [
+   {
+    "status": "Final",
+    "unit": "ppm",
+    "aegl2_60": "160",
+    "unitRow": "ppm",
+    "footnote": "Ammonia AEGL Technical Support Document (pdf) (659.98 KB) Acute Exposure Guideline Levels Open Sidenav Menu Close Sidenav Menu About AEGLsexpand or collapse the child menuHistory of AEGLs Access AEGLs by Chemical Name, CAS Number or AEGL Status AEGL Chemical Priority Lists How AEGLs are Developedexp",
+    "page": "ammonia-results-aegl-program.html"
+   }
+  ],
+  "7664-93-9": [
+   {
+    "status": "Interim",
+    "unit": "mg/m3",
+    "aegl2_60": "8.7 mg/m3",
+    "unitRow": "(mg/m3) 11/30/06",
+    "footnote": "NOTE THAT VALUES ARE IN mg/m3, NOT ppm. IMPORTANT NOTE: Interim AEGLs are established following review and consideration by the National Advisory Committee for AEGLs (NAC/AEGL) of public comments on Proposed AEGLs. Interim AEGLs are available for use by organizations while awaiting NRC/NAS peer revi",
+    "page": "sulfuric-acid-results-aegl-program.html"
+   }
+  ],
+  "7697-37-2": [
+   {
+    "status": "Final",
+    "unit": "ppm",
+    "aegl2_60": "24",
+    "unitRow": "ppm",
+    "footnote": "Nitric acid AEGL Technical Support Document (pdf) (542.83 KB) Acute Exposure Guideline Levels Open Sidenav Menu Close Sidenav Menu About AEGLsexpand or collapse the child menuHistory of AEGLs Access AEGLs by Chemical Name, CAS Number or AEGL Status AEGL Chemical Priority Lists How AEGLs are Develope",
+    "page": "nitric-acid-results-aegl-program.html"
+   }
+  ],
+  "7719-09-7": [
+   {
+    "status": "Interim",
+    "unit": "ppm",
+    "aegl2_60": "2.4",
+    "unitRow": "ppm (05/16/08)",
+    "footnote": "NR = Not recommended due to insufficient data IMPORTANT NOTE: Interim AEGLs are established following review and consideration by the National Advisory Committee for AEGLs (NAC/AEGL) of public comments on Proposed AEGLs. Interim AEGLs are available for use by organizations while awaiting NRC/NAS pee",
+    "page": "thionyl-chloride-results-aegl-program.html"
+   }
+  ],
+  "7719-12-2": [
+   {
+    "status": "Final",
+    "unit": "ppm",
+    "aegl2_60": "2.0",
+    "unitRow": "ppm",
+    "footnote": "Phosphorus trichloride AEGL Technical Support Document (pdf) (270.99 KB) Acute Exposure Guideline Levels Open Sidenav Menu Close Sidenav Menu About AEGLsexpand or collapse the child menuHistory of AEGLs Access AEGLs by Chemical Name, CAS Number or AEGL Status AEGL Chemical Priority Lists How AEGLs a",
+    "page": "phosphorus-trichloride-results-aegl-program.html"
+   }
+  ],
+  "7726-95-6": [
+   {
+    "status": "Final",
+    "unit": "ppm",
+    "aegl2_60": "0.24",
+    "unitRow": "ppm",
+    "footnote": "Bromine AEGL Technical Support Document (pdf) (445.63 KB) Acute Exposure Guideline Levels Open Sidenav Menu Close Sidenav Menu About AEGLsexpand or collapse the child menuHistory of AEGLs Access AEGLs by Chemical Name, CAS Number or AEGL Status AEGL Chemical Priority Lists How AEGLs are Developedexp",
+    "page": "bromine-results-aegl-program.html"
+   }
+  ],
+  "7782-41-4": [
+   {
+    "status": "Final",
+    "unit": "ppm",
+    "aegl2_60": "5.0",
+    "unitRow": "ppm",
+    "footnote": "Fluorine AEGL Technical Support Document (pdf) (536.89 KB) Acute Exposure Guideline Levels Open Sidenav Menu Close Sidenav Menu About AEGLsexpand or collapse the child menuHistory of AEGLs Access AEGLs by Chemical Name, CAS Number or AEGL Status AEGL Chemical Priority Lists How AEGLs are Developedex",
+    "page": "fluorine-results-aegl-program.html"
+   }
+  ],
+  "7782-50-5": [
+   {
+    "status": "Final",
+    "unit": "ppm",
+    "aegl2_60": "2.0",
+    "unitRow": "ppm",
+    "footnote": "Chlorine AEGL Technical Support Document (pdf) (1.36 MB) Acute Exposure Guideline Levels Open Sidenav Menu Close Sidenav Menu About AEGLsexpand or collapse the child menuHistory of AEGLs Access AEGLs by Chemical Name, CAS Number or AEGL Status AEGL Chemical Priority Lists How AEGLs are Developedexpa",
+    "page": "chlorine-results-aegl-program.html"
+   }
+  ],
+  "7782-65-2": [
+   {
+    "status": "Interim",
+    "unit": "ppm",
+    "aegl2_60": "0.17",
+    "unitRow": "ppm 09/21/09",
+    "footnote": "NR = Not recommended due to insufficient data IMPORTANT NOTE: Interim AEGLs are established following review and consideration by the National Advisory Committee for AEGLs (NAC/AEGL) of public comments on Proposed AEGLs. Interim AEGLs are available for use by organizations while awaiting NRC/NAS pee",
+    "page": "germane-results-aegl-program.html"
+   }
+  ],
+  "7783-06-4": [
+   {
+    "status": "Final",
+    "unit": "ppm",
+    "aegl2_60": "27",
+    "unitRow": "ppm",
+    "footnote": "* Level of Odor Awareness = 0.01 ppm Hydrogen sulfide AEGL Technical Support Document (pdf) (481.67 KB) Acute Exposure Guideline Levels Open Sidenav Menu Close Sidenav Menu About AEGLsexpand or collapse the child menuHistory of AEGLs Access AEGLs by Chemical Name, CAS Number or AEGL Status AEGL Chem",
+    "page": "hydrogen-sulfide-results-aegl-program.html"
+   }
+  ],
+  "7783-07-5": [
+   {
+    "status": "Final",
+    "unit": "ppm",
+    "aegl2_60": "0.11",
+    "unitRow": "ppm",
+    "footnote": "NR = Not recommended due to insufficient data Hydrogen selenide AEGL Technical Support Document (pdf) (453.75 KB) Acute Exposure Guideline Levels Open Sidenav Menu Close Sidenav Menu About AEGLsexpand or collapse the child menuHistory of AEGLs Access AEGLs by Chemical Name, CAS Number or AEGL Status",
+    "page": "hydrogen-selenide-results-aegl-program.html"
+   }
+  ],
+  "7783-61-1": [
+   {
+    "status": "Interim",
+    "unit": "ppm",
+    "aegl2_60": "3.3",
+    "unitRow": "ppm (05/16/08)",
+    "footnote": "IMPORTANT NOTE: Interim AEGLs are established following review and consideration by the National Advisory Committee for AEGLs (NAC/AEGL) of public comments on Proposed AEGLs. Interim AEGLs are available for use by organizations while awaiting NRC/NAS peer review and publication of Final AEGLs. Chang",
+    "page": "silicon-tetrafluoride-results-aegl-program.html"
+   }
+  ],
+  "7784-42-1": [
+   {
+    "status": "Final",
+    "unit": "ppm",
+    "aegl2_60": "0.17",
+    "unitRow": "ppm",
+    "footnote": "NR = Not Recommended since AEGL-2 concentrations are below sensory effect concentrations. Arsine AEGL Technical Support Document (pdf) (622.92 KB) Documentation for 10-min values (pdf) (382.99 KB) Acute Exposure Guideline Levels Open Sidenav Menu Close Sidenav Menu About AEGLsexpand or collapse the ",
+    "page": "arsine-results-aegl-program.html"
+   }
+  ],
+  "7789-30-2": [
+   {
+    "status": "Final",
+    "unit": "ppm",
+    "aegl2_60": "0.17",
+    "unitRow": "ppm",
+    "footnote": "NR = Not recommended due to insufficient data. Absence of an AEGL-1 value does not imply that exposures below the AEGL-2 value are without adverse effects. Bromine pentafluoride AEGL Technical Support Document (pdf) (1.16 MB) Acute Exposure Guideline Levels Open Sidenav Menu Close Sidenav Menu About",
+    "page": "bromine-pentafluoride-results-aegl-program.html"
+   }
+  ],
+  "7790-94-5": [
+   {
+    "status": "Interim",
+    "unit": "mg/m3",
+    "aegl2_60": "4.4 mg/m3",
+    "unitRow": "mg/m3 (05/16/08)",
+    "footnote": "NOTE THAT VALUES ARE IN mg/m3, NOT ppm. IMPORTANT NOTE: Interim AEGLs are established following review and consideration by the National Advisory Committee for AEGLs (NAC/AEGL) of public comments on Proposed AEGLs. Interim AEGLs are available for use by organizations while awaiting NRC/NAS peer revi",
+    "page": "chlorosulfonic-acid-results-aegl-program.html"
+   }
+  ],
+  "78-93-3": [
+   {
+    "status": "Final",
+    "unit": "ppm",
+    "aegl2_60": "2,700*",
+    "unitRow": "ppm",
+    "footnote": "Lower Explosive Limit (LEL) = 18,000 ppm * = >10% LEL; ** = >50% LEL AEGL 3 - 10 min/30 min = ** 10,000 ppm For values denoted as * safety considerations against the hazard(s) of explosion(s) must be taken into account. For values denoted as ** extreme safety considerations against the hazard(s) of ",
+    "page": "methyl-ethyl-ketone-results-aegl-program.html"
+   }
+  ],
+  "78-94-4": [
+   {
+    "status": "Interim",
+    "unit": "ppm",
+    "aegl2_60": "1.2",
+    "unitRow": "ppm (05/16/08)",
+    "footnote": "IMPORTANT NOTE: Interim AEGLs are established following review and consideration by the National Advisory Committee for AEGLs (NAC/AEGL) of public comments on Proposed AEGLs. Interim AEGLs are available for use by organizations while awaiting NRC/NAS peer review and publication of Final AEGLs. Chang",
+    "page": "methyl-vinyl-ketone-results-aegl-program.html"
+   }
+  ],
+  "7803-51-2": [
+   {
+    "status": "Final",
+    "unit": "ppm",
+    "aegl2_60": "2.0",
+    "unitRow": "ppm",
+    "footnote": "Phosphine AEGL Technical Support Document (pdf) (793.98 KB) Acute Exposure Guideline Levels Open Sidenav Menu Close Sidenav Menu About AEGLsexpand or collapse the child menuHistory of AEGLs Access AEGLs by Chemical Name, CAS Number or AEGL Status AEGL Chemical Priority Lists How AEGLs are Developede",
+    "page": "phosphine-results-aeglprogram.html"
+   }
+  ],
+  "7803-62-5": [
+   {
+    "status": "Interim",
+    "unit": "ppm",
+    "aegl2_60": "130",
+    "unitRow": "ppm 11/1/07",
+    "footnote": "NR = Not recommended due to insufficient data IMPORTANT NOTE: Interim AEGLs are established following review and consideration by the National Advisory Committee for AEGLs (NAC/AEGL) of public comments on Proposed AEGLs. Interim AEGLs are available for use by organizations while awaiting NRC/NAS pee",
+    "page": "silane-results-aegl-program.html"
+   }
+  ],
+  "79-10-7": [
+   {
+    "status": "Interim",
+    "unit": "ppm",
+    "aegl2_60": "46",
+    "unitRow": "ppm 4/11/2002",
+    "footnote": "IMPORTANT NOTE: Interim AEGLs are established following review and consideration by the National Advisory Committee for AEGLs (NAC/AEGL) of public comments on Proposed AEGLs. Interim AEGLs are available for use by organizations while awaiting NRC/NAS peer review and publication of Final AEGLs. Chang",
+    "page": "acrylic-acid-results-aegl-program.html"
+   }
+  ],
+  "91-08-7": [
+   {
+    "status": "Final",
+    "unit": "ppm",
+    "aegl2_60": "0.083",
+    "unitRow": "ppm",
+    "footnote": "2,4-Toluene Diisocyanate and 2,6-Toluene Diisocyanate AEGL Technical Support Document (pdf) (1.25 MB) Acute Exposure Guideline Levels Open Sidenav Menu Close Sidenav Menu About AEGLsexpand or collapse the child menuHistory of AEGLs Access AEGLs by Chemical Name, CAS Number or AEGL Status AEGL Chemic",
+    "page": "26-toluenediisocyanate-results-aegl-program.html"
+   }
+  ]
+ },
+ "pac": {
+  "100-42-5": [
+   {
+    "no": "2659",
+    "name": "Styrene",
+    "casCell": "100-42-5",
+    "pac2": "130",
+    "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "100-44-7": [
+   {
+    "no": "265",
+    "name": "Benzyl chloride",
+    "casCell": "100-44-7",
+    "pac2": "10ₑ",
+    "source": "ERPG-1, ERPG-2, ERPG-3",
+    "unit": "ppm"
+   }
+  ],
+  "100-97-0": [
+   {
+    "no": "1388",
+    "name": "Hexamethylenetetraamine; (Methenamine)",
+    "casCell": "100-97-0",
+    "pac2": "610",
+    "source": "TEEL-2/11, TEEL-3/6, rat iv LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "10025-78-2": [
+   {
+    "no": "2905",
+    "name": "Trichlorosilane",
+    "casCell": "10025-78-2",
+    "pac2": "7.3",
+    "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "10025-87-3": [
+   {
+    "no": "2192",
+    "name": "Phosphorus oxychloride",
+    "casCell": "10025-87-3",
+    "pac2": "0.48",
+    "source": "TLV-TWA x 3, LOC, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "10026-04-7": [
+   {
+    "no": "2731",
+    "name": "Tetrachlorosilane; (Silicon chloride)",
+    "casCell": "10026-04-7",
+    "pac2": "5.5",
+    "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "10049-04-4": [
+   {
+    "no": "564",
+    "name": "Chlorine dioxide",
+    "casCell": "10049-04-4",
+    "pac2": "1.1",
+    "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "10102-43-9": [
+   {
+    "no": "1955",
+    "name": "Nitric oxide",
+    "casCell": "10102-43-9",
+    "pac2": "12",
+    "source": "Used nitrogen dioxide (10102-44-0) AEGL values",
+    "unit": "ppm"
+   }
+  ],
+  "10294-34-5": [
+   {
+    "no": "331",
+    "name": "Boron trichloride",
+    "casCell": "10294-34-5",
+    "pac2": "2.1",
+    "source": "TEEL-2/11, LOC, rat 60-min LC50",
+    "unit": "ppm"
+   }
+  ],
+  "106-99-0": [
+   {
+    "no": "387",
+    "name": "Butadiene, 1,3-",
+    "casCell": "106-99-0",
+    "pac2": "5300",
+    "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "107-02-8": [
+   {
+    "no": "28",
+    "name": "Acrolein",
+    "casCell": "107-02-8",
+    "pac2": "0.10",
+    "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "107-05-1": [
+   {
+    "no": "57",
+    "name": "Allyl chloride",
+    "casCell": "107-05-1",
+    "pac2": "54",
+    "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "107-13-1": [
+   {
+    "no": "32",
+    "name": "Acrylonitrile",
+    "casCell": "107-13-1",
+    "pac2": "1.7",
+    "source": "AEGL-2/11, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "107-15-3": [
+   {
+    "no": "1207",
+    "name": "Ethylenediamine, 1,2-",
+    "casCell": "107-15-3",
+    "pac2": "9.7",
+    "source": "AEGL-2/11, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "107-18-6": [
+   {
+    "no": "55",
+    "name": "Allyl alcohol",
+    "casCell": "107-18-6",
+    "pac2": "1.7",
+    "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "107-44-8": [
+   {
+    "no": "1519",
+    "name": "Isopropyl methanefluoro-phosphonate; (Sarin; GB)",
+    "casCell": "107-44-8",
+    "pac2": "0.0060",
+    "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "107-46-0": [
+   {
+    "no": "1383",
+    "name": "Hexamethyldisiloxane",
+    "casCell": "107-46-0",
+    "pac2": "140",
+    "source": "TEEL-2/11, rat 360-min TCLo, mouse ip LD50",
+    "unit": "ppm"
+   }
+  ],
+  "108-38-3": [
+   {
+    "no": "3078",
+    "name": "Xylene, m- (inlcudes o- (95-47-6) and p- (106-42-3) isomers)",
+    "casCell": "108-38-3",
+    "pac2": "920",
+    "source": "TLV-STEL, EEGL-60 min, IDLH (1990)",
+    "unit": "ppm"
+   }
+  ],
+  "108-88-3": [
+   {
+    "no": "2846",
+    "name": "Toluene",
+    "casCell": "108-88-3",
+    "pac2": "560",
+    "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "108-95-2": [
+   {
+    "no": "2134",
+    "name": "Phenol",
+    "casCell": "108-95-2",
+    "pac2": "23",
+    "source": "AEGL-1, AEGL-2, ERPG-3",
+    "unit": "ppm"
+   }
+  ],
+  "109-73-9": [
+   {
+    "no": "437",
+    "name": "Butylamine, n-",
+    "casCell": "109-73-9",
+    "pac2": "50",
+    "source": "MAK-TWA x 3, TEEL-3/6, IDLH (1994)",
+    "unit": "ppm"
+   }
+  ],
+  "109-92-2": [
+   {
+    "no": "3060",
+    "name": "Vinyl ethyl ether; (Ethoxy ethene)",
+    "casCell": "109-92-2",
+    "pac2": "110",
+    "source": "TEEL-2/11, TEEL-3/6, rat 240-min LCLo",
+    "unit": "ppm"
+   }
+  ],
+  "115-21-9": [
+   {
+    "no": "2891",
+    "name": "Trichloroethylsilane; (Ethyl trichlorosilane)",
+    "casCell": "115-21-9",
+    "pac2": "7.3",
+    "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "116-14-3": [
+   {
+    "no": "2748",
+    "name": "Tetrafluoroethylene",
+    "casCell": "116-14-3",
+    "pac2": "55",
+    "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "121-44-8": [
+   {
+    "no": "2915",
+    "name": "Triethylamine",
+    "casCell": "121-44-8",
+    "pac2": "170",
+    "source": "TLV-STEL, TEEL-3/6, IDLH (1990)",
+    "unit": "ppm"
+   }
+  ],
+  "1314-84-7": [
+   {
+    "no": "3111",
+    "name": "Zinc phosphide",
+    "casCell": "1314-84-7",
+    "pac2": "11",
+    "source": "AEGL-2/11, AEGL-2, AEGL-3",
+    "unit": "mg/m3"
+   }
+  ],
+  "1330-20-7": [
+   {
+    "no": "3079",
+    "name": "Xylenes",
+    "casCell": "1330-20-7",
+    "pac2": "920",
+    "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "1338-23-4": [
+   {
+    "no": "1743",
+    "name": "Methyl ethyl ketone peroxide",
+    "casCell": "1338-23-4",
+    "pac2": "20",
+    "source": "TEEL-2/11, TLV-C adjusted based on ratio to toxicity data, rat 240-min LC50",
+    "unit": "ppm"
+   }
+  ],
+  "13463-39-3": [
+   {
+    "no": "1921",
+    "name": "Nickel carbonyl",
+    "casCell": "13463-39-3",
+    "pac2": "0.036",
+    "source": "AEGL-2/11, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "13463-40-6": [
+   {
+    "no": "1480",
+    "name": "Iron pentacarbonyl",
+    "casCell": "13463-40-6",
+    "pac2": "0.060",
+    "source": "AEGL-2/11, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "141-78-6": [
+   {
+    "no": "1151",
+    "name": "Ethyl acetate",
+    "casCell": "141-78-6",
+    "pac2": "1700",
+    "source": "TLV-TWA x 3, TEEL-3/6, IDLH (1990)",
+    "unit": "ppm"
+   }
+  ],
+  "143-33-9": [
+   {
+    "no": "2535",
+    "name": "Sodium cyanide",
+    "casCell": "143-33-9",
+    "pac2": "14",
+    "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "mg/m3"
+   }
+  ],
+  "151-56-4": [
+   {
+    "no": "1215",
+    "name": "Ethyleneimine",
+    "casCell": "151-56-4",
+    "pac2": "4.6",
+    "source": "TLV-STEL, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "19287-45-7": [
+   {
+    "no": "807",
+    "name": "Diborane",
+    "casCell": "19287-45-7",
+    "pac2": "1.0",
+    "source": "TLV-TWA x 3, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "3811-04-9": [
+   {
+    "no": "2297",
+    "name": "Potassium chlorate",
+    "casCell": "3811-04-9",
+    "pac2": "62",
+    "source": "TEEL-2/11, TEEL-3/6, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "4098-71-9": [
+   {
+    "no": "1511",
+    "name": "Isophorone diisocyanate",
+    "casCell": "4098-71-9",
+    "pac2": "1.2",
+    "source": "REL-STEL, LOC, rat 240-min LC50",
+    "unit": "mg/m3"
+   }
+  ],
+  "4109-96-0": [
+   {
+    "no": "870",
+    "name": "Dichlorosilane",
+    "casCell": "4109-96-0",
+    "pac2": "11",
+    "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "50-00-0": [
+   {
+    "no": "1279",
+    "name": "Formaldehyde",
+    "casCell": "50-00-0",
+    "pac2": "14",
+    "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "506-77-4": [
+   {
+    "no": "734",
+    "name": "Cyanogen chloride",
+    "casCell": "506-77-4",
+    "pac2": "0.050",
+    "source": "ERPG-2/11, ERPG-2, ERPG-3",
+    "unit": "ppm"
+   }
+  ],
+  "584-84-9": [
+   {
+    "no": "2849",
+    "name": "Toluene-2,4-diisocyanate; (TDI)",
+    "casCell": "584-84-9",
+    "pac2": "0.083",
+    "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "60-34-4": [
+   {
+    "no": "1880",
+    "name": "Monomethylhydrazine; (Methyl hydrazine)",
+    "casCell": "60-34-4",
+    "pac2": "0.90",
+    "source": "AEGL-2/11, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "630-08-0": [
+   {
+    "no": "518",
+    "name": "Carbon monoxide",
+    "casCell": "630-08-0",
+    "pac2": "83",
+    "source": "TLV-TWA x 3, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "64-18-6": [
+   {
+    "no": "1283",
+    "name": "Formic acid",
+    "casCell": "64-18-6",
+    "pac2": "25ₑ",
+    "source": "ERPG-1, ERPG-2, ERPG-3",
+    "unit": "ppm"
+   }
+  ],
+  "6484-52-2": [
+   {
+    "no": "144",
+    "name": "Ammonium nitrate",
+    "casCell": "6484-52-2",
+    "pac2": "73",
+    "source": "TEEL-2/11, TEEL-3/6, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "67-56-1": [
+   {
+    "no": "1729",
+    "name": "Methyl alcohol; (Methanol)",
+    "casCell": "67-56-1",
+    "pac2": "2100",
+    "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "71-43-2": [
+   {
+    "no": "236",
+    "name": "Benzene",
+    "casCell": "71-43-2",
+    "pac2": "800",
+    "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "74-87-3": [
+   {
+    "no": "1735",
+    "name": "Methyl chloride",
+    "casCell": "74-87-3",
+    "pac2": "910",
+    "source": "ERPG-1, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "74-89-5": [
+   {
+    "no": "1879",
+    "name": "Monomethylamine; (Methylamine)",
+    "casCell": "74-89-5",
+    "pac2": "64",
+    "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "74-90-8": [
+   {
+    "no": "1422",
+    "name": "Hydrogen cyanide; (Hydrocyanic acid)",
+    "casCell": "74-90-8",
+    "pac2": "7.1ₐ",
+    "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "7440-23-5": [
+   {
+    "no": "2497",
+    "name": "Sodium",
+    "casCell": "7440-23-5",
+    "pac2": "5.0",
+    "source": "TEEL-2/11, TEEL-3/6, mouse ip LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "75-01-4": [
+   {
+    "no": "3059",
+    "name": "Vinyl chloride",
+    "casCell": "75-01-4",
+    "pac2": "1200",
+    "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "75-15-0": [
+   {
+    "no": "517",
+    "name": "Carbon disulfide",
+    "casCell": "75-15-0",
+    "pac2": "160",
+    "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "75-21-8": [
+   {
+    "no": "1204",
+    "name": "Ethylene oxide; (Oxirane)",
+    "casCell": "75-21-8",
+    "pac2": "45",
+    "source": "PEL-STEL, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "75-35-4": [
+   {
+    "no": "3069",
+    "name": "Vinylidene chloride; (1,1-Dichloroethylene)",
+    "casCell": "75-35-4",
+    "pac2": "500ₑ",
+    "source": "ERPG-2/11, ERPG-2, ERPG-3",
+    "unit": "ppm"
+   }
+  ],
+  "75-44-5": [
+   {
+    "no": "2172",
+    "name": "Phosgene",
+    "casCell": "75-44-5",
+    "pac2": "0.30",
+    "source": "AEGL-2/11, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "75-50-3": [
+   {
+    "no": "2956",
+    "name": "Trimethylamine",
+    "casCell": "75-50-3",
+    "pac2": "120",
+    "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "75-52-5": [
+   {
+    "no": "1979",
+    "name": "Nitromethane",
+    "casCell": "75-52-5",
+    "pac2": "210",
+    "source": "TLV-TWA x 3, rat 360-min TCLo, IDLH (1990)",
+    "unit": "ppm"
+   }
+  ],
+  "75-54-7": [
+   {
+    "no": "1740",
+    "name": "Methyl dichlorosilane; (Dichloromethylsilane)",
+    "casCell": "75-54-7",
+    "pac2": "11",
+    "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "75-56-9": [
+   {
+    "no": "2404",
+    "name": "Propylene oxide; (Methyl ethylene oxide)",
+    "casCell": "75-56-9",
+    "pac2": "290",
+    "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "75-76-3": [
+   {
+    "no": "2773",
+    "name": "Tetramethylsilane",
+    "casCell": "75-76-3",
+    "pac2": "130",
+    "source": "Used MW-adjusted silane (7803-62-5) AEGL values",
+    "unit": "ppm"
+   }
+  ],
+  "75-79-6": [
+   {
+    "no": "1843",
+    "name": "Methyltrichlorosilane; (Trichloromethyl silane)",
+    "casCell": "75-79-6",
+    "pac2": "7.3",
+    "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "75-94-5": [
+   {
+    "no": "3064",
+    "name": "Vinyl trichlorosilane",
+    "casCell": "75-94-5",
+    "pac2": "7.3",
+    "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "7550-45-0": [
+   {
+    "no": "2842",
+    "name": "Titanium tetrachloride",
+    "casCell": "7550-45-0",
+    "pac2": "1ₐ",
+    "source": "ERPG-1, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "76-06-2": [
+   {
+    "no": "622",
+    "name": "Chloropicrin; (Trichloronitromethane)",
+    "casCell": "76-06-2",
+    "pac2": "0.15",
+    "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "7631-99-4": [
+   {
+    "no": "2580",
+    "name": "Sodium nitrate",
+    "casCell": "7631-99-4",
+    "pac2": "42",
+    "source": "TEEL-2/11, TEEL-3/6, mouse oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "7637-07-2": [
+   {
+    "no": "332",
+    "name": "Boron trifluoride",
+    "casCell": "7637-07-2",
+    "pac2": "29",
+    "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "mg/m3"
+   }
+  ],
+  "7647-01-0": [
+   {
+    "no": "1421",
+    "name": "Hydrogen chloride; (Hydrochloric acid)",
+    "casCell": "7647-01-0",
+    "pac2": "22ₐ",
+    "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "7664-39-3": [
+   {
+    "no": "1423",
+    "name": "Hydrogen fluoride; (Hydrofluoric acid)",
+    "casCell": "7664-39-3",
+    "pac2": "24ₐ",
+    "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "7664-41-7": [
+   {
+    "no": "112",
+    "name": "Ammonia",
+    "casCell": "7664-41-7",
+    "pac2": "160",
+    "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "7664-93-9": [
+   {
+    "no": "2681",
+    "name": "Sulfuric acid",
+    "casCell": "7664-93-9",
+    "pac2": "8.7",
+    "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "mg/m3"
+   }
+  ],
+  "7697-37-2": [
+   {
+    "no": "1951",
+    "name": "Nitric acid",
+    "casCell": "7697-37-2",
+    "pac2": "24",
+    "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "7719-09-7": [
+   {
+    "no": "2808",
+    "name": "Thionyl chloride",
+    "casCell": "7719-09-7",
+    "pac2": "2.4",
+    "source": "ERPG-1, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "7719-12-2": [
+   {
+    "no": "2196",
+    "name": "Phosphorus trichloride",
+    "casCell": "7719-12-2",
+    "pac2": "2.0",
+    "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "7722-64-7": [
+   {
+    "no": "2337",
+    "name": "Potassium permanganate",
+    "casCell": "7722-64-7",
+    "pac2": "1.3",
+    "source": "MW-adjusted manganese (1317-35-7) REL-STEL and PEL-C, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "7722-84-1": [
+   {
+    "no": "1424",
+    "name": "Hydrogen peroxide",
+    "casCell": "7722-84-1",
+    "pac2": "50ₑ",
+    "source": "ERPG-1, ERPG-2, ERPG-3",
+    "unit": "ppm"
+   }
+  ],
+  "7726-95-6": [
+   {
+    "no": "340",
+    "name": "Bromine",
+    "casCell": "7726-95-6",
+    "pac2": "0.24",
+    "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "7757-79-1": [
+   {
+    "no": "2328",
+    "name": "Potassium nitrate",
+    "casCell": "7757-79-1",
+    "pac2": "120",
+    "source": "TEEL-2/11, TEEL-3/6, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "7775-09-9": [
+   {
+    "no": "560",
+    "name": "Chloric acid, sodium salt; (Sodium chlorate)",
+    "casCell": "7775-09-9",
+    "pac2": "170",
+    "source": "TEEL-2/11, TEEL-3/6, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "7778-74-7": [
+   {
+    "no": "2335",
+    "name": "Potassium perchlorate",
+    "casCell": "7778-74-7",
+    "pac2": "65",
+    "source": "Used sodium perchlorate (7601-89-0) PAC values",
+    "unit": "mg/m3"
+   }
+  ],
+  "7782-41-4": [
+   {
+    "no": "1264",
+    "name": "Fluorine",
+    "casCell": "7782-41-4",
+    "pac2": "5",
+    "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "7782-50-5": [
+   {
+    "no": "563",
+    "name": "Chlorine",
+    "casCell": "7782-50-5",
+    "pac2": "2.0",
+    "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "7782-65-2": [
+   {
+    "no": "1309",
+    "name": "Germane; (Germanium tetrahydride)",
+    "casCell": "7782-65-2",
+    "pac2": "0.17",
+    "source": "AEGL-2/11, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "7783-06-4": [
+   {
+    "no": "1427",
+    "name": "Hydrogen sulfide",
+    "casCell": "7783-06-4",
+    "pac2": "27",
+    "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "7783-07-5": [
+   {
+    "no": "1426",
+    "name": "Hydrogen selenide",
+    "casCell": "7783-07-5",
+    "pac2": "0.11",
+    "source": "MAK-TWA x 3, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "7783-61-1": [
+   {
+    "no": "2483",
+    "name": "Silicon tetrafluoride; (Tetrafluorosilane)",
+    "casCell": "7783-61-1",
+    "pac2": "3.3",
+    "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "7784-42-1": [
+   {
+    "no": "200",
+    "name": "Arsine",
+    "casCell": "7784-42-1",
+    "pac2": "0.17",
+    "source": "AEGL-2/11, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "7789-30-2": [
+   {
+    "no": "342",
+    "name": "Bromine pentafluoride",
+    "casCell": "7789-30-2",
+    "pac2": "0.17",
+    "source": "AEGL-2/11, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "7790-94-5": [
+   {
+    "no": "632",
+    "name": "Chlorosulfonic acid; \n(Chlorosulfuric acid)",
+    "casCell": "7790-94-5",
+    "pac2": "4.4",
+    "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "mg/m3"
+   }
+  ],
+  "78-79-5": [
+   {
+    "no": "1513",
+    "name": "Isoprene",
+    "casCell": "78-79-5",
+    "pac2": "1000ₑ",
+    "source": "ERPG-1, ERPG-2, ERPG-3",
+    "unit": "ppm"
+   }
+  ],
+  "78-93-3": [
+   {
+    "no": "403",
+    "name": "Butanone, 2-; (Methyl ethyl ketone; MEK)",
+    "casCell": "78-93-3",
+    "pac2": "2700",
+    "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "78-94-4": [
+   {
+    "no": "1770",
+    "name": "Methyl vinyl ketone; (3-Buten-2-one)",
+    "casCell": "78-94-4",
+    "pac2": "1.2",
+    "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "7803-51-2": [
+   {
+    "no": "2176",
+    "name": "Phosphine",
+    "casCell": "7803-51-2",
+    "pac2": "2.0",
+    "source": "TLV-STEL, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "7803-62-5": [
+   {
+    "no": "2468",
+    "name": "Silane; (Silicon tetrahydride)",
+    "casCell": "7803-62-5",
+    "pac2": "130",
+    "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "79-10-7": [
+   {
+    "no": "31",
+    "name": "Acrylic acid",
+    "casCell": "79-10-7",
+    "pac2": "46",
+    "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "814-68-6": [
+   {
+    "no": "33",
+    "name": "Acrylyl chloride; (Acryloyl chloride)",
+    "casCell": "814-68-6",
+    "pac2": "0.9",
+    "source": "TEEL-2/11, LOC, mouse 120-min LC50",
+    "unit": "mg/m3"
+   }
+  ],
+  "96-33-3": [
+   {
+    "no": "1728",
+    "name": "Methyl acrylate",
+    "casCell": "96-33-3",
+    "pac2": "170",
+    "source": "TLV-TWA x 3, TEEL-3/6, IDLH (1990)",
+    "unit": "ppm"
+   }
+  ],
+  "98-95-3": [
+   {
+    "no": "1963",
+    "name": "Nitrobenzene",
+    "casCell": "98-95-3",
+    "pac2": "20",
+    "source": "TLV-TWA x 3, LOC, IDLH (1990 and 1994)",
+    "unit": "ppm"
+   }
+  ],
+  "99-99-0": [
+   {
+    "no": "2001",
+    "name": "Nitrotoluene, p-",
+    "casCell": "99-99-0",
+    "pac2": "33",
+    "source": "TLV-TWA x 3, TEEL-3/6, IDLH (1990 and 1994)",
+    "unit": "ppm"
+   }
+  ]
+ },
+ "skipped": []
+}
