@@ -118,6 +118,8 @@
   **배포 2026-10-20**: 리비전 `findchem-mcp-00008-495` Ready(서버 0.7.0-a010, 메모리 256Mi 그대로 기동). 커넥터 실측 통과 2026-10-20(13건 — REQUIREMENTS_AGENT A-010). 다음: ③ 함량기준 판정·행 정리·서식 파일을 스킬로.
   보충 2026-10-20(로컬 세션): 패키지 28 CAS 전수 실측도 통과(found 27ㆍnot_listed 1). 응답 약 99KB — 크기 주의는 REQUIREMENTS_AGENT A-010.
   **③ 함량 판정 규칙은 전문가 답 대기**(질문 6개 2026-10-20 전달 — 원문 요지는 REQUIREMENTS_AGENT A-010 3단계).
+  **③ 스펙화 2026-10-20**(결정 F1~F7: MCP 도구 `build_form6_rows` + 스킬 `form6-fill`, 현행 16칸 xlsx, 경계는 접지 않고 사용자 판정으로).
+  독성구분 대표ㆍ물질구분 범위 등 추가 질문 ⑦~⑩은 사용자가 전문가에게 보낼 차례. 다음: 구현(답과 무관한 부분부터).
 - [ ] **(master 트랙 F-010) 서버 중계 `POST /assist/messages`** — 웹의 판정(AI) 호출을 이 서버가 Anthropic으로 넘긴다(키는 서버에만).
   스펙·수용 기준의 원본은 `docs/REQUIREMENTS.md` F-010 한 곳이다(서버 항목은 이 브랜치에서 대조 — 그 절의 G11). 번호를 A로 새로 받지 않는다.
   **구현·테스트 완료 2026-10-12**(`lib/mcp/assist_proxy.dart`·`router.dart`, `test/mcp/assist_proxy_test.dart`, 서버 0.6.0-f010 — 서버 수용 기준 13항목 대응).
