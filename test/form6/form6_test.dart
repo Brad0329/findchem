@@ -205,6 +205,12 @@ void main() {
       expect(lowUnknown['status'], '확인필요');
     });
 
+    test('비중: 단위 없는 값이 비중 범위(0~25)를 벗어나면 확인필요 — `1058 (20 °C,)`는 kg/㎥ 밀도(IPDI, 패키지 대조에서 발견)', () async {
+      final v = specificGravityField(await fakeKosha(sg: '1058 (20 °C,)'), null);
+      expect(v['status'], '확인필요');
+      expect(specificGravityField(await fakeKosha(sg: '1.06'), null)['status'], '확정');
+    });
+
     test('물질상태: 하나만 걸리면 확정, 여럿·액화는 확인필요', () async {
       expect(stateField(await fakeKosha(state: '무색 액체'), null)['value'], '액체');
       expect(stateField(await fakeKosha(state: '액체 또는 기체'), null)['status'], '확인필요');

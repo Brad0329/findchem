@@ -111,7 +111,8 @@
   계기: 사용자가 준 인수인계 패키지(`temp/form6_handoff/`, 사업장 실명 자료 — 커밋 안 함). 1단계 = 사고대비물질 103 CAS(사용자 결정 2026-10-19).
   **9칸 구현 2026-10-19**(KOSHA MSDS + 환경공단 GHS 원문 515개, 위험노출수준 = AIHA ERPG + EPA AEGL + DOE PAC 2025-02판 —
   사용자 결정 "비상업 용도", 추출은 scripts/extract_exposure.py). A-002의 ERPGㆍPAC 부분은 여기로 흡수.
-  남은 것: 패키지 28행 대조 보고 → 2단계(MCP 도구로 내보내기) 스펙화. 배포 판 PAC 갱신은 미국 IP에서 받을 수 있을 때
+  패키지 28행 대조 2026-10-20(81칸 중 다름 19 — 생성기 결함 1건은 고침, 나머지는 온도·문헌·주⑨ 순서 차, 상세는 REQUIREMENTS_AGENT A-010).
+  남은 것: 2단계(MCP 도구로 내보내기) 스펙화. 배포 판 PAC 갱신은 미국 IP에서 받을 수 있을 때
 - [ ] **(master 트랙 F-010) 서버 중계 `POST /assist/messages`** — 웹의 판정(AI) 호출을 이 서버가 Anthropic으로 넘긴다(키는 서버에만).
   스펙·수용 기준의 원본은 `docs/REQUIREMENTS.md` F-010 한 곳이다(서버 항목은 이 브랜치에서 대조 — 그 절의 G11). 번호를 A로 새로 받지 않는다.
   **구현·테스트 완료 2026-10-12**(`lib/mcp/assist_proxy.dart`·`router.dart`, `test/mcp/assist_proxy_test.dart`, 서버 0.6.0-f010 — 서버 수용 기준 13항목 대응).

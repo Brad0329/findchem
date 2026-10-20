@@ -151,7 +151,10 @@ Map<String, Object?> specificGravityField(MsdsResult r, String? at, {MsdsLog? lo
   final unit = p.unit == null ? null : normalizeUnit(p.unit!);
   // `1.1 (20℃, 상대 밀도)` — 기준 표기 대신 '상대 밀도'라고 쓴 원문(2026-10-19 수집)
   final relative = unit == '상대밀도';
-  final ok = p.unitKind == UnitKind.relativeDensity || relative || p.unit == null || _sgDensityUnits.contains(unit);
+  // 단위 없는 값은 비중 범위(0~25 — 가장 무거운 원소 오스뮴 22.6) 안에서만 비중으로 본다.
+  // `1058 (20 °C,)`(IPDI)은 단위가 빠진 kg/㎥ 밀도다(2026-10-20 패키지 대조에서 발견)
+  final unitlessOk = p.unit == null && p.value > 0 && p.value < 25;
+  final ok = p.unitKind == UnitKind.relativeDensity || relative || unitlessOk || _sgDensityUnits.contains(unit);
   return _field(
     value: p.value,
     raw: v.raw,
@@ -161,6 +164,8 @@ Map<String, Object?> specificGravityField(MsdsResult r, String? at, {MsdsLog? lo
     status: ok ? Form6Status.confirmed : Form6Status.needsReview,
     note: ok
         ? (p.unit == null && p.basis == null ? '단위 없음 — 항목 이름이 비중' : null)
+        : p.unit == null
+        ? '단위 없는 값 ${p.number}이 비중 범위(0~25) 밖 — kg/㎥ 밀도일 수 있다'
         : '단위 ${p.unit} — 비중(물=1)으로 바로 쓸 수 없음',
     extra: {'number': p.number},
   );
