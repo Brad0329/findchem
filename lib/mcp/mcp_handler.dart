@@ -14,6 +14,7 @@ import '../assist/tools.dart';
 import '../calc/calc.dart';
 import '../calc/calc_definitions.dart';
 import '../classify/classify_cas.dart';
+import '../form6/form6_tool.dart';
 import '../parser/models.dart';
 
 /// 지원하는 MCP 프로토콜 판(최신이 앞). 클라이언트가 보낸 판이 여기 있으면 그대로 돌려준다.
@@ -29,13 +30,16 @@ abstract final class RpcError {
 }
 
 class McpHandler {
-  McpHandler(Dataset dataset, {required this.version, required this.log})
+  McpHandler(Dataset dataset, {required this.version, required this.log, this.form6})
       : _tools = AssistTools(dataset, log: log);
 
   /// `serverInfo.version`(배포 판 구분용).
   final String version;
   final void Function(String message) log;
   final AssistTools _tools;
+
+  /// A-010 6호 상수 생성물. 없으면 `get_form6_constants`만 실패로 답한다(E5).
+  final Form6Data? form6;
 
   /// 요청 본문(JSON 문자열) 하나를 처리한다. 돌려줄 응답이 없으면(알림뿐) null.
   /// 배치(배열)도 받는다 — 2025-03-26 판 클라이언트가 보낼 수 있다.
@@ -111,10 +115,12 @@ class McpHandler {
     final input = args == null ? const <String, Object?>{} : (args as Map).cast<String, Object?>();
     CalcOutcome? calc;
     try {
-      calc = runCalcTool(_tools.dataset, name, input) ?? runClassifyTool(_tools.dataset, name, input);
+      calc = runCalcTool(_tools.dataset, name, input) ??
+          runClassifyTool(_tools.dataset, name, input) ??
+          runForm6Tool(_tools.dataset, form6, name, input);
     } catch (e, st) {
-      // 계산ㆍ분류 도구는 입력 오류를 결과로 돌려준다 — 여기 오는 것은 코드 결함이다. 사유 없이 실패로 알리고 원인은 로그에.
-      log('A-004ㆍA-008 도구 예외($name): $e\n$st');
+      // 계산ㆍ분류ㆍ6호 도구는 입력 오류를 결과로 돌려준다 — 여기 오는 것은 코드 결함이다. 사유 없이 실패로 알리고 원인은 로그에.
+      log('A-004ㆍA-008ㆍA-010 도구 예외($name): $e\n$st');
       calc = CalcOutcome(const {}, error: '도구 실행에 실패했습니다: ${e.runtimeType}');
     }
     final outcome = calc == null
@@ -154,9 +160,14 @@ class McpHandler {
 /// MCP `tools/list`의 도구 배열 — [assistToolDefinitions]를 MCP 이름(`inputSchema`)으로 옮긴 것.
 /// 설명ㆍ스키마는 손대지 않는다(원본은 prompt.dart 하나).
 /// A-004 계산 도구 2개는 F-008 도구 뒤에 붙는다(설명 원본은 `lib/calc/calc_definitions.dart`).
-/// A-008 분류 도구는 그 뒤(설명 원본은 `lib/classify/classify_cas.dart`).
+/// A-008 분류 도구는 그 뒤(설명 원본은 `lib/classify/classify_cas.dart`), A-010 6호 도구는 맨 뒤(`lib/form6/form6_tool.dart`).
 List<Map<String, Object?>> mcpToolDefinitions() => [
-      for (final t in [...assistToolDefinitions(), ...calcToolDefinitions(), ...classifyToolDefinitions()])
+      for (final t in [
+        ...assistToolDefinitions(),
+        ...calcToolDefinitions(),
+        ...classifyToolDefinitions(),
+        ...form6ToolDefinitions(),
+      ])
         {
           'name': t['name'],
           'description': t['description'],

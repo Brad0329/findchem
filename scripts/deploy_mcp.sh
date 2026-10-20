@@ -24,6 +24,7 @@ rm -rf "$stage"
 mkdir -p "$stage"
 dart compile exe scripts/mcp_http_server.dart -o "$stage/server"
 cp assets/data/findchem_data.json "$stage/findchem_data.json"
+cp assets/form6/form6_constants.json "$stage/form6_constants.json"
 cat > "$stage/Dockerfile" <<'EOF'
 # dart 이미지는 /runtime(실행 파일이 쓰는 최소 libc)만 빌려 온다.
 FROM dart:stable AS runtime
@@ -31,7 +32,9 @@ FROM scratch
 COPY --from=runtime /runtime/ /
 COPY server /app/server
 COPY findchem_data.json /app/findchem_data.json
+COPY form6_constants.json /app/form6_constants.json
 ENV FINDCHEM_DATA=/app/findchem_data.json
+ENV FORM6_DATA=/app/form6_constants.json
 CMD ["/app/server"]
 EOF
 echo "이미지 재료: $stage ($(du -sh "$stage" | cut -f1))"

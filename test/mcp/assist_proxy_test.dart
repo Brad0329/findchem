@@ -219,7 +219,7 @@ void main() {
         return (jsonDecode(reply.body) as Map)['result'] as Map;
       }
 
-      expect((await rpc({'jsonrpc': '2.0', 'id': 1, 'method': 'tools/list'}))['tools'], hasLength(5));
+      expect((await rpc({'jsonrpc': '2.0', 'id': 1, 'method': 'tools/list'}))['tools'], hasLength(6));
       final called = await rpc({
         'jsonrpc': '2.0',
         'id': 2,
