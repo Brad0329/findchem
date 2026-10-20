@@ -298,6 +298,7 @@
     - [x] 상수 파일 없이 만든 서버: 이 도구는 isError + 사유, `classify_cas`는 정상
     - [x] MCP `tools/list` = 기존 5개(순서 그대로) + `get_form6_constants`. 서버 판 0.7.0-a010
     - [ ] (실측) 배포 후 커넥터 재연결 → 새 대화에서 명신기연 CAS로 호출해 found 9ㆍnot_covered 나머지가 나오는지
+      — 배포 2026-10-20 리비전 `findchem-mcp-00008-495`(서버 0.7.0-a010, 별표 2 범위 1,551 CAS 생성물). 실측 대기(커넥터 해제→재연결 필요)
 
 ### A-003: 물성 조회 도구 (KOSHA MSDS)
 - **설명**: CAS 하나로 안전보건공단 MSDS 조회 서비스(data.go.kr 15157612, `https://apis.data.go.kr/B552468/msdschem1`, XML 전용)를 불러
