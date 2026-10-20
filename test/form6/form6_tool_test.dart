@@ -36,9 +36,9 @@ void main() {
 
     test('items = 입력과 같은 순서ㆍ같은 개수(하나가 틀려도 나머지는 조회)', () {
       final r = run(['abc', '108-88-3', '123-86-4', '68-12-2', '108-88-3']);
-      expect(items(r).map((i) => i['status']), ['invalid', 'found', 'not_listed', 'not_covered', 'found']);
+      expect(items(r).map((i) => i['status']), ['invalid', 'found', 'not_listed', 'found', 'found']);
       expect(r['total'], 5);
-      expect(r['counts'], {'found': 2, 'not_covered': 1, 'not_listed': 1, 'invalid': 1});
+      expect(r['counts'], {'found': 3, 'not_covered': 0, 'not_listed': 1, 'invalid': 1});
     });
   });
 
@@ -58,15 +58,25 @@ void main() {
       expect((t['cas'], t['input'], t['status']), ('108-88-3', '000108-88-3', 'found'));
     });
 
-    test('68-12-2(DMF, 별표 2만) → not_covered + 물질구분ㆍ별표 2 고유번호 후보 / 123-86-4 → not_listed / abc → invalid', () {
+    test('68-12-2(DMF, 별표 2만) → found(범위 확장) + 물질구분ㆍ별표 2 고유번호 후보 / 123-86-4 → not_listed / abc → invalid', () {
       final [dmf, butyl, bad] = items(run(['68-12-2', '123-86-4', 'abc']));
-      expect(dmf['status'], 'not_covered');
+      expect(dmf['status'], 'found');
       expect(dmf['material_class'], isNotEmpty);
       expect((dmf['material_class'] as List).contains('사고대비'), isFalse);
-      expect((dmf['unique_number_candidates'] as List), isNotEmpty);
-      expect(dmf.containsKey('fields'), isFalse);
+      expect((dmf['unique_number_candidates'] as List).map((u) => (u as Map)['source']), contains('별표 2 고유번호'));
       expect(butyl['status'], 'not_listed');
       expect(bad['status'], 'invalid');
+    });
+
+    test('상수 데이터에 없는 유해화학물질 → not_covered(데이터에서 DMF를 뺀 경우), 칸 없음', () {
+      final sub = Form6Data.fromJson({
+        ...(onDisk.cast<String, Object?>()),
+        'substances': [for (final s in onDisk['substances'] as List) if ((s as Map)['cas'] != '68-12-2') s],
+      });
+      final dmf = (form6Constants(ds, sub, {'cas': ['68-12-2']}).response['items'] as List).single as Map;
+      expect(dmf['status'], 'not_covered');
+      expect(dmf.containsKey('fields'), isFalse);
+      expect((dmf['unique_number_candidates'] as List), isNotEmpty);
     });
 
     test('물질구분이 여럿인 사고대비물질(107-13-1 아크릴로니트릴) — 사고대비 먼저', () {
@@ -79,7 +89,8 @@ void main() {
   test('응답 머리에 AIHA 고지문 원문과 범위 문장', () {
     final r = run(['108-88-3']);
     expect(r['aiha_notice'] as String, contains('non-commercial, educational, research, and governmental use'));
-    expect(r['scope'] as String, contains('CAS 103개'));
+    expect(r['scope'] as String, contains('CAS ${(onDisk['targets'] as Map)['casCount']}개'));
+    expect((onDisk['targets'] as Map)['casCount'], greaterThan(1500));
     expect(r['fill_rules'] as String, contains('주⑨'));
   });
 

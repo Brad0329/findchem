@@ -69,7 +69,8 @@ Future<Map<String, Object?>> buildForm6({
   ExposureTables? exposure,
   void Function(String)? log,
 }) async {
-  final targets = form6TargetsOf(dataset);
+  // 별표 2까지(사용자 2026-10-20 범위 확장 — 1단계는 별표 3만이었다)
+  final targets = form6TargetsOf(dataset, includeByeolpyo2: true);
   final collectedFile = File('$rawDir/collected.json');
   final collected = collectedFile.existsSync()
       ? (jsonDecode(collectedFile.readAsStringSync()) as Map).cast<String, Object?>()
@@ -123,7 +124,7 @@ Future<Map<String, Object?>> buildForm6({
     'notice': '「화학사고예방관리계획서 작성 등에 관한 규정」 제2026-19호 별지 제6호서식 — 물질 상수 9칸',
     'collectedThrough': dates.isEmpty ? null : dates.last,
     'targets': {
-      'basis': '번들 별표 3(사고대비물질) 살아 있는 항목 — ${dataset.byeolpyo3.file}, 추출 ${dataset.extractedAt}',
+      'basis': '번들 별표 2ㆍ3 살아 있는 항목(별표 3 먼저) — ${dataset.byeolpyo3.file} · ${dataset.byeolpyo2.file}, 추출 ${dataset.extractedAt}',
       'entryCount': targets.entryCount,
       'casCount': targets.cas.length,
       'noCasEntries': [for (final e in targets.noCasEntries) {'no': e.no, 'name': e.name}],

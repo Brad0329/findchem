@@ -74,18 +74,18 @@ void main() {
   });
 
   group('대상', () {
-    test('대상 = 번들 별표 3 살아 있는 항목의 CAS 전부, 머리에 CAS 수와 CAS 없는 항목', () {
+    test('대상 = 번들 별표 2ㆍ3 살아 있는 항목의 CAS 전부(2026-10-20 범위 확장), 머리에 CAS 수와 CAS 없는 항목', () {
       final want = <String>{
         for (final e in ds.entries)
-          if (e.src == Source.byeolpyo3 && !e.deleted) ...e.cas,
+          if (!e.deleted) ...e.cas,
       };
       expect(subs.map((s) => s['cas']).toSet(), want);
       expect(subs.length, want.length);
       final t = built['targets'] as Map;
       expect(t['casCount'], want.length);
-      final noCas = ds.entries.where((e) => e.src == Source.byeolpyo3 && !e.deleted && e.cas.isEmpty).length;
+      final noCas = ds.entries.where((e) => !e.deleted && e.cas.isEmpty).length;
       expect((t['noCasEntries'] as List).length, noCas);
-      expect(t['entryCount'], form6TargetsOf(ds).entryCount);
+      expect(t['entryCount'], form6TargetsOf(ds, includeByeolpyo2: true).entryCount);
     });
 
     test('범위 확장(별표 2 포함) 대상 = 별표 3 CAS가 앞, 별표 2 살아 있는 항목 CAS가 뒤(중복 없음), CAS 없는 항목도 센다', () {
@@ -296,9 +296,18 @@ void main() {
       expect(n, greaterThan(200));
     });
 
-    test('세 원천 모두 없는 CAS만 자료없음(2026-10-19 원천: m-크레졸·헥사플루오로부타디엔·디실란·o-/p-자일렌 개별 CAS)', () {
-      final none = [for (final s in subs) if (f(s, 'exposure')['status'] == '자료없음') s['cas']];
+    test('사고대비물질 중 세 원천 모두 없는 CAS만 자료없음(2026-10-19 원천: m-크레졸·헥사플루오로부타디엔·디실란·o-/p-자일렌 개별 CAS)', () {
+      final b3 = form6TargetsOf(ds).cas.toSet();
+      final none = [for (final s in subs) if (b3.contains(s['cas']) && f(s, 'exposure')['status'] == '자료없음') s['cas']];
       expect(none, unorderedEquals(['108-39-4', '685-63-2', '1590-87-0', '95-47-6', '106-42-3']));
+    });
+
+    test('위험노출수준 자료없음 ⇔ 항목 목록이 비어 있다 — 전 CAS', () {
+      for (final s in subs) {
+        final e = f(s, 'exposure');
+        final list = e['value'] as List;
+        expect(e['status'] == '자료없음', list.isEmpty, reason: '${s['cas']}');
+      }
     });
 
     // 두 원천 대조 — PAC 표가 근거로 적은 AEGL·ERPG 값이 각 원천에서 뽑은 값과 같다(추출이 틀리면 어긋난다)
@@ -317,17 +326,42 @@ void main() {
       expect(n, greaterThan(50));
     });
 
-    test('대조: PAC-2 근거가 ERPG-2면 AIHA ERPG-2와 같다', () {
+    // 질량 단위는 mg/m3로 맞춰 비교한다(AIHA 베릴륨 `25 µg/m3` ↔ PAC `0.025 mg/m3` — 2026-10-20 이 테스트가 단위 미인식을 잡았다)
+    double? asMg(Map<String, Object?> e) {
+      final u = (e['unit'] as String?)?.toLowerCase();
+      final v = e['value'] as double;
+      if (u == null) return null;
+      if (u.startsWith('mg/')) return v;
+      if (u.startsWith('µg/') || u.startsWith('μg/') || u.startsWith('ug/')) return v / 1000;
+      return null;
+    }
+
+    bool sameQuantity(Map<String, Object?> a, Map<String, Object?> b) {
+      if (a['unit'] == 'ppm' || b['unit'] == 'ppm') return a['unit'] == b['unit'] && a['value'] == b['value'];
+      final x = asMg(a), y = asMg(b);
+      return x != null && y != null && (x - y).abs() <= 1e-9 * (x.abs() + y.abs() + 1);
+    }
+
+    test('대조: PAC-2 근거가 ERPG-2면 AIHA ERPG-2와 같은 양이다(단위 환산 후) — 별표 2ㆍ3 전부', () {
       var n = 0;
       for (final s in subs) {
         final es = entriesOf(s['cas'] as String);
-        final erpg = es.where((e) => e['kind'] == 'ERPG-2').map((e) => e['value']).toList();
+        final erpg = es.where((e) => e['kind'] == 'ERPG-2').toList();
         for (final p in es.where((e) => e['kind'] == 'PAC-2' && pac2Basis(e).startsWith('ERPG-2'))) {
           n++;
-          expect(erpg, contains(p['value']), reason: '${s['cas']}');
+          expect(erpg.any((e) => sameQuantity(e, p)), isTrue,
+              reason: '${s['cas']}: PAC ${p['value']} ${p['unit']} ↔ ERPG ${erpg.map((e) => '${e['value']} ${e['unit']}')}');
         }
       }
-      expect(n, 6); // 2026-10-19 조사: PAC-2 근거가 ERPG인 물질 6종
+      expect(n, greaterThanOrEqualTo(6)); // 사고대비물질만일 때 6종(2026-10-19 조사)
+    });
+
+    test('ERPG·AEGL 항목은 단위가 있거나, 없으면 확인필요 표시가 있다', () {
+      for (final s in subs) {
+        for (final e in entriesOf(s['cas'] as String)) {
+          if (e['unit'] == null) expect(e['needsReview'], isTrue, reason: '${s['cas']} ${e['kind']} ${e['raw']}');
+        }
+      }
     });
   });
 

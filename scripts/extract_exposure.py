@@ -6,7 +6,7 @@
   doe_pac/pac_getexcel_20250207.xlsx DOE PAC(Wayback 2025-02-07 — 한국 IP에서 DOE가 막힘). 'Input' 시트, 4행부터 데이터
 
 값은 **원문 문자열 그대로** 둔다(`2,500*`, `0.083`, `NR`). 숫자 해석·고르기는 Dart 생성기(lib/form6/exposure_tables.dart)가 한다.
-결정적이다(정렬된 키, 같은 원문 → 같은 바이트). PAC는 대상 CAS(번들 별표 3)만 싣는다 — 3천여 행을 다 실을 이유가 없다.
+결정적이다(정렬된 키, 같은 원문 → 같은 바이트). PAC는 대상 CAS(번들 별표 2ㆍ3)만 싣는다 — 3천여 행을 다 실을 이유가 없다.
 읽지 못한 것은 조용히 버리지 않고 `skipped`에 사유와 함께 남긴다.
 
 사용: python scripts/extract_exposure.py
@@ -78,6 +78,37 @@ def _events(path: Path) -> list[tuple[str, object]]:
     return p.events
 
 
+# AIHA ERPG 표의 CAS 오기 정정 — (표의 물질명, 표의 CAS) → 바른 CAS. 손으로 만든 표라 [check_errata]가 PAC 표로 검증한다.
+# 2026-10-20 범위 확장 대조에서 발견: 두 행이 다른 물질의 CAS로 적혀 그 물질에 엉뚱한 ERPG가 붙었다
+#   (MDI 101-68-8에 수소화리튬 0.1 mg/m3, 수은 7439-97-6에 무수말레산 5 ppm). PAC 표의 같은 이름 행이 바른 CAS와 같은 ERPG 값을 싣고 있다.
+ERPG_ERRATA = {
+    ("Lithium hydride", "101-68-8"): "7580-67-8",
+    ("Maleic anhydride", "7439-97-6"): "108-31-6",
+}
+
+
+def check_errata(pac_path: Path) -> list[dict]:
+    """정정마다 PAC 표 전체에서 같은 이름으로 시작하는 행의 CAS가 바른 CAS인지 본다. 아니면 멈춘다(정정 표가 틀렸다)."""
+    ws = openpyxl.load_workbook(pac_path, read_only=True, data_only=True)["Input"]
+    rows = [(_s(r[1]), _s(r[2])) for r in ws.iter_rows(min_row=4, values_only=True) if r and r[1]]
+    out = []
+    for (name, wrong), right in sorted(ERPG_ERRATA.items()):
+        hits = [c for n, c in rows if n.lower().startswith(name.lower())]
+        if right not in {m for c in hits for m in CAS_RE.findall(c)}:
+            raise SystemExit(f"ERPG 정정 검증 실패: {name} — PAC 표 CAS {hits}에 {right}가 없다")
+        out.append({"name": name, "aihaCas": wrong, "correctedCas": right, "checkedBy": "DOE PAC 같은 이름 행"})
+    return out
+
+
+def erpg_conflicts(erpg: dict[str, list[dict]]) -> list[dict]:
+    """한 CAS에 이름도 ERPG-2 값도 다른 행이 여럿 — 다른 물질의 CAS로 적힌 오기일 수 있다(별칭 행은 값이 같아 걸리지 않는다)."""
+    return [
+        {"cas": c, "rows": [(r["name"], r["erpg2"]) for r in rows]}
+        for c, rows in sorted(erpg.items())
+        if len({r["name"] for r in rows}) > 1 and len({r["erpg2"] for r in rows}) > 1
+    ]
+
+
 def extract_erpg(path: Path, skipped: list[str]) -> dict[str, list[dict]]:
     tables = [t for k, t in _events(path) if k == "table"]
     if len(tables) != 1:
@@ -97,10 +128,12 @@ def extract_erpg(path: Path, skipped: list[str]) -> dict[str, list[dict]]:
         if not cas:
             skipped.append(f"ERPG CAS 없음: {d['Chemical Name']} ({d['CAS']!r})")
             continue
-        for c in cas:
-            out.setdefault(c, []).append(
-                {"name": d["Chemical Name"], "casCell": d["CAS"], "erpg2": d["ERPG-2"], "lastUpdate": d["Last Update"]}
-            )
+        fixed = [ERPG_ERRATA.get((d["Chemical Name"], c), c) for c in cas]
+        for c in fixed:
+            rec = {"name": d["Chemical Name"], "casCell": d["CAS"], "erpg2": d["ERPG-2"], "lastUpdate": d["Last Update"]}
+            if fixed != cas:
+                rec["casCorrected"] = "AIHA 표의 CAS 오기 정정(ERPG_ERRATA)"
+            out.setdefault(c, []).append(rec)
     return out
 
 
@@ -239,7 +272,8 @@ def extract_pac(path: Path, targets: set[str], skipped: list[str]) -> dict[str, 
 
 def targets_from_bundle() -> set[str]:
     data = json.loads((ROOT / "assets/data/findchem_data.json").read_text(encoding="utf-8"))
-    return {c for e in data["entries"] if e["src"] == "별표3" and not e["deleted"] for c in e["cas"]}
+    # 별표 2ㆍ3 살아 있는 항목 전부(2026-10-20 범위 확장 — 처음엔 별표 3만)
+    return {c for e in data["entries"] if not e["deleted"] for c in e["cas"]}
 
 
 def aiha_notice(path: Path) -> str:
@@ -256,13 +290,17 @@ def aiha_notice(path: Path) -> str:
 def build() -> dict:
     skipped: list[str] = []
     targets = targets_from_bundle()
+    pac_path = RAW / "doe_pac/pac_getexcel_20250207.xlsx"
+    errata = check_errata(pac_path)
     erpg = extract_erpg(RAW / "aiha_erpg/ERPG.html", skipped)
     aegl = extract_aegl(RAW / "epa_aegl", skipped)
-    pac = extract_pac(RAW / "doe_pac/pac_getexcel_20250207.xlsx", targets, skipped)
+    pac = extract_pac(pac_path, targets, skipped)
     return {
         "generatedBy": "scripts/extract_exposure.py",
         "sources": json.loads((RAW / "sources.json").read_text(encoding="utf-8")),
         "aihaNotice": aiha_notice(RAW / "aiha_erpg/Copyright-and-Licensing.html"),
+        "erpgErrata": errata,
+        "erpgConflicts": erpg_conflicts(erpg),
         "erpg": dict(sorted(erpg.items())),
         "aegl": dict(sorted(aegl.items())),
         "pac": dict(sorted(pac.items())),
@@ -278,7 +316,10 @@ def main() -> int:
     d = build()
     OUT.write_text(render(d), encoding="utf-8", newline="\n")
     sys.stdout.reconfigure(encoding="utf-8")
-    print(f"exposure_tables.json: ERPG CAS {len(d['erpg'])}, AEGL CAS {len(d['aegl'])}, PAC CAS {len(d['pac'])}, 건너뜀 {len(d['skipped'])}")
+    print(f"exposure_tables.json: ERPG CAS {len(d['erpg'])}, AEGL CAS {len(d['aegl'])}, PAC CAS {len(d['pac'])}, 건너뜀 {len(d['skipped'])}, "
+          f"ERPG 정정 {len(d['erpgErrata'])}, ERPG 충돌 {len(d['erpgConflicts'])}")
+    for c in d["erpgConflicts"]:
+        print("  ERPG 충돌(오기 의심):", c)
     for s in d["skipped"]:
         print("  건너뜀:", s)
     return 0

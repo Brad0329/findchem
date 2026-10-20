@@ -58,7 +58,7 @@ twa 허용농도, vaporPressure 증기압(mmHg, condition에 온도), corrosive 
 - 고르는 일은 이 도구가 하지 않는다: 독성구분은 ghs 목록에서 대표 1개를, 위험노출수준은 별지 주⑨ 순서(ERPG → AEGL → PAC)로 exposure 목록의 첫 값을 쓴다.
   고유번호 표기도 후보에서 고른다.
 - 연번ㆍ함량(%)은 사업장 값이라 여기 없다. 함량기준 미만 성분은 6호 대상이 아니다 — 판정은 이 도구가 하지 않는다.
-- status: found(9칸 있음) / not_covered(유해화학물질이지만 아직 상수 범위 밖 — classes 참고, 칸은 MSDS 등에서 따로 채운다) /
+- status: found(9칸 있음) / not_covered(유해화학물질이지만 상수 데이터에 없음 — classes 참고, 칸은 MSDS 등에서 따로 채운다) /
   not_listed(별표 2ㆍ3에 없음 — 6호 대상 아님) / invalid(CAS 형식 아님).
 - ERPG 값은 AIHA 자료다 — 결과를 내보낼 때 응답 머리의 aiha_notice를 함께 싣고 출처를 표시한다.
 한 번에 최대 $form6CasCap개, 응답 items는 입력과 같은 순서ㆍ같은 개수.''';
@@ -119,7 +119,8 @@ CalcOutcome form6Constants(Dataset ds, Form6Data data, Map<String, Object?> args
     'counts': {for (final s in ['found', 'not_covered', 'not_listed', 'invalid']) s: count(s)},
     'items': items,
     'scope': '상수 범위: ${h['targets'] is Map ? (h['targets'] as Map)['basis'] : '?'} — CAS '
-        '${h['targets'] is Map ? (h['targets'] as Map)['casCount'] : '?'}개(1단계 사고대비물질). 그 밖의 유해화학물질은 not_covered',
+        '${h['targets'] is Map ? (h['targets'] as Map)['casCount'] : '?'}개. CAS 없이 묶어 규정된 항목(염류ㆍ"~화합물")은 CAS로 잡히지 않는다 — '
+        'not_listed라도 의심되면 search_chemical로 물질명을 본다',
     'form': h['notice'],
     'collected_through': h['collectedThrough'],
     'sources': h['sources'],
@@ -150,7 +151,7 @@ Map<String, Object?> _item(Map<String, Object?> c, Form6Data data, Map<String, S
     return {
       ...common,
       'status': 'not_covered',
-      'note': '유해화학물질이지만 6호 상수 범위 밖이다(지금은 사고대비물질만) — 9칸은 MSDS 등에서 따로 채운다',
+      'note': '유해화학물질이지만 6호 상수 데이터에 이 CAS가 없다 — 9칸은 MSDS 등에서 따로 채운다',
       'unique_number_candidates': [
         for (final u in (uids[cas] ?? const <String>{}).toList()..sort()) {'value': u, 'source': '별표 2 고유번호'},
       ],

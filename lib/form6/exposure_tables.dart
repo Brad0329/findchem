@@ -22,7 +22,8 @@ ExposureTables? loadExposureTables(String path) {
 }
 
 final _lead = RegExp(r'^\s*(\d{1,3}(?:,\d{3})+|\d+)(?:\.\d+)?');
-final _unitInCell = RegExp(r'(ppm|mg/m3|mg/m³|mg/㎥)', caseSensitive: false);
+// µg/m3: AIHA 베릴륨 ERPG-2 `25 µg/m3`(2026-10-20 범위 확장 대조에서 발견 — 단위를 못 읽어 숫자 25만 남았다)
+final _unitInCell = RegExp(r'(ppm|mg/m3|mg/m³|mg/㎥|µg/m3|μg/m3|ug/m3)', caseSensitive: false);
 
 class ExposureTables {
   ExposureTables._(this._erpg, this._aegl, this._pac, this.sources, this.aihaNotice);
@@ -66,14 +67,16 @@ class ExposureTables {
         notes.add("ERPG-2 원문 '$raw'(값 아님)");
         continue;
       }
+      final unit = _unitInCell.firstMatch(raw)?.group(1);
       entries.add({
         'kind': 'ERPG-2',
         'value': double.parse(n.replaceAll(',', '')),
         'number': n,
-        'unit': _unitInCell.firstMatch(raw)?.group(1),
+        'unit': unit,
         'raw': raw,
         'source': {'kind': 'AIHA ERPG', 'id': r['name'], 'version': 'Last Update ${r['lastUpdate']}', 'attribution': 'AIHA ERPG®'},
-        'note': null,
+        'note': unit == null ? '단위 표기를 찾지 못함' : null,
+        'needsReview': unit == null,
       });
     }
 

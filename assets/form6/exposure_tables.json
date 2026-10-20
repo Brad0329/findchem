@@ -25,6 +25,21 @@
   }
  ],
  "aihaNotice": "© 2025 American Industrial Hygiene Association (AIHA). All rights reserved.\nThe Emergency Response Planning Guidelines (ERPG®) data are the intellectual property of AIHA and are provided solely for non-commercial, educational, research, and governmental use.\nUsers may download, reproduce, and distribute this data only in its original, unmodified form and must include this notice in any reproduction.\nCommercial use, redistribution, resale, or inclusion of this data in any product or service offered for profit is strictly prohibited without the prior written consent of AIHA.\nTo request permission for commercial use or licensing, contact\n[email protected]\n.\nBy downloading this dataset, you acknowledge and agree that:\nThe ERPG data remain the sole property of AIHA.\nYou will not alter, reproduce, or distribute the data for commercial purposes.\nYou will provide attribution to AIHA when the data are used in reports, models, or databases.\nAIHA reserves the right to require licensing fees or other remuneration for any commercial use.",
+ "erpgErrata": [
+  {
+   "name": "Lithium hydride",
+   "aihaCas": "101-68-8",
+   "correctedCas": "7580-67-8",
+   "checkedBy": "DOE PAC 같은 이름 행"
+  },
+  {
+   "name": "Maleic anhydride",
+   "aihaCas": "7439-97-6",
+   "correctedCas": "108-31-6",
+   "checkedBy": "DOE PAC 같은 이름 행"
+  }
+ ],
+ "erpgConflicts": [],
  "erpg": {
   "100-42-5": [
    {
@@ -67,12 +82,6 @@
    }
   ],
   "101-68-8": [
-   {
-    "name": "Lithium hydride",
-    "casCell": "101-68-8",
-    "erpg2": "0.1 mg/m3",
-    "lastUpdate": "2016"
-   },
    {
     "name": "Methyl diphenyl diisocyanate (MDI)",
     "casCell": "101-68-8",
@@ -182,6 +191,15 @@
     "casCell": "108-24-7",
     "erpg2": "15 ppm",
     "lastUpdate": "2019"
+   }
+  ],
+  "108-31-6": [
+   {
+    "name": "Maleic anhydride",
+    "casCell": "7439-97-6",
+    "erpg2": "5 ppm",
+    "lastUpdate": "2016",
+    "casCorrected": "AIHA 표의 CAS 오기 정정(ERPG_ERRATA)"
    }
   ],
   "108-65-6": [
@@ -714,12 +732,6 @@
   ],
   "7439-97-6": [
    {
-    "name": "Maleic anhydride",
-    "casCell": "7439-97-6",
-    "erpg2": "5 ppm",
-    "lastUpdate": "2016"
-   },
-   {
     "name": "Mercury vapor",
     "casCell": "7439-97-6",
     "erpg2": "0.25 ppm",
@@ -906,6 +918,15 @@
     "casCell": "7553-56-2",
     "erpg2": "0.5 ppm",
     "lastUpdate": "2024"
+   }
+  ],
+  "7580-67-8": [
+   {
+    "name": "Lithium hydride",
+    "casCell": "101-68-8",
+    "erpg2": "0.1 mg/m3",
+    "lastUpdate": "2016",
+    "casCorrected": "AIHA 표의 CAS 오기 정정(ERPG_ERRATA)"
    }
   ],
   "76-06-2": [
@@ -1938,6 +1959,16 @@
   ]
  },
  "pac": {
+  "100-20-9": [
+   {
+    "no": "2707",
+    "name": "Terephthaloyl chloride; (Benzenedicarbonyl dichloride, 1,4-)",
+    "casCell": "100-20-9",
+    "pac2": "83",
+    "source": "TEEL-2/11, TEEL-3/6, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
   "100-42-5": [
    {
     "no": "2659",
@@ -1958,6 +1989,26 @@
     "unit": "ppm"
    }
   ],
+  "100-61-8": [
+   {
+    "no": "1789",
+    "name": "Methylaniline, N-",
+    "casCell": "100-61-8",
+    "pac2": "17",
+    "source": "TLV-TWA x 3, TEEL-3/6, IDLH (1990 and 1994)",
+    "unit": "ppm"
+   }
+  ],
+  "100-63-0": [
+   {
+    "no": "2156",
+    "name": "Phenylhydrazine",
+    "casCell": "100-63-0",
+    "pac2": "0.14",
+    "source": "TLV-TWA x 3, rat oral TDLo, IDLH (1990)",
+    "unit": "ppm"
+   }
+  ],
   "100-97-0": [
    {
     "no": "1388",
@@ -1966,6 +2017,26 @@
     "pac2": "610",
     "source": "TEEL-2/11, TEEL-3/6, rat iv LD50",
     "unit": "mg/m3"
+   }
+  ],
+  "10024-97-2": [
+   {
+    "no": "2003",
+    "name": "Nitrous oxide",
+    "casCell": "10024-97-2",
+    "pac2": "10000",
+    "source": "TEEL-2/11, EEGL 60-min, EEGL 30-min",
+    "unit": "ppm"
+   }
+  ],
+  "10025-67-9": [
+   {
+    "no": "2677",
+    "name": "Sulfur monochloride",
+    "casCell": "10025-67-9",
+    "pac2": "6.4",
+    "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "ppm"
    }
   ],
   "10025-78-2": [
@@ -1988,6 +2059,16 @@
     "unit": "ppm"
    }
   ],
+  "10025-91-9": [
+   {
+    "no": "187",
+    "name": "Antimony trichloride; (Antimony(III) chloride)",
+    "casCell": "10025-91-9",
+    "pac2": "17",
+    "source": "MW-adjusted antimony (7440-36-0) TLV-TWA x 3, TEEL-3/6, antimony IDLH (1990)",
+    "unit": "mg/m3"
+   }
+  ],
   "10026-04-7": [
    {
     "no": "2731",
@@ -1996,6 +2077,56 @@
     "pac2": "5.5",
     "source": "AEGL-1, AEGL-2, AEGL-3",
     "unit": "ppm"
+   }
+  ],
+  "10026-13-8": [
+   {
+    "no": "2193",
+    "name": "Phosphorus pentachloride",
+    "casCell": "10026-13-8",
+    "pac2": "20",
+    "source": "TEEL-2/11, LOC, IDLH (1990)",
+    "unit": "mg/m3"
+   }
+  ],
+  "10034-85-2": [
+   {
+    "no": "1418",
+    "name": "Hydriodic acid; (Hydrogen iodide)",
+    "casCell": "10034-85-2",
+    "pac2": "25ₐ",
+    "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "10035-10-6": [
+   {
+    "no": "1419",
+    "name": "Hydrobromic acid; (Hydrogen bromide)",
+    "casCell": "10035-10-6",
+    "pac2": "40",
+    "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "10039-54-0": [
+   {
+    "no": "1445",
+    "name": "Hydroxylamine sulfate; (Oxammonium sulfate)",
+    "casCell": "10039-54-0",
+    "pac2": "31",
+    "source": "TEEL-2/11,TEEL-3/6, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "10043-35-3": [
+   {
+    "no": "325",
+    "name": "Boric acid",
+    "casCell": "10043-35-3",
+    "pac2": "21",
+    "source": "TLV-TWA x 3, rat oral TDLo, dog oral LD50",
+    "unit": "mg/m3"
    }
   ],
   "10049-04-4": [
@@ -2008,6 +2139,66 @@
     "unit": "ppm"
    }
   ],
+  "10099-74-8": [
+   {
+    "no": "1561",
+    "name": "Lead nitrate",
+    "casCell": "10099-74-8",
+    "pac2": "180",
+    "source": "MW-adjusted lead (7439-92-1) TLV-TWA x 3, TEEL-3/6, MW-adjusted lead IDLH (1990)",
+    "unit": "mg/m3"
+   }
+  ],
+  "101-02-0": [
+   {
+    "no": "2985",
+    "name": "Triphenyl phosphite",
+    "casCell": "101-02-0",
+    "pac2": "53",
+    "source": "TEEL-2/11, TEEL-3/6, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "101-14-4": [
+   {
+    "no": "1801",
+    "name": "Methylene bis(2-chloroaniline), 4,4'-; (MBOCA)",
+    "casCell": "101-14-4",
+    "pac2": "10",
+    "source": "TLV-TWA x 3, mouse oral TDLo, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "101-68-8": [
+   {
+    "no": "1804",
+    "name": "Methylene diphenyl diisocyanate; (Diphenylmethane diisocyanate; MDI)",
+    "casCell": "101-68-8",
+    "pac2": "5.0",
+    "source": "ERPG-2/11, ERPG-2, ERPG-3",
+    "unit": "mg/m3"
+   }
+  ],
+  "101-77-9": [
+   {
+    "no": "1808",
+    "name": "Methylenedianiline, 4,4'-",
+    "casCell": "101-77-9",
+    "pac2": "5.0",
+    "source": "PEL-STEL, human oral TDLo, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "101-80-4": [
+   {
+    "no": "790",
+    "name": "Diaminodiphenyl ether, 4,4'-; (4,4'-Oxydianiline)",
+    "casCell": "101-80-4",
+    "pac2": "24",
+    "source": "TEEL-2/11, TEEL-3/6, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
   "10102-43-9": [
    {
     "no": "1955",
@@ -2016,6 +2207,86 @@
     "pac2": "12",
     "source": "Used nitrogen dioxide (10102-44-0) AEGL values",
     "unit": "ppm"
+   }
+  ],
+  "10102-45-1": [
+   {
+    "no": "2797",
+    "name": "Thallous nitrate; (Thallium nitrate; Thallium(I) nitrate)",
+    "casCell": "10102-45-1",
+    "pac2": "4.3",
+    "source": "MW-adjusted soluble thallium (7440-28-0) TLV-TWA x 3, TEEL-3/6, soluble thallium IDLH (1990)",
+    "unit": "mg/m3"
+   }
+  ],
+  "10108-64-2": [
+   {
+    "no": "460",
+    "name": "Cadmium chloride",
+    "casCell": "10108-64-2",
+    "pac2": "0.91",
+    "source": "Used MW-adjusted cadmium (7440-43-9) AEGL values",
+    "unit": "mg/m3"
+   }
+  ],
+  "10124-36-4": [
+   {
+    "no": "469",
+    "name": "Cadmium sulfate",
+    "casCell": "10124-36-4",
+    "pac2": "9.2",
+    "source": "Used MW-adjusted cadmium (7440-43-9) AEGL values",
+    "unit": "mg/m3"
+   }
+  ],
+  "10124-43-3": [
+   {
+    "no": "677",
+    "name": "Cobalt sulfate",
+    "casCell": "10124-43-3",
+    "pac2": "14",
+    "source": "MW-adjusted inorganic cobalt (7440-48-4) TLV-TWA x 3, TEEL-3/6, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "10141-05-6": [
+   {
+    "no": "674",
+    "name": "Cobalt nitrate; (Cobalt(II) nitrate)",
+    "casCell": "10141-05-6",
+    "pac2": "14",
+    "source": "MW-adjusted inorganic cobalt (7440-48-4) TLV-TWA x 3, TEEL-3/6, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "102-06-7": [
+   {
+    "no": "1059",
+    "name": "Diphenylguanidine, 1,3-",
+    "casCell": "102-06-7",
+    "pac2": "3.5",
+    "source": "TEEL-2/11, TEEL-3/6, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "102-82-9": [
+   {
+    "no": "2974",
+    "name": "Tri-n-butylamine",
+    "casCell": "102-82-9",
+    "pac2": "0.54",
+    "source": "TEEL-2/11, TEEL-3/6, rat 240-min LCLo",
+    "unit": "ppm"
+   }
+  ],
+  "10265-92-6": [
+   {
+    "no": "1704",
+    "name": "Methamidophos",
+    "casCell": "10265-92-6",
+    "pac2": "1.2",
+    "source": "TEEL-2/11,TEEL-3/6, rat 240-min LC50",
+    "unit": "mg/m3"
    }
   ],
   "10294-34-5": [
@@ -2028,12 +2299,182 @@
     "unit": "ppm"
    }
   ],
+  "10294-40-3": [
+   {
+    "no": "214",
+    "name": "Barium chromate",
+    "casCell": "10294-40-3",
+    "pac2": "0.46",
+    "source": "MW-adjusted insoluble chromium VI (7440-47-3) TLV-TWA x 3, TEEL-3/6, MW-adjusted chromates (1333-82-0) IDLH (1990)",
+    "unit": "mg/m3"
+   }
+  ],
+  "1031-47-6": [
+   {
+    "no": "2866",
+    "name": "Triamiphos",
+    "casCell": "1031-47-6",
+    "pac2": "0.66",
+    "source": "TEEL-2/11, TEEL-3/6, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "10311-84-9": [
+   {
+    "no": "785",
+    "name": "Dialifor",
+    "casCell": "10311-84-9",
+    "pac2": "5.0",
+    "source": "TEEL-2/11, LOC, dog oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "10325-94-7": [
+   {
+    "no": "464",
+    "name": "Cadmium nitrate",
+    "casCell": "10325-94-7",
+    "pac2": "9.9",
+    "source": "Used MW-adjusted cadmium (7440-43-9) AEGL values",
+    "unit": "mg/m3"
+   }
+  ],
+  "104-49-4": [
+   {
+    "no": "2150",
+    "name": "Phenylene diisocyanate, 1,4-",
+    "casCell": "104-49-4",
+    "pac2": "11",
+    "source": "TEEL-2/11, rat 420-min TCLo, rat 240-min LCLo",
+    "unit": "mg/m3"
+   }
+  ],
+  "105-67-9": [
+   {
+    "no": "1016",
+    "name": "Dimethylphenol, 2,4-; (2,4-Xylenol)",
+    "casCell": "105-67-9",
+    "pac2": "76",
+    "source": "TEEL-2/11, TEEL-3/6, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "10588-01-9": [
+   {
+    "no": "2539",
+    "name": "Sodium dichromate; (Disodium dichromate)",
+    "casCell": "10588-01-9",
+    "pac2": "6.5",
+    "source": "MW-adjusted soluble chromium (VI) (7440-47-3) TLV-TWA x 3, TEEL-3/6, MW-adjusted chromates (1333-82-0) IDLH (1990)",
+    "unit": "mg/m3"
+   }
+  ],
+  "106-46-7": [
+   {
+    "no": "836",
+    "name": "Dichlorobenzene, p-",
+    "casCell": "106-46-7",
+    "pac2": "170",
+    "source": "TLV-TWA x 3, TEEL-3/6, IDLH (1990)",
+    "unit": "ppm"
+   }
+  ],
+  "106-49-0": [
+   {
+    "no": "2861",
+    "name": "Toluidine, p-; (4-Methylbenzenamine)",
+    "casCell": "106-49-0",
+    "pac2": "8.3",
+    "source": "TLV-TWA x 3, rat oral TDLo, rat oral LD50",
+    "unit": "ppm"
+   }
+  ],
+  "106-50-3": [
+   {
+    "no": "2155",
+    "name": "Phenylenediamine, 1,4-; (p-Phenylenediamine)",
+    "casCell": "106-50-3",
+    "pac2": "4.2",
+    "source": "TLV-TWA x 3, TEEL-3/6, rat 240-min LC50",
+    "unit": "mg/m3"
+   }
+  ],
+  "106-51-4": [
+   {
+    "no": "255",
+    "name": "Benzoquinone, p-; (Quinone)",
+    "casCell": "106-51-4",
+    "pac2": "50",
+    "source": "TLV-TWA x 3, TEEL-3/6, IDLH (1990)",
+    "unit": "mg/m3"
+   }
+  ],
+  "106-89-8": [
+   {
+    "no": "1114",
+    "name": "Epichlorohydrin",
+    "casCell": "106-89-8",
+    "pac2": "24",
+    "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "106-90-1": [
+   {
+    "no": "1323",
+    "name": "Glycidyl acrylate; (2,3-Epoxypropyl acrylate)",
+    "casCell": "106-90-1",
+    "pac2": "0.89",
+    "source": "TEEL-2/11, TEEL-3/6, rat 240-min LCLo",
+    "unit": "ppm"
+   }
+  ],
+  "106-93-4": [
+   {
+    "no": "1193",
+    "name": "Ethylene dibromide; (Dibromoethane)",
+    "casCell": "106-93-4",
+    "pac2": "24",
+    "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "106-94-5": [
+   {
+    "no": "376",
+    "name": "Bromopropane, 1-",
+    "casCell": "106-94-5",
+    "pac2": "120",
+    "source": "TLV-TWA x 3, TEEL-3/6, rat 30-min LC50",
+    "unit": "ppm"
+   }
+  ],
+  "106-95-6": [
+   {
+    "no": "56",
+    "name": "Allyl bromide; (3-Bromopropene)",
+    "casCell": "106-95-6",
+    "pac2": "23",
+    "source": "TLV-STEL, TEEL-3/6, rat 120-min LC50",
+    "unit": "mg/m3"
+   }
+  ],
   "106-99-0": [
    {
     "no": "387",
     "name": "Butadiene, 1,3-",
     "casCell": "106-99-0",
     "pac2": "5300",
+    "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "1066-35-9": [
+   {
+    "no": "999",
+    "name": "Dimethylchlorosilane; (Chlorodimethylsilane)",
+    "casCell": "1066-35-9",
+    "pac2": "22",
     "source": "AEGL-1, AEGL-2, AEGL-3",
     "unit": "ppm"
    }
@@ -2055,6 +2496,36 @@
     "casCell": "107-05-1",
     "pac2": "54",
     "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "107-06-2": [
+   {
+    "no": "1194",
+    "name": "Ethylene dichloride; (1,2-Dichloroethane)",
+    "casCell": "107-06-2",
+    "pac2": "200ₑ",
+    "source": "ERPG-1, ERPG-2, ERPG-3",
+    "unit": "ppm"
+   }
+  ],
+  "107-07-3": [
+   {
+    "no": "1192",
+    "name": "Ethylene chlorohydrin; (2-Chloroethanol)",
+    "casCell": "107-07-3",
+    "pac2": "1.2",
+    "source": "AEGL-2/11, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "107-12-0": [
+   {
+    "no": "2388",
+    "name": "Propionitrile; (Propiononitrile)",
+    "casCell": "107-12-0",
+    "pac2": "3",
+    "source": "AEGL-2/11, AEGL-2, AEGL-3",
     "unit": "ppm"
    }
   ],
@@ -2088,6 +2559,26 @@
     "unit": "ppm"
    }
   ],
+  "107-19-7": [
+   {
+    "no": "2380",
+    "name": "Propargyl alcohol",
+    "casCell": "107-19-7",
+    "pac2": "16",
+    "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "107-30-2": [
+   {
+    "no": "608",
+    "name": "Chloromethyl methyl ether",
+    "casCell": "107-30-2",
+    "pac2": "0.47",
+    "source": "AEGL-2/11, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
   "107-44-8": [
    {
     "no": "1519",
@@ -2108,6 +2599,46 @@
     "unit": "ppm"
    }
   ],
+  "107-49-3": [
+   {
+    "no": "2741",
+    "name": "Tetraethyl pyrophosphate; (TEPP)",
+    "casCell": "107-49-3",
+    "pac2": "1.0",
+    "source": "TEEL-2/11, LOC, IDLH (1990)",
+    "unit": "mg/m3"
+   }
+  ],
+  "108-18-9": [
+   {
+    "no": "944",
+    "name": "Diisopropylamine",
+    "casCell": "108-18-9",
+    "pac2": "170",
+    "source": "TLV-TWA x 3, TEEL-3/6, IDLH (1990)",
+    "unit": "ppm"
+   }
+  ],
+  "108-24-7": [
+   {
+    "no": "13",
+    "name": "Acetic anhydride",
+    "casCell": "108-24-7",
+    "pac2": "15",
+    "source": "ERPG-1, ERPG-2, ERPG-3",
+    "unit": "ppm"
+   }
+  ],
+  "108-31-6": [
+   {
+    "no": "1642",
+    "name": "Maleic anhydride",
+    "casCell": "108-31-6",
+    "pac2": "5.0",
+    "source": "ERPG-1, ERPG-2, ERPG-3",
+    "unit": "ppm"
+   }
+  ],
   "108-38-3": [
    {
     "no": "3078",
@@ -2115,6 +2646,56 @@
     "casCell": "108-38-3",
     "pac2": "920",
     "source": "TLV-STEL, EEGL-60 min, IDLH (1990)",
+    "unit": "ppm"
+   }
+  ],
+  "108-44-1": [
+   {
+    "no": "2859",
+    "name": "Toluidine, m-; (3-Methylaniline)",
+    "casCell": "108-44-1",
+    "pac2": "8.2",
+    "source": "TLV-TWA x 3, rat oral TDLo, rat oral LD50",
+    "unit": "ppm"
+   }
+  ],
+  "108-45-2": [
+   {
+    "no": "2154",
+    "name": "Phenylenediamine, 1,3-; (m-Phenylenediamine)",
+    "casCell": "108-45-2",
+    "pac2": "21",
+    "source": "TLV-TWA x 3, TEEL-3/6, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "108-46-3": [
+   {
+    "no": "2427",
+    "name": "Resorcinol",
+    "casCell": "108-46-3",
+    "pac2": "28",
+    "source": "TLV-STEL, TEEL-3/6, dog iv LDLo",
+    "unit": "ppm"
+   }
+  ],
+  "108-77-0": [
+   {
+    "no": "739",
+    "name": "Cyanuric chloride",
+    "casCell": "108-77-0",
+    "pac2": "0.63",
+    "source": "TEEL-2/11, rat oral TDLo, rat 240-min LC50",
+    "unit": "mg/m3"
+   }
+  ],
+  "108-87-2": [
+   {
+    "no": "1795",
+    "name": "Methylcyclohexane",
+    "casCell": "108-87-2",
+    "pac2": "1700*",
+    "source": "TLV-TWA x 3, TEEL-3/6, IDLH (1990)",
     "unit": "ppm"
    }
   ],
@@ -2128,6 +2709,26 @@
     "unit": "ppm"
    }
   ],
+  "108-91-8": [
+   {
+    "no": "751",
+    "name": "Cyclohexylamine",
+    "casCell": "108-91-8",
+    "pac2": "8.6",
+    "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "108-94-1": [
+   {
+    "no": "746",
+    "name": "Cyclohexanone; (Ketohexamethylene)",
+    "casCell": "108-94-1",
+    "pac2": "830",
+    "source": "TLV-TWA x 3, TEEL-3/6, IDLH (1990)",
+    "unit": "ppm"
+   }
+  ],
   "108-95-2": [
    {
     "no": "2134",
@@ -2135,6 +2736,26 @@
     "casCell": "108-95-2",
     "pac2": "23",
     "source": "AEGL-1, AEGL-2, ERPG-3",
+    "unit": "ppm"
+   }
+  ],
+  "109-55-7": [
+   {
+    "no": "981",
+    "name": "Dimethyl-1,3-propanediamine, N,N-; (1-Amino-3-dimethylaminopropane)",
+    "casCell": "109-55-7",
+    "pac2": "13",
+    "source": "TEEL-2/11, rat oral TDLo, rat oral LD50",
+    "unit": "ppm"
+   }
+  ],
+  "109-61-5": [
+   {
+    "no": "2393",
+    "name": "Propyl chloroformate; (Propyl chlorocarbonate)",
+    "casCell": "109-61-5",
+    "pac2": "3.7ₐ",
+    "source": "AEGL-2/11, AEGL-2, AEGL-3",
     "unit": "ppm"
    }
   ],
@@ -2148,6 +2769,46 @@
     "unit": "ppm"
    }
   ],
+  "109-74-0": [
+   {
+    "no": "396",
+    "name": "Butanenitrile; (Butyronitrile)",
+    "casCell": "109-74-0",
+    "pac2": "1.2",
+    "source": "TEEL-2/11, TEEL-3/6, rat 60-min LCLo",
+    "unit": "ppm"
+   }
+  ],
+  "109-77-3": [
+   {
+    "no": "2375",
+    "name": "Propanedinitrile; (Malononitrile)",
+    "casCell": "109-77-3",
+    "pac2": "0.77",
+    "source": "AEGL-2/11, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "109-83-1": [
+   {
+    "no": "1788",
+    "name": "Methylamino)ethanol, 2-(",
+    "casCell": "109-83-1",
+    "pac2": "25",
+    "source": "TEEL-2/11, TEEL-3/6, rat oral LD50",
+    "unit": "ppm"
+   }
+  ],
+  "109-86-4": [
+   {
+    "no": "1201",
+    "name": "Ethylene glycol monomethyl ether; (2-Methoxyethanol; EGME; Methyl Cellosolve(R))",
+    "casCell": "109-86-4",
+    "pac2": "14",
+    "source": "TLV-TWA x 3, rat oral TDLo, IDLH (1990)",
+    "unit": "ppm"
+   }
+  ],
   "109-92-2": [
    {
     "no": "3060",
@@ -2156,6 +2817,186 @@
     "pac2": "110",
     "source": "TEEL-2/11, TEEL-3/6, rat 240-min LCLo",
     "unit": "ppm"
+   }
+  ],
+  "110-57-6": [
+   {
+    "no": "2863",
+    "name": "Trans-1,4-dichlorobutene; (2-Butylene dichloride)",
+    "casCell": "110-57-6",
+    "pac2": "0.86",
+    "source": "TEEL-2/11, LOC, rat 240-min LC50",
+    "unit": "ppm"
+   }
+  ],
+  "110-65-6": [
+   {
+    "no": "449",
+    "name": "Butyne-1,4-diol, 2-; (1,4-Butynediol)",
+    "casCell": "110-65-6",
+    "pac2": "3.4",
+    "source": "MAK-TWA x 3, TEEL-3/6, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "110-71-4": [
+   {
+    "no": "962",
+    "name": "Dimethoxyethane, 1,2-",
+    "casCell": "110-71-4",
+    "pac2": "140",
+    "source": "TEEL-2/11, TEEL-3/6, rat 360-min LCLo",
+    "unit": "ppm"
+   }
+  ],
+  "110-80-5": [
+   {
+    "no": "1142",
+    "name": "Ethoxyethanol, 2-",
+    "casCell": "110-80-5",
+    "pac2": "1000",
+    "source": "TLV-TWA x 3, TEEL-3/6, IDLH (1990)",
+    "unit": "ppm"
+   }
+  ],
+  "110-82-7": [
+   {
+    "no": "741",
+    "name": "Cyclohexane",
+    "casCell": "110-82-7",
+    "pac2": "1700*",
+    "source": "TLV-TWA x 3, TEEL-3/6, IDLH (1990)",
+    "unit": "ppm"
+   }
+  ],
+  "111-15-9": [
+   {
+    "no": "1145",
+    "name": "Ethoxyethylacetate, 2-",
+    "casCell": "111-15-9",
+    "pac2": "420",
+    "source": "TLV-TWA x 3, TEEL-3/6, IDLH (1990)",
+    "unit": "ppm"
+   }
+  ],
+  "111-30-8": [
+   {
+    "no": "1316",
+    "name": "Gluteraldehyde",
+    "casCell": "111-30-8",
+    "pac2": "1.0",
+    "source": "ERPG-1, ERPG-2, ERPG-3",
+    "unit": "ppm"
+   }
+  ],
+  "111-44-4": [
+   {
+    "no": "842",
+    "name": "Dichloroethyl ether; (1,1'-Oxybis(2-chloro)ethane; Bis(2-chloroethyl)ether)",
+    "casCell": "111-44-4",
+    "pac2": "26",
+    "source": "TLV-STEL, LOC, IDLH (1990)",
+    "unit": "ppm"
+   }
+  ],
+  "111-64-8": [
+   {
+    "no": "506",
+    "name": "Caprylyl chloride; (Octanoyl chloride)",
+    "casCell": "111-64-8",
+    "pac2": "330",
+    "source": "TLV-TWA (PNOS) x 3, TEEL-1 x 11, TEEL-2 x 6",
+    "unit": "mg/m3"
+   }
+  ],
+  "111-66-0": [
+   {
+    "no": "2044",
+    "name": "Octene, 1-",
+    "casCell": "111-66-0",
+    "pac2": "800ₑ*",
+    "source": "ERPG-1, ERPG-2, ERPG-3",
+    "unit": "ppm"
+   }
+  ],
+  "111-88-6": [
+   {
+    "no": "2039",
+    "name": "Octanethiol, 1-",
+    "casCell": "111-88-6",
+    "pac2": "3.0",
+    "source": "TEEL-2/11, REL-C, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "111-92-2": [
+   {
+    "no": "1026",
+    "name": "Di-n-butylamine",
+    "casCell": "111-92-2",
+    "pac2": "5.0",
+    "source": "TEEL-2/11, WEEL-C, rat 240-min LCLo",
+    "unit": "ppm"
+   }
+  ],
+  "111-96-6": [
+   {
+    "no": "909",
+    "name": "Diethylene glycol dimethyl ether; (Bis(2-methoxy ethyl)ether)",
+    "casCell": "111-96-6",
+    "pac2": "91",
+    "source": "MAK-TWA x 3, rat 240-min TCLo, rat oral LD50",
+    "unit": "ppm"
+   }
+  ],
+  "11135-81-2": [
+   {
+    "no": "2634",
+    "name": "Sodium-Potassium",
+    "casCell": "11135-81-2",
+    "pac2": "5.0",
+    "source": "Used sodium hydroxide (1310-73-2) ERPG values",
+    "unit": "mg/m3"
+   }
+  ],
+  "112-02-7": [
+   {
+    "no": "1373",
+    "name": "Hexadecyltrimethylammonium chloride",
+    "casCell": "112-02-7",
+    "pac2": "12",
+    "source": "TEEL-2/11, TEEL-3/6, mouse iv LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "112-53-8": [
+   {
+    "no": "1097",
+    "name": "Dodecyl alcohol",
+    "casCell": "112-53-8",
+    "pac2": "140",
+    "source": "TEEL-2/11, TEEL-3/6, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "1120-71-4": [
+   {
+    "no": "2372",
+    "name": "Propane sultone, 1,3-",
+    "casCell": "1120-71-4",
+    "pac2": "18",
+    "source": "TEEL-2/11, TEEL-3/6, rat 360-min LCLo",
+    "unit": "mg/m3"
+   }
+  ],
+  "114-26-1": [
+   {
+    "no": "2390",
+    "name": "Propoxur (Baygon)",
+    "casCell": "114-26-1",
+    "pac2": "2.5",
+    "source": "TLV-TWA x 3, TEEL-3/6, rat 60-min LC50",
+    "unit": "mg/m3"
    }
   ],
   "115-21-9": [
@@ -2168,6 +3009,66 @@
     "unit": "ppm"
    }
   ],
+  "115-26-4": [
+   {
+    "no": "954",
+    "name": "Dimefox; (bis(Dimethylamido)fluorophosphate)",
+    "casCell": "115-26-4",
+    "pac2": "1.0",
+    "source": "TEEL-2/11, LOC, dog iv LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "115-29-7": [
+   {
+    "no": "1109",
+    "name": "Endosulfan",
+    "casCell": "115-29-7",
+    "pac2": "0.80",
+    "source": "TLV-TWA x 3, LOC, human oral LDLo",
+    "unit": "mg/m3"
+   }
+  ],
+  "115-78-6": [
+   {
+    "no": "2873",
+    "name": "Tributyl(2,4-dichlorobenzyl) phosphonium chloride",
+    "casCell": "115-78-6",
+    "pac2": "5.9",
+    "source": "TEEL-2/11, TEEL-3/6, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "115-86-6": [
+   {
+    "no": "2984",
+    "name": "Triphenyl phosphate",
+    "casCell": "115-86-6",
+    "pac2": "360",
+    "source": "TLV-TWA x  3, TEEL-3/6, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "115-90-2": [
+   {
+    "no": "1237",
+    "name": "Fensulfothion",
+    "casCell": "115-90-2",
+    "pac2": "2.0",
+    "source": "TEEL-2/11, LOC, rat 60-min LC50",
+    "unit": "mg/m3"
+   }
+  ],
+  "116-06-3": [
+   {
+    "no": "40",
+    "name": "Aldicarb; (Carbanolate; Methyl-2-(methylthio)propionaldehyde-O-(methylcarbamoyl)oxime, 2-)",
+    "casCell": "116-06-3",
+    "pac2": "0.30",
+    "source": "TEEL-2/11, LOC, rat 300-min LC50",
+    "unit": "mg/m3"
+   }
+  ],
   "116-14-3": [
    {
     "no": "2748",
@@ -2176,6 +3077,76 @@
     "pac2": "55",
     "source": "AEGL-1, AEGL-2, AEGL-3",
     "unit": "ppm"
+   }
+  ],
+  "117-81-7": [
+   {
+    "no": "1071",
+    "name": "Di-sec-octylphthalate",
+    "casCell": "117-81-7",
+    "pac2": "830",
+    "source": "REL-STEL, human oral TDLo, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "119-38-0": [
+   {
+    "no": "1524",
+    "name": "Isopropylmethylpyrazolyl dimethylcarbamate; (Isolan)",
+    "casCell": "119-38-0",
+    "pac2": "5.6",
+    "source": "TEEL-2/11, LOC, TEEL-2 x 6",
+    "unit": "mg/m3"
+   }
+  ],
+  "119-90-4": [
+   {
+    "no": "958",
+    "name": "Dimethoxybenzidene 3,3'-; (o-Dianisidine)",
+    "casCell": "119-90-4",
+    "pac2": "220",
+    "source": "TEEL-2/11, rat oral TDLo, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "120-94-5": [
+   {
+    "no": "1839",
+    "name": "Methylpyrrolidine; (Methylpyrrolidine, 1-)",
+    "casCell": "120-94-5",
+    "pac2": "6.4",
+    "source": "TEEL-2/11, TEEL-3/6, mouse ip LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "12001-28-4": [
+   {
+    "no": "713",
+    "name": "Crocidolite",
+    "casCell": "12001-28-4",
+    "pac2": "26",
+    "source": "PEL-STEL, mouse 360-min TCLo, rat ip LDLo",
+    "unit": "mg/m3"
+   }
+  ],
+  "12054-48-7": [
+   {
+    "no": "1936",
+    "name": "Nickel(II) hydroxide; (Nickelous hydroxide)",
+    "casCell": "12054-48-7",
+    "pac2": "8.8",
+    "source": "MW-adjusted insoluble nickel (7440-02-0) TWA-TWA x 3, TEEL-3/6, rat 240-min LC50",
+    "unit": "mg/m3"
+   }
+  ],
+  "121-14-2": [
+   {
+    "no": "1038",
+    "name": "Dinitrotoluene, 2,4-",
+    "casCell": "121-14-2",
+    "pac2": "8.8",
+    "source": "TLV-TWA (dinitrotoluene, 25321-14-6) x 3, dog oral TDLo, dinitroluene IDLH (1990)",
+    "unit": "mg/m3"
    }
   ],
   "121-44-8": [
@@ -2188,6 +3159,406 @@
     "unit": "ppm"
    }
   ],
+  "121-69-7": [
+   {
+    "no": "996",
+    "name": "Dimethylaniline, N,N-",
+    "casCell": "121-69-7",
+    "pac2": "330",
+    "source": "TLV-STEL, TEEL-3/6, IDLH (1990)",
+    "unit": "ppm"
+   }
+  ],
+  "121-75-5": [
+   {
+    "no": "1639",
+    "name": "Malathion",
+    "casCell": "121-75-5",
+    "pac2": "120",
+    "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "mg/m3"
+   }
+  ],
+  "121-82-4": [
+   {
+    "no": "763",
+    "name": "Cyclotrimethylenetrinitramine; (RDX or Cyclonite)",
+    "casCell": "121-82-4",
+    "pac2": "2.3",
+    "source": "REL-STEL, TEEL-3/6, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "12125-01-8": [
+   {
+    "no": "130",
+    "name": "Ammonium fluoride",
+    "casCell": "12125-01-8",
+    "pac2": "83",
+    "source": "MW-adjusted fluorides TLV-TWA x 3, TEEL-3/6, MW-adjusted fluorides IDLH (1990)",
+    "unit": "mg/m3"
+   }
+  ],
+  "12185-10-3": [
+   {
+    "no": "2191",
+    "name": "Phosphorus (yellow); (White phosphorus)",
+    "casCell": "12185-10-3",
+    "pac2": "0.83",
+    "source": "TLV-TWA x 3, TEEL-3/6, dog oral LDLo",
+    "unit": "mg/m3"
+   }
+  ],
+  "122-19-0": [
+   {
+    "no": "271",
+    "name": "Benzyldimethyloctadecylammonium chloride; (Dimethyloctadecylbenzylammonium chloride)",
+    "casCell": "122-19-0",
+    "pac2": "41",
+    "source": "TEEL-2/11, TEEL-3/6, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "122-39-4": [
+   {
+    "no": "1056",
+    "name": "Diphenylamine",
+    "casCell": "122-39-4",
+    "pac2": "37",
+    "source": "TLV-TWA x 3, rat oral TDLo, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "123-31-9": [
+   {
+    "no": "1429",
+    "name": "Hydroquinone",
+    "casCell": "123-31-9",
+    "pac2": "20",
+    "source": "TLV-TWA x 3, LOC, dog oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "123-39-7": [
+   {
+    "no": "1810",
+    "name": "Methylformamide, N-",
+    "casCell": "123-39-7",
+    "pac2": "56",
+    "source": "TEEL-2/11, rat 360-min TCLo, rat oral LD50",
+    "unit": "ppm"
+   }
+  ],
+  "123-73-9": [
+   {
+    "no": "715",
+    "name": "Crotonaldehyde, trans-",
+    "casCell": "123-73-9",
+    "pac2": "4.4",
+    "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "123-75-1": [
+   {
+    "no": "2419",
+    "name": "Pyrrolidine",
+    "casCell": "123-75-1",
+    "pac2": "7.6",
+    "source": "TEEL-2/11, TEEL-3/6, mouse 120-min LC50",
+    "unit": "mg/m3"
+   }
+  ],
+  "123-91-1": [
+   {
+    "no": "1046",
+    "name": "Dioxane, 1,4-; (1,4-Diethyleneoxide)",
+    "casCell": "123-91-1",
+    "pac2": "320",
+    "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "124-40-3": [
+   {
+    "no": "988",
+    "name": "Dimethylamine",
+    "casCell": "124-40-3",
+    "pac2": "66",
+    "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "124-41-4": [
+   {
+    "no": "2575",
+    "name": "Sodium methylate",
+    "casCell": "124-41-4",
+    "pac2": "67",
+    "source": "TEEL-2/11, TEEL-3/6, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "124-43-6": [
+   {
+    "no": "3037",
+    "name": "Urea peroxide; (Urea hydrogen peroxide)",
+    "casCell": "124-43-6",
+    "pac2": "13",
+    "source": "TEEL-2/11, TEEL-3/6, rat oral LD50 (HHR = 3)",
+    "unit": "mg/m3"
+   }
+  ],
+  "124-63-0": [
+   {
+    "no": "1709",
+    "name": "Methanesulfonyl chloride",
+    "casCell": "124-63-0",
+    "pac2": "0.21",
+    "source": "AEGL-2/11, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "124-70-9": [
+   {
+    "no": "1848",
+    "name": "Methylvinyldichlorosilane; (Dichloromethylvinylsilane)",
+    "casCell": "124-70-9",
+    "pac2": "11",
+    "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "126-98-7": [
+   {
+    "no": "1702",
+    "name": "Methacrylonitrile; (Methylacrylonitrile)",
+    "casCell": "126-98-7",
+    "pac2": "1.0",
+    "source": "AEGL-2/11, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "12656-85-8": [
+   {
+    "no": "1859",
+    "name": "Molybdate orange",
+    "casCell": "12656-85-8",
+    "pac2": "59",
+    "source": "MW-adjusted soluble molybdenum (7439-98-7) TLV-TWA x 3, dog oral TDLo, TEEL-2 x 6",
+    "unit": "mg/m3"
+   }
+  ],
+  "127-18-4": [
+   {
+    "no": "2114",
+    "name": "Perchloroethylene; (Tetrachloroethylene)",
+    "casCell": "127-18-4",
+    "pac2": "230",
+    "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "127-19-5": [
+   {
+    "no": "986",
+    "name": "Dimethylacetamide, N,N-",
+    "casCell": "127-19-5",
+    "pac2": "67",
+    "source": "TLV-TWA x 3, TEEL-3/6, IDLH (1990)",
+    "unit": "ppm"
+   }
+  ],
+  "1302-42-7": [
+   {
+    "no": "2501",
+    "name": "Sodium aluminate; (Aluminum sodium dioxide)",
+    "casCell": "1302-42-7",
+    "pac2": "200",
+    "source": "MW-adjusted soluble aluminum salts (7429-90-5) REL-TWA x 3, TEEL-1 x 11, TEEL-2 x 6",
+    "unit": "mg/m3"
+   }
+  ],
+  "1303-28-2": [
+   {
+    "no": "196",
+    "name": "Arsenic pentoxide",
+    "casCell": "1303-28-2",
+    "pac2": "8.0",
+    "source": "TEEL-2/11, LOC, MW-adjusted arsenic (7440-38-2) IDLH (1990)",
+    "unit": "mg/m3"
+   }
+  ],
+  "1303-86-2": [
+   {
+    "no": "329",
+    "name": "Boron oxide",
+    "casCell": "1303-86-2",
+    "pac2": "100",
+    "source": "TLV-TWA x 3, TEEL-3/6, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "13048-33-4": [
+   {
+    "no": "1393",
+    "name": "Hexanediol diacrylate, 1,6-",
+    "casCell": "13048-33-4",
+    "pac2": "170",
+    "source": "WEEL-TWA x 3, TEEL-3/6, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "1306-19-0": [
+   {
+    "no": "467",
+    "name": "Cadmium oxide",
+    "casCell": "1306-19-0",
+    "pac2": "1.2",
+    "source": "Used MW-adjusted cadmium (7440-43-9) AEGL values",
+    "unit": "mg/m3"
+   }
+  ],
+  "1306-23-6": [
+   {
+    "no": "471",
+    "name": "Cadmium sulfide",
+    "casCell": "1306-23-6",
+    "pac2": "0.76",
+    "source": "Used MW-adjusted cadmium (7440-43-9) AEGL values",
+    "unit": "mg/m3"
+   }
+  ],
+  "1307-96-6": [
+   {
+    "no": "681",
+    "name": "Cobalt(II) oxide",
+    "casCell": "1307-96-6",
+    "pac2": "6.7",
+    "source": "MW-adjusted inorganic cobalt (7440-48-4) TLV-TWA x 3, TEEL-3/6, MW-adjusted cobalt fume IDLH (1990)",
+    "unit": "mg/m3"
+   }
+  ],
+  "13071-79-9": [
+   {
+    "no": "2705",
+    "name": "Terbufos",
+    "casCell": "13071-79-9",
+    "pac2": "0.053",
+    "source": "TEEL-2/11, LOC, dog oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "131-17-9": [
+   {
+    "no": "786",
+    "name": "Diallyl phthalate",
+    "casCell": "131-17-9",
+    "pac2": "24",
+    "source": "United Kingdom OEL-TWA x 3, TEEL-3/6, rat 60-min LC50",
+    "unit": "mg/m3"
+   }
+  ],
+  "1310-58-3": [
+   {
+    "no": "2318",
+    "name": "Potassium hydroxide",
+    "casCell": "1310-58-3",
+    "pac2": "2.0",
+    "source": "TEEL-2/11, TLV-C, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "1310-65-2": [
+   {
+    "no": "1595",
+    "name": "Lithium hydroxide",
+    "casCell": "1310-65-2",
+    "pac2": "1.0",
+    "source": "TEEL-2/11, WEEL-C, rat 240-min LC50",
+    "unit": "mg/m3"
+   }
+  ],
+  "1310-73-2": [
+   {
+    "no": "2557",
+    "name": "Sodium hydroxide",
+    "casCell": "1310-73-2",
+    "pac2": "5.0",
+    "source": "ERPG-1, ERPG-2, ERPG-3",
+    "unit": "mg/m3"
+   }
+  ],
+  "1313-60-6": [
+   {
+    "no": "2589",
+    "name": "Sodium peroxide",
+    "casCell": "1313-60-6",
+    "pac2": "5.0",
+    "source": "Used sodium hydroxide (1310-73-2) ERPG values",
+    "unit": "mg/m3"
+   }
+  ],
+  "1313-99-1": [
+   {
+    "no": "1927",
+    "name": "Nickel oxide; (Nickel(II) oxide)",
+    "casCell": "1313-99-1",
+    "pac2": "220",
+    "source": "MW-adjusted insoluble nickel (7440-02-0) TLV-TWA x 3, TEEL-3/6, rat oral LDLo",
+    "unit": "mg/m3"
+   }
+  ],
+  "13138-45-9": [
+   {
+    "no": "1938",
+    "name": "Nickel(II) nitrate; (Nickelous nitrate)",
+    "casCell": "13138-45-9",
+    "pac2": "10",
+    "source": "MW-adjusted soluble nickel (7440-02-0) TLV-TWA x 3, TEEL-1 x 11, TEEL-2 x 6",
+    "unit": "mg/m3"
+   }
+  ],
+  "1314-13-2": [
+   {
+    "no": "3107",
+    "name": "Zinc oxide",
+    "casCell": "1314-13-2",
+    "pac2": "15",
+    "source": "TLV-STEL, REL-C, IDLH (1990)",
+    "unit": "mg/m3"
+   }
+  ],
+  "1314-41-6": [
+   {
+    "no": "1568",
+    "name": "Lead tetroxide",
+    "casCell": "1314-41-6",
+    "pac2": "130",
+    "source": "MW-adjusted lead (7439-92-1) TLV-TWA x 3, TEEL-3/6, MW-adjusted lead IDLH (1990)",
+    "unit": "mg/m3"
+   }
+  ],
+  "1314-56-3": [
+   {
+    "no": "2195",
+    "name": "Phosphorus pentoxide",
+    "casCell": "1314-56-3",
+    "pac2": "10ₑ",
+    "source": "ERPG-1, ERPG-2, ERPG-3",
+    "unit": "mg/m3"
+   }
+  ],
+  "1314-80-3": [
+   {
+    "no": "2194",
+    "name": "Phosphorus pentasulfide",
+    "casCell": "1314-80-3",
+    "pac2": "130",
+    "source": "TLV-STEL, TEEL-3/6, IDLH (1990)",
+    "unit": "mg/m3"
+   }
+  ],
   "1314-84-7": [
    {
     "no": "3111",
@@ -2195,6 +3566,96 @@
     "casCell": "1314-84-7",
     "pac2": "11",
     "source": "AEGL-2/11, AEGL-2, AEGL-3",
+    "unit": "mg/m3"
+   }
+  ],
+  "1317-36-8": [
+   {
+    "no": "1564",
+    "name": "Lead oxide; (Lead monoxide)",
+    "casCell": "1317-36-8",
+    "pac2": "130",
+    "source": "MW-adjusted lead (7439-92-1) TLV-TWA x 3, TEEL-3/6, MW-adjusted lead IDLH (1990)",
+    "unit": "mg/m3"
+   }
+  ],
+  "1317-38-0": [
+   {
+    "no": "727",
+    "name": "Cupric oxide",
+    "casCell": "1317-38-0",
+    "pac2": "11",
+    "source": "MW-adjusted copper (7440-50-8) TLV-TWA x 3, mouse ip TDLo, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "1317-39-1": [
+   {
+    "no": "693",
+    "name": "Copper oxide; (Copper(I) oxide)",
+    "casCell": "1317-39-1",
+    "pac2": "21",
+    "source": "MW-adjusted copper fume (7440-50-8) TLV-TWA x 3, TEEL-3/6, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "13171-21-6": [
+   {
+    "no": "2175",
+    "name": "Phosphamidon; (Famfos)",
+    "casCell": "13171-21-6",
+    "pac2": "0.30",
+    "source": "TEEL-2/11, LOC, dog oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "1319-77-3": [
+   {
+    "no": "709",
+    "name": "Cresols, all isomers; (includes 95-48-7,108-39-4,106-44-5)",
+    "casCell": "1319-77-3",
+    "pac2": "25",
+    "source": "TLV-TWA x 3, LOC, IDLH (1990 and 1994)",
+    "unit": "ppm"
+   }
+  ],
+  "13194-48-4": [
+   {
+    "no": "1175",
+    "name": "Ethyl S,S-dipropylphosphorodithioate, O-; (Mocap PC-84; Ethoprophos)",
+    "casCell": "13194-48-4",
+    "pac2": "0.90",
+    "source": "TEEL-2/11, TEEL-3/6, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "1327-53-3": [
+   {
+    "no": "197",
+    "name": "Arsenic trioxide",
+    "casCell": "1327-53-3",
+    "pac2": "3.0",
+    "source": "AEGL-2/11, AEGL-2, AEGL-3",
+    "unit": "mg/m3"
+   }
+  ],
+  "13292-87-0": [
+   {
+    "no": "322",
+    "name": "Borane methyl sulfide complex; (Methyl sulfide complex with borane (1:1))",
+    "casCell": "13292-87-0",
+    "pac2": "1.0",
+    "source": "TEEL-2/11, TEEL-3/6, rabbit dermal LDLo",
+    "unit": "mg/m3"
+   }
+  ],
+  "133-06-2": [
+   {
+    "no": "508",
+    "name": "Captan",
+    "casCell": "133-06-2",
+    "pac2": "26",
+    "source": "TLV-TWA x 3, human oral TDLo, human oral LDLo",
     "unit": "mg/m3"
    }
   ],
@@ -2208,6 +3669,46 @@
     "unit": "ppm"
    }
   ],
+  "1330-43-4": [
+   {
+    "no": "2519",
+    "name": "Sodium borate; (Disodium tetraborate)",
+    "casCell": "1330-43-4",
+    "pac2": "88",
+    "source": "TLV-STEL, TEEL-3/6, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "1333-82-0": [
+   {
+    "no": "650",
+    "name": "Chromic trioxide; (Chromium(VI) oxide (1:3))",
+    "casCell": "1333-82-0",
+    "pac2": "0.10",
+    "source": "MW-adjusted soluble chromium (VI) (7440-47-3) TLV-TWA x 3, TEEL-3/6, MW-adjusted chromates (1330-82-0) IDLH (1990)",
+    "unit": "mg/m3"
+   }
+  ],
+  "1335-32-6": [
+   {
+    "no": "1548",
+    "name": "Lead acetate, basic; (Lead subacetate)",
+    "casCell": "1335-32-6",
+    "pac2": "59",
+    "source": "TEEL-2/11, TEEL-3/6, guinea pig oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "1336-36-3": [
+   {
+    "no": "2248",
+    "name": "Polychlorinated biphenyl; (Aroclor; PCBs)",
+    "casCell": "1336-36-3",
+    "pac2": "140",
+    "source": "TEEL-2/11, TEEL-3/6, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
   "1338-23-4": [
    {
     "no": "1743",
@@ -2216,6 +3717,16 @@
     "pac2": "20",
     "source": "TEEL-2/11, TLV-C adjusted based on ratio to toxicity data, rat 240-min LC50",
     "unit": "ppm"
+   }
+  ],
+  "1341-49-7": [
+   {
+    "no": "134",
+    "name": "Ammonium hydrogen fluoride; (Ammonium bifluoride)",
+    "casCell": "1341-49-7",
+    "pac2": "130",
+    "source": "MW-adjusted fluorides TLV-TWA x 3, TEEL-3/6, MW-adjusted fluorides IDLH (1990)",
+    "unit": "mg/m3"
    }
   ],
   "13463-39-3": [
@@ -2238,6 +3749,126 @@
     "unit": "ppm"
    }
   ],
+  "135-19-3": [
+   {
+    "no": "1898",
+    "name": "Naphthol, 2-",
+    "casCell": "135-19-3",
+    "pac2": "65",
+    "source": "TEEL-2/11, TEEL-3/6, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "137-26-8": [
+   {
+    "no": "2812",
+    "name": "Thiram; (Tetramethylthioperoxydicarbonic diamide)",
+    "casCell": "137-26-8",
+    "pac2": "250",
+    "source": "TLV-TWA x 3, TEEL-3/6, IDLH (1990)",
+    "unit": "mg/m3"
+   }
+  ],
+  "13765-19-0": [
+   {
+    "no": "481",
+    "name": "Calcium chromate",
+    "casCell": "13765-19-0",
+    "pac2": "7.8",
+    "source": "TLV-TWA x 3, TEEL-3/6, MW-adjusted chromates (1333-82-0) IDLH (1990)",
+    "unit": "mg/m3"
+   }
+  ],
+  "13770-89-3": [
+   {
+    "no": "1929",
+    "name": "Nickel sulfamate; (Nickel(II) sulfamate)",
+    "casCell": "13770-89-3",
+    "pac2": "12",
+    "source": "MW-adjusted soluble nickel (7440-02-0) TLV-TWA x 3, TEEL-3/6, mouse ip LDLo",
+    "unit": "mg/m3"
+   }
+  ],
+  "13780-06-8": [
+   {
+    "no": "492",
+    "name": "Calcium nitrite",
+    "casCell": "13780-06-8",
+    "pac2": "71",
+    "source": "Used sodium nitrite (7632-00-0) PAC values",
+    "unit": "mg/m3"
+   }
+  ],
+  "13814-96-5": [
+   {
+    "no": "1557",
+    "name": "Lead fluoborate",
+    "casCell": "13814-96-5",
+    "pac2": "220",
+    "source": "MW-adjusted lead (7439-92-1) TLV-TWA x 3, TEEL-3/6, MW-adjusted lead IDLH (1990)",
+    "unit": "mg/m3"
+   }
+  ],
+  "13814-97-6": [
+   {
+    "no": "2826",
+    "name": "Tin fluoroborate",
+    "casCell": "13814-97-6",
+    "pac2": "170",
+    "source": "MW-adjusted inorganic tin (7440-31-5) TLV-TWA x 3, TEEL-3/6, MW-adjusted inorganic tin IDLH (1990)",
+    "unit": "mg/m3"
+   }
+  ],
+  "13952-84-6": [
+   {
+    "no": "438",
+    "name": "Butylamine, sec-; (inlcudes 513-49-5)",
+    "casCell": "13952-84-6",
+    "pac2": "15",
+    "source": "MAK-TWA x 3, MAK-C, dog oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "140-29-4": [
+   {
+    "no": "267",
+    "name": "Benzyl cyanide; (Phenylacetonitrile)",
+    "casCell": "140-29-4",
+    "pac2": "4.3",
+    "source": "TEEL-2/11, LOC, rat 120-min LC50",
+    "unit": "mg/m3"
+   }
+  ],
+  "140-88-5": [
+   {
+    "no": "1153",
+    "name": "Ethyl acrylate",
+    "casCell": "140-88-5",
+    "pac2": "36",
+    "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "141-43-5": [
+   {
+    "no": "1138",
+    "name": "Ethanolamine",
+    "casCell": "141-43-5",
+    "pac2": "170",
+    "source": "TLV-STEL, TEEL-3/6, IDLH (1990)",
+    "unit": "ppm"
+   }
+  ],
+  "141-66-2": [
+   {
+    "no": "874",
+    "name": "Dicrotophos",
+    "casCell": "141-66-2",
+    "pac2": "0.90",
+    "source": "TEEL-2/11, LOC, rat 60-min LC50",
+    "unit": "mg/m3"
+   }
+  ],
   "141-78-6": [
    {
     "no": "1151",
@@ -2248,12 +3879,62 @@
     "unit": "ppm"
    }
   ],
+  "1420-07-1": [
+   {
+    "no": "1042",
+    "name": "Dinoterb; (2-(1,1-Dimethylethyl)-4,6-dinitrophenol)",
+    "casCell": "1420-07-1",
+    "pac2": "2.0",
+    "source": "TEEL-2/11, TEEL-3/6, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
   "143-33-9": [
    {
     "no": "2535",
     "name": "Sodium cyanide",
     "casCell": "143-33-9",
     "pac2": "14",
+    "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "mg/m3"
+   }
+  ],
+  "144-49-0": [
+   {
+    "no": "1270",
+    "name": "Fluoroacetic acid; (Fluoroethanoic acid)",
+    "casCell": "144-49-0",
+    "pac2": "0.47",
+    "source": "TEEL-2/11, LOC, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "149-30-4": [
+   {
+    "no": "1672",
+    "name": "Mercaptobenzothiazole, 2-; (2-Benzothiazolethiol)",
+    "casCell": "149-30-4",
+    "pac2": "20",
+    "source": "WEEL-TWA x 3, mouse ip TDLo, rat 240-min LC50",
+    "unit": "mg/m3"
+   }
+  ],
+  "1493-13-6": [
+   {
+    "no": "2931",
+    "name": "Trifluoromethanesulfonic acid; (Triflic acid)",
+    "casCell": "1493-13-6",
+    "pac2": "22",
+    "source": "TEEL-2/11, TEEL-3/6, rat oral LD50 (HHR = 3)",
+    "unit": "ppm"
+   }
+  ],
+  "151-50-8": [
+   {
+    "no": "2302",
+    "name": "Potassium cyanide",
+    "casCell": "151-50-8",
+    "pac2": "19",
     "source": "AEGL-1, AEGL-2, AEGL-3",
     "unit": "mg/m3"
    }
@@ -2268,6 +3949,166 @@
     "unit": "ppm"
    }
   ],
+  "152-16-9": [
+   {
+    "no": "2033",
+    "name": "Octamethyldiphosphoramide; (Octamethylpyrophosphoramide, Schradan)",
+    "casCell": "152-16-9",
+    "pac2": "0.80",
+    "source": "TEEL-2/11, LOC, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "1563-66-2": [
+   {
+    "no": "514",
+    "name": "Carbofuran",
+    "casCell": "1563-66-2",
+    "pac2": "0.43",
+    "source": "TLV-TWA x 3, LOC, rat 240-min LC50",
+    "unit": "mg/m3"
+   }
+  ],
+  "1582-09-8": [
+   {
+    "no": "2935",
+    "name": "Trifluralin; (2,6-Dinitro-N,N-dipropyl-4-(trifluoromethyl) benzenamine)",
+    "casCell": "1582-09-8",
+    "pac2": "13",
+    "source": "TEEL-2/11, TEEL-3/6, rat 60-min LC50",
+    "unit": "mg/m3"
+   }
+  ],
+  "1592-20-7": [
+   {
+    "no": "3066",
+    "name": "Vinylbenzylchloride; (4-Vinylbenzyl chloride)",
+    "casCell": "1592-20-7",
+    "pac2": "13",
+    "source": "TEEL-2/11, TEEL-3/6, rat oral LD50 (HHR = 3)",
+    "unit": "mg/m3"
+   }
+  ],
+  "16079-88-2": [
+   {
+    "no": "347",
+    "name": "Bromo-3-chloro-5,5-dimethylhydantoin, 1-; (1-Bromo-3-chloro-5,5-dimethyl-2,4-imidazolidinedione)",
+    "casCell": "16079-88-2",
+    "pac2": "46",
+    "source": "TEEL-2/11, TEEL-3/6, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "1609-86-5": [
+   {
+    "no": "429",
+    "name": "Butyl isocyanate, tert-",
+    "casCell": "1609-86-5",
+    "pac2": "12",
+    "source": "TEEL-2/11, TEEL-3/6, rat 240-min LC50",
+    "unit": "mg/m3"
+   }
+  ],
+  "16721-80-5": [
+   {
+    "no": "2611",
+    "name": "Sodium sulfhydrate; (Sodium hydrosulfide)",
+    "casCell": "16721-80-5",
+    "pac2": "3.5",
+    "source": "TEEL-2/11, TEEL-3/6, rat ip LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "16752-77-5": [
+   {
+    "no": "1713",
+    "name": "Methomyl",
+    "casCell": "16752-77-5",
+    "pac2": "10",
+    "source": "TEEL-2/11, LOC, rat 240-min LC50",
+    "unit": "mg/m3"
+   }
+  ],
+  "16871-90-2": [
+   {
+    "no": "2313",
+    "name": "Potassium hexafluorosilicate; (Silicate(2-), hexafluoro-, dipotassium)",
+    "casCell": "16871-90-2",
+    "pac2": "13",
+    "source": "TEEL-2/11, TEEL-3/6, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "16872-11-0": [
+   {
+    "no": "1260",
+    "name": "Fluoboric acid; (Tetrafluoroboric acid)",
+    "casCell": "16872-11-0",
+    "pac2": "97",
+    "source": "MW-adjusted fluorides TLV-TWA x 3, TEEL-3/6, MW-adjusted fluorides IDLH (1990)",
+    "unit": "mg/m3"
+   }
+  ],
+  "16893-85-9": [
+   {
+    "no": "1078",
+    "name": "Disodium hexafluorosilicate (2-)",
+    "casCell": "16893-85-9",
+    "pac2": "140",
+    "source": "MW-adjusted fluorides TLV-TWA x 3, rat oral TDLo, MW-adjusted fluorides IDLH (1990)",
+    "unit": "mg/m3"
+   }
+  ],
+  "16919-19-0": [
+   {
+    "no": "133",
+    "name": "Ammonium hexafluorosilicate; (Ammonium silicofluoride)",
+    "casCell": "16919-19-0",
+    "pac2": "130",
+    "source": "MW-adjusted fluorides TLV-TWA x 3, TEEL-3/6, MW-adjusted fluorides IDLH (1990)",
+    "unit": "mg/m3"
+   }
+  ],
+  "16961-83-4": [
+   {
+    "no": "2479",
+    "name": "Silicofluoric acid; (Fluorosilicic acid)",
+    "casCell": "16961-83-4",
+    "pac2": "14",
+    "source": "MW-adjusted fluorides TLV-TWA x 3, TEEL-3/6, MW-adjusted fluorides IDLH (1990)",
+    "unit": "mg/m3"
+   }
+  ],
+  "1752-30-3": [
+   {
+    "no": "15",
+    "name": "Acetone thiosemicarbazide",
+    "casCell": "1752-30-3",
+    "pac2": "0.42",
+    "source": "TEEL-2/11, LOC, TEEL-2 x 6",
+    "unit": "mg/m3"
+   }
+  ],
+  "1897-45-6": [
+   {
+    "no": "633",
+    "name": "Chlorothalonil; (Tetrachloroisophthalonitrile)",
+    "casCell": "1897-45-6",
+    "pac2": "0.73",
+    "source": "TEEL-2/11, TEEL-3/6, rat 60-min LC50",
+    "unit": "mg/m3"
+   }
+  ],
+  "1910-42-5": [
+   {
+    "no": "2080",
+    "name": "Paraquat dichloride",
+    "casCell": "1910-42-5",
+    "pac2": "0.25",
+    "source": "TEEL-2/11, TEEL-3/6, monkey oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
   "19287-45-7": [
    {
     "no": "807",
@@ -2278,6 +4119,556 @@
     "unit": "ppm"
    }
   ],
+  "2032-65-7": [
+   {
+    "no": "1712",
+    "name": "Methiocarb; (Mercaptodimethur)",
+    "casCell": "2032-65-7",
+    "pac2": "15",
+    "source": "TEEL-2/11, LOC, TEEL-2 x 6",
+    "unit": "mg/m3"
+   }
+  ],
+  "20325-40-0": [
+   {
+    "no": "798",
+    "name": "Dianisidine dihydrochloride, o-; (3,3'-Dimethoxybenzidine dihydrochloride)",
+    "casCell": "20325-40-0",
+    "pac2": "13",
+    "source": "TEEL-2/11, TEEL-3/6, rat oral LD50 (HHR = 3)",
+    "unit": "mg/m3"
+   }
+  ],
+  "2074-50-2": [
+   {
+    "no": "2081",
+    "name": "Paraquat methosulfate; (Paraquat dimethyl sulphate)",
+    "casCell": "2074-50-2",
+    "pac2": "0.15",
+    "source": "TEEL-2/11, LOC, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "20816-12-0": [
+   {
+    "no": "2054",
+    "name": "Osmium tetroxide",
+    "casCell": "20816-12-0",
+    "pac2": "0.0084",
+    "source": "TLV-STEL, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "20859-73-8": [
+   {
+    "no": "76",
+    "name": "Aluminum phosphide",
+    "casCell": "20859-73-8",
+    "pac2": "2.0",
+    "source": "TLV-TWA x 3, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "2097-19-0": [
+   {
+    "no": "2163",
+    "name": "Phenylsilatrane",
+    "casCell": "2097-19-0",
+    "pac2": "1.0",
+    "source": "TEEL-2/11, LOC, TEEL-2 x 6",
+    "unit": "mg/m3"
+   }
+  ],
+  "2104-64-5": [
+   {
+    "no": "1115",
+    "name": "EPN; (O-Ethyl-O-(4-nitrophenyl) phenylthiophosphonate)",
+    "casCell": "2104-64-5",
+    "pac2": "5.0",
+    "source": "TEEL-2/11, LOC, IDLH (1990)",
+    "unit": "mg/m3"
+   }
+  ],
+  "21041-93-0": [
+   {
+    "no": "672",
+    "name": "Cobalt hydroxide",
+    "casCell": "21041-93-0",
+    "pac2": "0.37",
+    "source": "MW-adjusted inorganic cobalt (7440-48-4) TLV-TWA x 3, TEEL-1 x 11, TEEL-2 x 6",
+    "unit": "mg/m3"
+   }
+  ],
+  "21041-95-2": [
+   {
+    "no": "463",
+    "name": "Cadmium hydroxide",
+    "casCell": "21041-95-2",
+    "pac2": "0.76",
+    "source": "Used MW-adjusted cadmium (7440-43-9) AEGL values",
+    "unit": "mg/m3"
+   }
+  ],
+  "21548-32-3": [
+   {
+    "no": "1289",
+    "name": "Fosthietan",
+    "casCell": "21548-32-3",
+    "pac2": "4.7",
+    "source": "TEEL-2/11, LOC, TEEL-2 x 6",
+    "unit": "mg/m3"
+   }
+  ],
+  "21609-90-5": [
+   {
+    "no": "1572",
+    "name": "Leptophos; (Fosvel)",
+    "casCell": "21609-90-5",
+    "pac2": "0.63",
+    "source": "TEEL-2/11, LOC, rat ip LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "21923-23-9": [
+   {
+    "no": "643",
+    "name": "Chlorthiophos",
+    "casCell": "21923-23-9",
+    "pac2": "0.30",
+    "source": "TEEL-2/11, LOC, mouse oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "22224-92-6": [
+   {
+    "no": "1236",
+    "name": "Fenamiphos",
+    "casCell": "22224-92-6",
+    "pac2": "0.90",
+    "source": "TLV-TWA x 3, LOC, rat 60-min LC50",
+    "unit": "mg/m3"
+   }
+  ],
+  "2275-18-5": [
+   {
+    "no": "2408",
+    "name": "Prothoate; (Isopropyl diethyldithiophosphorylacetamide)",
+    "casCell": "2275-18-5",
+    "pac2": "1.7",
+    "source": "TEEL-2/11, LOC, TEEL-2 x 6",
+    "unit": "mg/m3"
+   }
+  ],
+  "23135-22-0": [
+   {
+    "no": "2061",
+    "name": "Oxamyl",
+    "casCell": "23135-22-0",
+    "pac2": "1.7",
+    "source": "TEEL-2/11, LOC, rat 60-min LC50",
+    "unit": "mg/m3"
+   }
+  ],
+  "23505-41-1": [
+   {
+    "no": "2216",
+    "name": "Pirimifos-ethyl",
+    "casCell": "23505-41-1",
+    "pac2": "25",
+    "source": "TEEL-2/11, LOC, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "2386-64-3": [
+   {
+    "no": "1224",
+    "name": "Ethylmagnesium chloride; (Chloroethyl magnesium)",
+    "casCell": "2386-64-3",
+    "pac2": "330",
+    "source": "TLV-TWA (PNOS) x 3, TEEL-1 x 11, TEEL-2 x 6",
+    "unit": "mg/m3"
+   }
+  ],
+  "24017-47-8": [
+   {
+    "no": "2869",
+    "name": "Triazofos; (Triazophos)",
+    "casCell": "24017-47-8",
+    "pac2": "2.8",
+    "source": "TEEL-2/11, LOC, rat 240-min LC50",
+    "unit": "mg/m3"
+   }
+  ],
+  "2426-08-6": [
+   {
+    "no": "427",
+    "name": "Butyl glycidyl ether, n-",
+    "casCell": "2426-08-6",
+    "pac2": "580",
+    "source": "TLV-TWA x 3, TEEL-3/6, IDLH (1990)",
+    "unit": "ppm"
+   }
+  ],
+  "24468-13-1": [
+   {
+    "no": "1220",
+    "name": "Ethylhexylchloroformate, 2-",
+    "casCell": "24468-13-1",
+    "pac2": "0.97",
+    "source": "AEGL-2/11, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "24934-91-6": [
+   {
+    "no": "567",
+    "name": "Chlormephos",
+    "casCell": "24934-91-6",
+    "pac2": "7",
+    "source": "TEEL-2/11, LOC, TEEL-2 x 6",
+    "unit": "mg/m3"
+   }
+  ],
+  "25154-52-3": [
+   {
+    "no": "2013",
+    "name": "Nonyl phenol (mixed isomers)",
+    "casCell": "25154-52-3",
+    "pac2": "2.1",
+    "source": "TEEL-2/11, rat ip TDLo, rat oral LD50",
+    "unit": "ppm"
+   }
+  ],
+  "25321-14-6": [
+   {
+    "no": "1037",
+    "name": "Dinitrotoluene",
+    "casCell": "25321-14-6",
+    "pac2": "8.3",
+    "source": "TLV-TWA x 3, rat oral TDLo, IDLH (1990)",
+    "unit": "mg/m3"
+   }
+  ],
+  "2540-82-1": [
+   {
+    "no": "1286",
+    "name": "Formothion",
+    "casCell": "2540-82-1",
+    "pac2": "0.27",
+    "source": "TEEL-2/11, TEEL-3/6, rat 240-min LC50",
+    "unit": "mg/m3"
+   }
+  ],
+  "26134-62-3": [
+   {
+    "no": "1602",
+    "name": "Lithium nitride",
+    "casCell": "26134-62-3",
+    "pac2": "9.3",
+    "source": "TLV-TWA (PNOS) x 3, TEEL-1 x 11, TEEL-2 x 6",
+    "unit": "ppm"
+   }
+  ],
+  "26172-55-4": [
+   {
+    "no": "575",
+    "name": "Chloro-2-methyl-4-isothiazolin-3-one, 5-",
+    "casCell": "26172-55-4",
+    "pac2": "1.8",
+    "source": "MAK-TWA x 3, TEEL-1 x 11, TEEL-2 x 6",
+    "unit": "mg/m3"
+   }
+  ],
+  "2631-37-0": [
+   {
+    "no": "2369",
+    "name": "Promecarb; (m-Cym-5-yl methylcarbamate)",
+    "casCell": "2631-37-0",
+    "pac2": "16",
+    "source": "TEEL-2/11, LOC, TEEL-2 x 6",
+    "unit": "mg/m3"
+   }
+  ],
+  "26447-40-5": [
+   {
+    "no": "1806",
+    "name": "Methylenebis(isocyanato-benzene), 1,1'-; (Diphenyl methane diisocyanate)",
+    "casCell": "26447-40-5",
+    "pac2": "40",
+    "source": "MW-adjusted cyanides MAK-TWA x 3, TEEL-3/6, MW-adjusted cyanides IDLH (1990)",
+    "unit": "mg/m3"
+   }
+  ],
+  "26471-62-5": [
+   {
+    "no": "2847",
+    "name": "Toluene diisocyanate (mixed isomers)",
+    "casCell": "26471-62-5",
+    "pac2": "0.083",
+    "source": "Used toluene-2,6-diisocyanate (584-84-9) AEGL values",
+    "unit": "ppm"
+   }
+  ],
+  "26628-22-8": [
+   {
+    "no": "2509",
+    "name": "Sodium azide",
+    "casCell": "26628-22-8",
+    "pac2": "0.29",
+    "source": "TEEL-2/11, TLV-C, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "2699-79-8": [
+   {
+    "no": "2685",
+    "name": "Sulfuryl fluoride",
+    "casCell": "2699-79-8",
+    "pac2": "21",
+    "source": "TLV-STEL, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "2778-04-3": [
+   {
+    "no": "1110",
+    "name": "Endothion",
+    "casCell": "2778-04-3",
+    "pac2": "17",
+    "source": "TEEL-2/11, LOC, TEEL-2 x 6",
+    "unit": "mg/m3"
+   }
+  ],
+  "2857-97-8": [
+   {
+    "no": "385",
+    "name": "Bromotrimethylsilane; (Trimethylsilyl bromide)",
+    "casCell": "2857-97-8",
+    "pac2": "13",
+    "source": "TEEL-2/11, TEEL-3/6, rat oral LD50 (HHR = 3)",
+    "unit": "mg/m3"
+   }
+  ],
+  "28772-56-7": [
+   {
+    "no": "339",
+    "name": "Bromadiolone",
+    "casCell": "28772-56-7",
+    "pac2": "1.0",
+    "source": "TEEL-2/11, LOC, dog oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "2921-88-2": [
+   {
+    "no": "641",
+    "name": "Chlorpyrifos; (Dursban)",
+    "casCell": "2921-88-2",
+    "pac2": "1.5",
+    "source": "REL-STEL, rat oral TDLo, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "297-78-9": [
+   {
+    "no": "1491",
+    "name": "Isobenzan",
+    "casCell": "297-78-9",
+    "pac2": "1.0",
+    "source": "TEEL-2/11, TEEL-3/6, dog oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "297-97-2": [
+   {
+    "no": "2807",
+    "name": "Thionazin; (Ethyl pyrazinyl phosphorothioate)",
+    "casCell": "297-97-2",
+    "pac2": "0.12",
+    "source": "TEEL-2/11, LOC, TEEL-2 x 6",
+    "unit": "mg/m3"
+   }
+  ],
+  "298-00-0": [
+   {
+    "no": "1760",
+    "name": "Methyl parathion",
+    "casCell": "298-00-0",
+    "pac2": "1.2",
+    "source": "AEGL-2/11, AEGL-2, AEGL-3",
+    "unit": "mg/m3"
+   }
+  ],
+  "298-02-2": [
+   {
+    "no": "2169",
+    "name": "Phorate",
+    "casCell": "298-02-2",
+    "pac2": "0.040",
+    "source": "AEGL-2/11, AEGL-2, AEGL-3",
+    "unit": "mg/m3"
+   }
+  ],
+  "298-04-4": [
+   {
+    "no": "1083",
+    "name": "Disulfoton",
+    "casCell": "298-04-4",
+    "pac2": "0.43",
+    "source": "TLV-TWA x 3, LOC, rat 240-min LC50",
+    "unit": "mg/m3"
+   }
+  ],
+  "301-04-2": [
+   {
+    "no": "1549",
+    "name": "Lead acetate; (Lead diacetate)",
+    "casCell": "301-04-2",
+    "pac2": "55",
+    "source": "TEEL-2/11, TEEL-3/6, dog iv LDLo",
+    "unit": "mg/m3"
+   }
+  ],
+  "302-01-2": [
+   {
+    "no": "1412",
+    "name": "Hydrazine",
+    "casCell": "302-01-2",
+    "pac2": "13ₐ",
+    "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "30525-89-4": [
+   {
+    "no": "2077",
+    "name": "Paraformaldehyde",
+    "casCell": "30525-89-4",
+    "pac2": "5",
+    "source": "TEEL-2/11, rat oral TDLo, rat 240-min LC50",
+    "unit": "mg/m3"
+   }
+  ],
+  "309-00-2": [
+   {
+    "no": "41",
+    "name": "Aldrin; (1,2,3,4,10,10-Hexachloro-1,4,4a,5,8,8a-hexahydro-1,4-endo,exo-5,8-dimethanonaphthalene)",
+    "casCell": "309-00-2",
+    "pac2": "10",
+    "source": "TEEL-2/11, LOC, IDLH (1990)",
+    "unit": "mg/m3"
+   }
+  ],
+  "315-18-4": [
+   {
+    "no": "1852",
+    "name": "Mexacarbate; (4-(Dimethylamine)-3,5-xylyl N-methylcarbamate)",
+    "casCell": "315-18-4",
+    "pac2": "14",
+    "source": "TEEL-2/11, LOC, TEEL-2 x 6",
+    "unit": "mg/m3"
+   }
+  ],
+  "3251-23-8": [
+   {
+    "no": "692",
+    "name": "Copper nitrate; (Cupric nitrate)",
+    "casCell": "3251-23-8",
+    "pac2": "31",
+    "source": "MW-adjusted copper (7440-50-8) TLV-TWA x 3, TEEL-3/6, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "327-98-0": [
+   {
+    "no": "2896",
+    "name": "Trichloronate; (Ethyl trichlorophenylethylphosphonothioate)",
+    "casCell": "327-98-0",
+    "pac2": "10",
+    "source": "TEEL-2/11, LOC, rat 240-min LCLo",
+    "unit": "mg/m3"
+   }
+  ],
+  "3282-30-2": [
+   {
+    "no": "2954",
+    "name": "Trimethylacetyl chloride; (Pivaloyl chloride)",
+    "casCell": "3282-30-2",
+    "pac2": "0.16",
+    "source": "AEGL-2/11, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "3349-06-2": [
+   {
+    "no": "1925",
+    "name": "Nickel formate",
+    "casCell": "3349-06-2",
+    "pac2": "83",
+    "source": "MW-adjusted organic nickel (7440-02-0) PEL-TWA x 3, TEEL-1 x 11, TEEL-2 x 6",
+    "unit": "mg/m3"
+   }
+  ],
+  "354-32-5": [
+   {
+    "no": "2929",
+    "name": "Trifluoroacetyl chloride",
+    "casCell": "354-32-5",
+    "pac2": "0.29",
+    "source": "MW-adjusted fluorides TLV-TWA x 3, TEEL-3/6, MW-adjusted fluorides IDLH (1990) converted to ppm",
+    "unit": "ppm"
+   }
+  ],
+  "358-23-6": [
+   {
+    "no": "2932",
+    "name": "Trifluoromethanesulfonic anhydride",
+    "casCell": "358-23-6",
+    "pac2": "130",
+    "source": "TEEL-2/11, TEEL-3/6, rat oral LD50 (HHR = 3)",
+    "unit": "mg/m3"
+   }
+  ],
+  "35963-20-3": [
+   {
+    "no": "502",
+    "name": "Camphorsulfonic acid, (1R)-(-)-10-",
+    "casCell": "35963-20-3",
+    "pac2": "13",
+    "source": "TLV-TWA (PNOS) x 3, TEEL-1 x 11, TEEL-2 x 6",
+    "unit": "mg/m3"
+   }
+  ],
+  "3689-24-5": [
+   {
+    "no": "2674",
+    "name": "Sulfotep; (TEDP)",
+    "casCell": "3689-24-5",
+    "pac2": "3.5",
+    "source": "TEEL-2/11, LOC, IDLH (1990)",
+    "unit": "mg/m3"
+   }
+  ],
+  "3691-35-8": [
+   {
+    "no": "614",
+    "name": "Chlorophacinone",
+    "casCell": "3691-35-8",
+    "pac2": "0.051",
+    "source": "TEEL-2/11, TEEL-3/6, 240-min rat LC50",
+    "unit": "mg/m3"
+   }
+  ],
+  "3734-97-2": [
+   {
+    "no": "109",
+    "name": "Amiton oxalate",
+    "casCell": "3734-97-2",
+    "pac2": "0.099",
+    "source": "TEEL-2/11, TEEL-3/6, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
   "3811-04-9": [
    {
     "no": "2297",
@@ -2285,6 +4676,46 @@
     "casCell": "3811-04-9",
     "pac2": "62",
     "source": "TEEL-2/11, TEEL-3/6, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "39196-18-4": [
+   {
+    "no": "2806",
+    "name": "Thiofanox; (Dacamox)",
+    "casCell": "39196-18-4",
+    "pac2": "8.5",
+    "source": "TEEL-2/11, LOC, TEEL-2 x 6",
+    "unit": "mg/m3"
+   }
+  ],
+  "3926-62-3": [
+   {
+    "no": "581",
+    "name": "Chloroacetic acid, sodium salt",
+    "casCell": "3926-62-3",
+    "pac2": "79",
+    "source": "WEEL-TWA x 3, TEEL-1 x 11, TEEL-2 x 6",
+    "unit": "mg/m3"
+   }
+  ],
+  "3978-81-2": [
+   {
+    "no": "2713",
+    "name": "Tert-butylpyridine, 4-",
+    "casCell": "3978-81-2",
+    "pac2": "330",
+    "source": "TLV-TWA (PNOS) x 3, TEEL-1 x 11, TEEL-2 x 6",
+    "unit": "mg/m3"
+   }
+  ],
+  "409-21-2": [
+   {
+    "no": "2481",
+    "name": "Silicon carbide",
+    "casCell": "409-21-2",
+    "pac2": "500",
+    "source": "PEL-TWA x 3, TEEL-1 x 11, TEEL-2 x 6",
     "unit": "mg/m3"
    }
   ],
@@ -2298,6 +4729,16 @@
     "unit": "mg/m3"
    }
   ],
+  "4104-14-7": [
+   {
+    "no": "2170",
+    "name": "Phosacetim",
+    "casCell": "4104-14-7",
+    "pac2": "3.7",
+    "source": "TEEL-2/11, LOC, dog oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
   "4109-96-0": [
    {
     "no": "870",
@@ -2306,6 +4747,66 @@
     "pac2": "11",
     "source": "AEGL-1, AEGL-2, AEGL-3",
     "unit": "ppm"
+   }
+  ],
+  "4170-30-3": [
+   {
+    "no": "714",
+    "name": "Crotonaldehyde",
+    "casCell": "4170-30-3",
+    "pac2": "4.4",
+    "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "420-04-2": [
+   {
+    "no": "728",
+    "name": "Cyanamide",
+    "casCell": "420-04-2",
+    "pac2": "66",
+    "source": "TLV-TWA x 3, TEEL-1 x 11, TEEL-2 x 6",
+    "unit": "mg/m3"
+   }
+  ],
+  "4499-86-9": [
+   {
+    "no": "2780",
+    "name": "Tetrapropylammonium hydroxide",
+    "casCell": "4499-86-9",
+    "pac2": "13",
+    "source": "TEEL-2/11, TEEL-3/6, rat oral LD50 (HHR = 3)",
+    "unit": "mg/m3"
+   }
+  ],
+  "463-58-1": [
+   {
+    "no": "525",
+    "name": "Carbonyl sulfide",
+    "casCell": "463-58-1",
+    "pac2": "55",
+    "source": "TLV-TWA x 3, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "4635-59-0": [
+   {
+    "no": "594",
+    "name": "Chlorobutyryl chloride, 4-",
+    "casCell": "4635-59-0",
+    "pac2": "4.8",
+    "source": "TEEL-2/11, TEEL-3/6, rat 240-min LC50",
+    "unit": "mg/m3"
+   }
+  ],
+  "470-90-6": [
+   {
+    "no": "559",
+    "name": "Chlorfenvinfos",
+    "casCell": "470-90-6",
+    "pac2": "0.37",
+    "source": "TEEL-2/11, LOC, dog oral LD50",
+    "unit": "mg/m3"
    }
   ],
   "50-00-0": [
@@ -2318,6 +4819,66 @@
     "unit": "ppm"
    }
   ],
+  "50-29-3": [
+   {
+    "no": "768",
+    "name": "DDT; (Dichlorodiphenyltrichloroethane)",
+    "casCell": "50-29-3",
+    "pac2": "83",
+    "source": "TLV-TWA x 3, TEEL-3/6, dog oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "501-53-1": [
+   {
+    "no": "266",
+    "name": "Benzyl chloroformate; (Carbobenzoxy chloride)",
+    "casCell": "501-53-1",
+    "pac2": "0.97",
+    "source": "AEGL-2/11, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "504-24-5": [
+   {
+    "no": "108",
+    "name": "Aminopyridine, 4-; (4-Pyridinamine)",
+    "casCell": "504-24-5",
+    "pac2": "20",
+    "source": "TEEL-2/11, LOC, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "505-60-2": [
+   {
+    "no": "289",
+    "name": "Bis(2-chloroethyl)sulfide; (HD; Sulfur mustard)",
+    "casCell": "505-60-2",
+    "pac2": "0.020",
+    "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "506-61-6": [
+   {
+    "no": "2351",
+    "name": "Potassium silver cyanide",
+    "casCell": "506-61-6",
+    "pac2": "0.69",
+    "source": "TEEL-2/11, TEEL-3/6, MW-adjusted cyanides  IDLH (1990)",
+    "unit": "mg/m3"
+   }
+  ],
+  "506-64-9": [
+   {
+    "no": "2491",
+    "name": "Silver cyanide",
+    "casCell": "506-64-9",
+    "pac2": "4.1",
+    "source": "TEEL-2/11, TEEL-3/6, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
   "506-77-4": [
    {
     "no": "734",
@@ -2326,6 +4887,406 @@
     "pac2": "0.050",
     "source": "ERPG-2/11, ERPG-2, ERPG-3",
     "unit": "ppm"
+   }
+  ],
+  "506-87-6": [
+   {
+    "no": "122",
+    "name": "Ammonium carbonate",
+    "casCell": "506-87-6",
+    "pac2": "3.5",
+    "source": "TEEL-2/11, TEEL-3/6, mouse iv LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "51-28-5": [
+   {
+    "no": "1033",
+    "name": "Dinitrophenol, 2,4-",
+    "casCell": "51-28-5",
+    "pac2": "1.4",
+    "source": "TEEL-2/11, rat oral TDLo, dog oral LDLo",
+    "unit": "mg/m3"
+   }
+  ],
+  "51-75-2": [
+   {
+    "no": "1974",
+    "name": "Nitrogen mustard; (Bis(b-chloroethyl)methylamine; Nitrogen mustard-2)",
+    "casCell": "51-75-2",
+    "pac2": "0.022",
+    "source": "AEGL-2/11, AEGL-2, AEGL-3",
+    "unit": "mg/m3"
+   }
+  ],
+  "51-79-6": [
+   {
+    "no": "3039",
+    "name": "Urethane; (Carbamic acid, ethyl ester; Ethyl carbamate)",
+    "casCell": "51-79-6",
+    "pac2": "60",
+    "source": "TEEL-2/11, TEEL-3/6, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "510-15-6": [
+   {
+    "no": "590",
+    "name": "Chlorobenzylate; (4,4'-Dichlorobenzilic acid ethyl ester)",
+    "casCell": "510-15-6",
+    "pac2": "1.7",
+    "source": "TEEL-2/11, rat oral TDLo, rat oral LD50",
+    "unit": "ppm"
+   }
+  ],
+  "5124-30-1": [
+   {
+    "no": "1802",
+    "name": "Methylene bis(4-isocyanatocyclohexane), 1,1'-",
+    "casCell": "5124-30-1",
+    "pac2": "3.2",
+    "source": "TLV-TWA x 3, TEEL-3/6, rat 240-min LCLo",
+    "unit": "mg/m3"
+   }
+  ],
+  "513-78-0": [
+   {
+    "no": "459",
+    "name": "Cadmium carbonate",
+    "casCell": "513-78-0",
+    "pac2": "1.2",
+    "source": "Used MW-adjusted cadmium (7440-43-9) AEGL values",
+    "unit": "mg/m3"
+   }
+  ],
+  "513-79-1": [
+   {
+    "no": "686",
+    "name": "Cobaltous carbonate",
+    "casCell": "513-79-1",
+    "pac2": "210",
+    "source": "MW-adjusted inorganic cobalt (7440-48-4) TLV-TWA x 3, TEEL-3/6, rabbit ip LDLo",
+    "unit": "mg/m3"
+   }
+  ],
+  "52-68-6": [
+   {
+    "no": "2893",
+    "name": "Trichlorohydroxyethyl dimethylphosphonate; ((2,2,2-Trichloro-1-hydroxyethyl)dimethylphosphonate; Trichlorphon)",
+    "casCell": "52-68-6",
+    "pac2": "13",
+    "source": "TEEL-2/11, LOC, rat 240-min LC50",
+    "unit": "mg/m3"
+   }
+  ],
+  "534-52-1": [
+   {
+    "no": "1030",
+    "name": "Dinitro-o-cresol, 4,6-",
+    "casCell": "534-52-1",
+    "pac2": "0.65",
+    "source": "TLV-TWA x 3, TEEL-3/6, IDLH (1990 and 1994)",
+    "unit": "mg/m3"
+   }
+  ],
+  "5341-61-7": [
+   {
+    "no": "1417",
+    "name": "Hydrazine, dihydrochloride",
+    "casCell": "5341-61-7",
+    "pac2": "20",
+    "source": "TEEL-2/11, rat oral TDlo, TEEL-2 x 6",
+    "unit": "mg/m3"
+   }
+  ],
+  "535-89-7": [
+   {
+    "no": "711",
+    "name": "Crimidine; (Castrix)",
+    "casCell": "535-89-7",
+    "pac2": "0.041",
+    "source": "TEEL-2/11, TEEL-3/6, dog ip LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "53558-25-1": [
+   {
+    "no": "2415",
+    "name": "Pyriminil; (Pyriminyl)",
+    "casCell": "53558-25-1",
+    "pac2": "5.8",
+    "source": "TEEL-2/11, LOC, human oral LDLo",
+    "unit": "ppm"
+   }
+  ],
+  "54-11-5": [
+   {
+    "no": "1944",
+    "name": "Nicotine; (Pyridine, (S)-3-(1-methyl-2-pyrrolidinyl)-); (Includes DL-Nicotine, 22083-74-5)",
+    "casCell": "54-11-5",
+    "pac2": "3.5",
+    "source": "TLV-TWA x 3, LOC, IDLH (1990)",
+    "unit": "mg/m3"
+   }
+  ],
+  "540-51-2": [
+   {
+    "no": "364",
+    "name": "Bromoethanol, 2-; (Ethylene bromohydrin)",
+    "casCell": "540-51-2",
+    "pac2": "3.8",
+    "source": "TEEL-2/11, mouse ip TDLo, mouse ip LDLo",
+    "unit": "mg/m3"
+   }
+  ],
+  "542-75-6": [
+   {
+    "no": "868",
+    "name": "Dichloropropene, 1,3-; (including cis- and trans- isomers)",
+    "casCell": "542-75-6",
+    "pac2": "5.8",
+    "source": "TLV-TWA x 3, TEEL-3/6, mouse 120-min LC50",
+    "unit": "ppm"
+   }
+  ],
+  "542-88-1": [
+   {
+    "no": "854",
+    "name": "Dichloromethyl ether; (bis(Chloromethyl)ether)",
+    "casCell": "542-88-1",
+    "pac2": "0.044",
+    "source": "AEGL-2/11, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "543-27-1": [
+   {
+    "no": "1496",
+    "name": "Isobutyl chloroformate",
+    "casCell": "543-27-1",
+    "pac2": "2.2",
+    "source": "MAK-TWA x 3, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "544-92-3": [
+   {
+    "no": "690",
+    "name": "Copper cyanide; (Copper(I) cyanide; Cuprous cyanide)",
+    "casCell": "544-92-3",
+    "pac2": "42",
+    "source": "Used MW-adjusted cyanide (57-12-5) PAC values",
+    "unit": "mg/m3"
+   }
+  ],
+  "5470-11-1": [
+   {
+    "no": "1443",
+    "name": "Hydroxylamine chloride; \n(Hydroxylamine hydrochloride)",
+    "casCell": "5470-11-1",
+    "pac2": "4.7",
+    "source": "TEEL-2/11, TEEL-3/6, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "55-38-9": [
+   {
+    "no": "1238",
+    "name": "Fenthion",
+    "casCell": "55-38-9",
+    "pac2": "5.9",
+    "source": "TEEL-2/11, TEEL-3/6, rat 240-min LC50",
+    "unit": "mg/m3"
+   }
+  ],
+  "55-86-7": [
+   {
+    "no": "1973",
+    "name": "Nitrogen mustard hydrochloride",
+    "casCell": "55-86-7",
+    "pac2": "0.029",
+    "source": "TEEL-2/11, TEEL-3/6, dog iv LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "55-91-4": [
+   {
+    "no": "950",
+    "name": "Diisopropylfluorophosphate; (Phosphorofluoridic acid, bis(1-methylethyl) ester)",
+    "casCell": "55-91-4",
+    "pac2": "0.11",
+    "source": "TEEL-2/11, LOC, TEEL-2 x 6",
+    "unit": "mg/m3"
+   }
+  ],
+  "556-52-5": [
+   {
+    "no": "1321",
+    "name": "Glycidol; (Oxiranemethanol, 1-Propanol, 2,3-epoxy)",
+    "casCell": "556-52-5",
+    "pac2": "83",
+    "source": "TLV-TWA x 3, TEEL-3/6, IDLH (1990)",
+    "unit": "ppm"
+   }
+  ],
+  "556-61-6": [
+   {
+    "no": "1752",
+    "name": "Methyl isothiocyanate; (Isothiocyanatomethane)",
+    "casCell": "556-61-6",
+    "pac2": "17",
+    "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "556-67-2": [
+   {
+    "no": "2032",
+    "name": "Octamethylcyclotetrasiloxane",
+    "casCell": "556-67-2",
+    "pac2": "530",
+    "source": "WEEL-TWA x 3, rat 360-min TCLo, rat 240-min LC50",
+    "unit": "mg/m3"
+   }
+  ],
+  "557-19-7": [
+   {
+    "no": "1923",
+    "name": "Nickel cyanide",
+    "casCell": "557-19-7",
+    "pac2": "13",
+    "source": "MW-adjusted insoluble nickel (7440-02-0) TLV-TWA x 3, TEEL-1 x 11, TEEL-2 x 6",
+    "unit": "mg/m3"
+   }
+  ],
+  "557-21-1": [
+   {
+    "no": "3101",
+    "name": "Zinc cyanide",
+    "casCell": "557-21-1",
+    "pac2": "0.44",
+    "source": "MW-adjusted cyanides MAK-TWA x 3, TEEL-3/6, MW-adjusted cyanides IDLH (1990)",
+    "unit": "mg/m3"
+   }
+  ],
+  "56-18-8": [
+   {
+    "no": "792",
+    "name": "Diaminodipropylamine, 3,3-; (Aminobis(propylamine))",
+    "casCell": "56-18-8",
+    "pac2": "0.22",
+    "source": "TEEL-2/11, TEEL-3/6, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "56-23-5": [
+   {
+    "no": "519",
+    "name": "Carbon tetrachloride",
+    "casCell": "56-23-5",
+    "pac2": "13",
+    "source": "AEGL-2/11, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "56-38-2": [
+   {
+    "no": "2082",
+    "name": "Parathion",
+    "casCell": "56-38-2",
+    "pac2": "1.5",
+    "source": "AEGL-2/11, AEGL-2, AEGL-3",
+    "unit": "mg/m3"
+   }
+  ],
+  "563-12-2": [
+   {
+    "no": "1141",
+    "name": "Ethion",
+    "casCell": "563-12-2",
+    "pac2": "13",
+    "source": "TEEL-2/11, LOC, rat 240-min LC50",
+    "unit": "mg/m3"
+   }
+  ],
+  "563-68-8": [
+   {
+    "no": "2791",
+    "name": "Thallium(I) acetate; (Acetic acid, thallium(1+) salt)",
+    "casCell": "563-68-8",
+    "pac2": "4.3",
+    "source": "MW-adjusted soluble thallium (7440-28-0) TLV-TWA x 3, TEEL-3/6, MW-adjusted soluble thallium IDLH (1990)",
+    "unit": "mg/m3"
+   }
+  ],
+  "569-64-2": [
+   {
+    "no": "230",
+    "name": "Basic Green 4; (Aizen malachite green)",
+    "casCell": "569-64-2",
+    "pac2": "1.4",
+    "source": "TEEL-2/11, TEEL-3/6, mouse oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "57-09-0": [
+   {
+    "no": "164",
+    "name": "Ammonium, hexadecyltrimethyl-, bromide; (Hexadecyltrimethylammonium bromide)",
+    "casCell": "57-09-0",
+    "pac2": "14",
+    "source": "TEEL-2/11, TEEL-3/6, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "57-24-9": [
+   {
+    "no": "2657",
+    "name": "Strychnine",
+    "casCell": "57-24-9",
+    "pac2": "0.30",
+    "source": "TLV-TWA x 3, TEEL-3/6, IDLH (1990 and 1994)",
+    "unit": "mg/m3"
+   }
+  ],
+  "57-74-9": [
+   {
+    "no": "558",
+    "name": "Chlordane",
+    "casCell": "57-74-9",
+    "pac2": "50",
+    "source": "TEEL-2/11, LOC, IDLH (1990)",
+    "unit": "mg/m3"
+   }
+  ],
+  "576-26-1": [
+   {
+    "no": "1017",
+    "name": "Dimethylphenol, 2,6-; (2,6-Xylenol)",
+    "casCell": "576-26-1",
+    "pac2": "26",
+    "source": "TEEL-2/11, mouse 120-min TCLo, TEEL-2 x 6",
+    "unit": "mg/m3"
+   }
+  ],
+  "58-89-9": [
+   {
+    "no": "1577",
+    "name": "Lindane; (gamma-Benzenehexachloride)",
+    "casCell": "58-89-9",
+    "pac2": "100",
+    "source": "TEEL-2/11, LOC, IDLH (1990)",
+    "unit": "mg/m3"
+   }
+  ],
+  "5836-29-3": [
+   {
+    "no": "707",
+    "name": "Coumatetralyl; (Endrocide)",
+    "casCell": "5836-29-3",
+    "pac2": "0.29",
+    "source": "TEEL-2/11, dog oral TDLo, rat 240-min LC50",
+    "unit": "mg/m3"
    }
   ],
   "584-84-9": [
@@ -2338,6 +5299,66 @@
     "unit": "ppm"
    }
   ],
+  "592-01-8": [
+   {
+    "no": "483",
+    "name": "Calcium cyanide",
+    "casCell": "592-01-8",
+    "pac2": "13",
+    "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "mg/m3"
+   }
+  ],
+  "593-84-0": [
+   {
+    "no": "2804",
+    "name": "Thiocyanic acid, compound with guanidine (1:1); (Guanidine thiocyanate salt)",
+    "casCell": "593-84-0",
+    "pac2": "11",
+    "source": "TEEL-2/11, TEEL-3/6, mouse ip LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "598-31-2": [
+   {
+    "no": "351",
+    "name": "Bromoacetone",
+    "casCell": "598-31-2",
+    "pac2": "0.33",
+    "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "5989-27-5": [
+   {
+    "no": "1576",
+    "name": "Limonene, d-",
+    "casCell": "5989-27-5",
+    "pac2": "67",
+    "source": "MAK-TWA x 3, rat oral TDLo, rat oral LD50",
+    "unit": "ppm"
+   }
+  ],
+  "60-09-3": [
+   {
+    "no": "2147",
+    "name": "Phenylazo)aniline, p-(",
+    "casCell": "60-09-3",
+    "pac2": "7.2",
+    "source": "TEEL-2/11, TEEL-3/6, mouse ip LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "60-24-2": [
+   {
+    "no": "1673",
+    "name": "Mercaptoethanol, 2-",
+    "casCell": "60-24-2",
+    "pac2": "2.3",
+    "source": "WEEL-TWA x 3, rat oral TDLo, mouse 15-min LC50",
+    "unit": "ppm"
+   }
+  ],
   "60-34-4": [
    {
     "no": "1880",
@@ -2346,6 +5367,136 @@
     "pac2": "0.90",
     "source": "AEGL-2/11, AEGL-2, AEGL-3",
     "unit": "ppm"
+   }
+  ],
+  "60-51-5": [
+   {
+    "no": "955",
+    "name": "Dimethoate",
+    "casCell": "60-51-5",
+    "pac2": "30",
+    "source": "TEEL-2/11, LOC, dog oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "60-57-1": [
+   {
+    "no": "880",
+    "name": "Dieldrin",
+    "casCell": "60-57-1",
+    "pac2": "4.5",
+    "source": "TLV-TWA x 3, rat oral TDLo, IDLH (1990)",
+    "unit": "mg/m3"
+   }
+  ],
+  "603-35-0": [
+   {
+    "no": "2989",
+    "name": "Triphenylphosphine",
+    "casCell": "603-35-0",
+    "pac2": "32",
+    "source": "TEEL-2/11, dog oral LD50, rat 240-min LC50",
+    "unit": "mg/m3"
+   }
+  ],
+  "606-20-2": [
+   {
+    "no": "1039",
+    "name": "Dinitrotoluene, 2,6-",
+    "casCell": "606-20-2",
+    "pac2": "2.0",
+    "source": "TLV-TWA (dinitrotoluene, 25321-14-6) x 3, dog oral TDLo, dinitroluene IDLH (1990)",
+    "unit": "mg/m3"
+   }
+  ],
+  "610-39-9": [
+   {
+    "no": "1040",
+    "name": "Dinitrotoluene, 3,4-",
+    "casCell": "610-39-9",
+    "pac2": "27",
+    "source": "TLV-TWA (dinitrotoluene, 25321-14-6) x 3, TEEL-3/6,  dinitrotoluene IDLH (1990)",
+    "unit": "mg/m3"
+   }
+  ],
+  "615-28-1": [
+   {
+    "no": "2151",
+    "name": "Phenylenediamine dihydrochloride, 1,2-",
+    "casCell": "615-28-1",
+    "pac2": "19",
+    "source": "TEEL-2/11, TEEL-3/6, rat ip LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "62-38-4": [
+   {
+    "no": "2159",
+    "name": "Phenylmercury acetate; (Acetoxyphenylmercury)",
+    "casCell": "62-38-4",
+    "pac2": "22",
+    "source": "TEEL-2/11, LOC, MW-adjusted aryl mercury (7439-97-6) IDLH (1990)",
+    "unit": "mg/m3"
+   }
+  ],
+  "62-53-3": [
+   {
+    "no": "172",
+    "name": "Aniline",
+    "casCell": "62-53-3",
+    "pac2": "12",
+    "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "62-73-7": [
+   {
+    "no": "873",
+    "name": "Dichlorovos; (Dichlorvos)",
+    "casCell": "62-73-7",
+    "pac2": "20",
+    "source": "TEEL-2/11, LOC, IDLH (1990)",
+    "unit": "mg/m3"
+   }
+  ],
+  "62-74-8": [
+   {
+    "no": "1269",
+    "name": "Fluoroacetic acid, sodium salt; (Sodium fluoroacetate)",
+    "casCell": "62-74-8",
+    "pac2": "0.5",
+    "source": "TLV-TWA x 3, LOC, IDLH (1990)",
+    "unit": "mg/m3"
+   }
+  ],
+  "624-18-0": [
+   {
+    "no": "2152",
+    "name": "Phenylenediamine dihydrochloride, 1,4-",
+    "casCell": "624-18-0",
+    "pac2": "4.9",
+    "source": "TEEL-2/11, TEEL-3/6, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "624-92-0": [
+   {
+    "no": "968",
+    "name": "Dimethyl disulfide",
+    "casCell": "624-92-0",
+    "pac2": "50ₑ",
+    "source": "ERPG-1, ERPG-2, ERPG-3",
+    "unit": "ppm"
+   }
+  ],
+  "63-25-2": [
+   {
+    "no": "511",
+    "name": "Carbaryl",
+    "casCell": "63-25-2",
+    "pac2": "300",
+    "source": "TLV-TWA x 3, TEEL-3/6, IDLH (1990)",
+    "unit": "mg/m3"
    }
   ],
   "630-08-0": [
@@ -2368,6 +5519,46 @@
     "unit": "ppm"
    }
   ],
+  "64-19-7": [
+   {
+    "no": "7",
+    "name": "Acetic acid",
+    "casCell": "64-19-7",
+    "pac2": "35",
+    "source": "ERPG-1, ERPG-2, ERPG-3",
+    "unit": "ppm"
+   }
+  ],
+  "64-67-5": [
+   {
+    "no": "896",
+    "name": "Diethyl sulfate",
+    "casCell": "64-67-5",
+    "pac2": "1.8",
+    "source": "TEEL-2/11, TEEL-3/6, rat 240-min LCLo",
+    "unit": "ppm"
+   }
+  ],
+  "640-19-7": [
+   {
+    "no": "1268",
+    "name": "Fluoroacetamide",
+    "casCell": "640-19-7",
+    "pac2": "5.8",
+    "source": "TEEL-2/11, LOC, mouse 120-min LC50",
+    "unit": "mg/m3"
+   }
+  ],
+  "644-64-4": [
+   {
+    "no": "1024",
+    "name": "Dimetilan",
+    "casCell": "644-64-4",
+    "pac2": "25",
+    "source": "TEEL-2/11, LOC, TEEL-2 x 6",
+    "unit": "mg/m3"
+   }
+  ],
   "6484-52-2": [
    {
     "no": "144",
@@ -2375,6 +5566,26 @@
     "casCell": "6484-52-2",
     "pac2": "73",
     "source": "TEEL-2/11, TEEL-3/6, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "65-85-0": [
+   {
+    "no": "250",
+    "name": "Benzoic acid",
+    "casCell": "65-85-0",
+    "pac2": "140",
+    "source": "TEEL-2/11, rat TCLo, dog oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "66-81-9": [
+   {
+    "no": "748",
+    "name": "Cycloheximide",
+    "casCell": "66-81-9",
+    "pac2": "2.0",
+    "source": "TEEL-2/11, LOC, monkey oral LD50",
     "unit": "mg/m3"
    }
   ],
@@ -2388,6 +5599,76 @@
     "unit": "ppm"
    }
   ],
+  "67-66-3": [
+   {
+    "no": "605",
+    "name": "Chloroform",
+    "casCell": "67-66-3",
+    "pac2": "64",
+    "source": "REL-STEL, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "67-72-1": [
+   {
+    "no": "1364",
+    "name": "Hexachloroethane",
+    "casCell": "67-72-1",
+    "pac2": "36",
+    "source": "TLV-TWA x 3, rat 360-min TCLo, IDLH (1990 and 1994)",
+    "unit": "ppm"
+   }
+  ],
+  "68-11-1": [
+   {
+    "no": "1670",
+    "name": "Mercaptoacetic acid; (Thioglycolic acid)",
+    "casCell": "68-11-1",
+    "pac2": "33",
+    "source": "TLV-TWA x 3, TEEL-1 x 11, TEEL-2 x 6",
+    "unit": "ppm"
+   }
+  ],
+  "68-12-2": [
+   {
+    "no": "1006",
+    "name": "Dimethylformamide, N,N-",
+    "casCell": "68-12-2",
+    "pac2": "91",
+    "source": "ERPG-1, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "68391-01-5": [
+   {
+    "no": "52",
+    "name": "Alkylbenzyldimethyl ammonium chloride, (C12-C18)",
+    "casCell": "68391-01-5",
+    "pac2": "10",
+    "source": "TEEL-2/11, rat oral TDLo, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "68424-85-1": [
+   {
+    "no": "2421",
+    "name": "Quaternary ammonium compounds, benzyl-C12-C16-alkyldimethyl, chlorides",
+    "casCell": "68424-85-1",
+    "pac2": "14",
+    "source": "TEEL-2/11, TEEL-3/6, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "6923-22-4": [
+   {
+    "no": "1878",
+    "name": "Monocrotophos",
+    "casCell": "6923-22-4",
+    "pac2": "0.63",
+    "source": "TEEL-2/11, LOC, rat 240-min LC50",
+    "unit": "mg/m3"
+   }
+  ],
   "71-43-2": [
    {
     "no": "236",
@@ -2398,6 +5679,46 @@
     "unit": "ppm"
    }
   ],
+  "7173-51-5": [
+   {
+    "no": "879",
+    "name": "Didecyldimethylammonium chloride",
+    "casCell": "7173-51-5",
+    "pac2": "2.8",
+    "source": "TEEL-2/11, rat oral TDLo, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "72-20-8": [
+   {
+    "no": "1111",
+    "name": "Endrin",
+    "casCell": "72-20-8",
+    "pac2": "20",
+    "source": "TEEL-2/11, LOC, IDLH (1990)",
+    "unit": "mg/m3"
+   }
+  ],
+  "732-11-6": [
+   {
+    "no": "2174",
+    "name": "Phosmet",
+    "casCell": "732-11-6",
+    "pac2": "0.54",
+    "source": "TEEL-2/11, LOC, rat 60-min LC50",
+    "unit": "mg/m3"
+   }
+  ],
+  "74-83-9": [
+   {
+    "no": "1733",
+    "name": "Methyl bromide; (Bromomethane)",
+    "casCell": "74-83-9",
+    "pac2": "210",
+    "source": "AEGL-2/11, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
   "74-87-3": [
    {
     "no": "1735",
@@ -2405,6 +5726,16 @@
     "casCell": "74-87-3",
     "pac2": "910",
     "source": "ERPG-1, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "74-88-4": [
+   {
+    "no": "1748",
+    "name": "Methyl iodide",
+    "casCell": "74-88-4",
+    "pac2": "50ₑ",
+    "source": "ERPG-1, ERPG-2, ERPG-3",
     "unit": "ppm"
    }
   ],
@@ -2428,6 +5759,36 @@
     "unit": "ppm"
    }
   ],
+  "7439-92-1": [
+   {
+    "no": "1546",
+    "name": "Lead",
+    "casCell": "7439-92-1",
+    "pac2": "120",
+    "source": "TLV-TWA x 3, TEEL-3/6, IDLH (1990)",
+    "unit": "mg/m3"
+   }
+  ],
+  "7439-97-6": [
+   {
+    "no": "1689",
+    "name": "Mercury vapor",
+    "casCell": "7439-97-6",
+    "pac2": "1.7",
+    "source": "AEGL-2/11, AEGL-2, AEGL-3",
+    "unit": "mg/m3"
+   }
+  ],
+  "7440-09-7": [
+   {
+    "no": "2277",
+    "name": "Potassium",
+    "casCell": "7440-09-7",
+    "pac2": "25",
+    "source": "TEEL-2/11, TEEL-3/6, mouse ip LD50",
+    "unit": "mg/m3"
+   }
+  ],
   "7440-23-5": [
    {
     "no": "2497",
@@ -2438,12 +5799,162 @@
     "unit": "mg/m3"
    }
   ],
+  "7440-38-2": [
+   {
+    "no": "194",
+    "name": "Arsenic",
+    "casCell": "7440-38-2",
+    "pac2": "17",
+    "source": "TEEL-2/11, TEEL-3/6, IDLH (1990)",
+    "unit": "mg/m3"
+   }
+  ],
+  "7440-41-7": [
+   {
+    "no": "273",
+    "name": "Beryllium",
+    "casCell": "7440-41-7",
+    "pac2": "0.025",
+    "source": "ERPG-2/11, ERPG-2, ERPG-3",
+    "unit": "mg/m3"
+   }
+  ],
+  "7440-43-9": [
+   {
+    "no": "457",
+    "name": "Cadmium",
+    "casCell": "7440-43-9",
+    "pac2": "0.76",
+    "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "mg/m3"
+   }
+  ],
+  "7440-48-4": [
+   {
+    "no": "667",
+    "name": "Cobalt",
+    "casCell": "7440-48-4",
+    "pac2": "2.0",
+    "source": "TEEL-2/11, LOC, IDLH (1990 and 1994)",
+    "unit": "mg/m3"
+   }
+  ],
+  "7440-50-8": [
+   {
+    "no": "689",
+    "name": "Copper",
+    "casCell": "7440-50-8",
+    "pac2": "33",
+    "source": "TLV-TWA x 3, TEEL-1 x 11, TEEL-2 x 6",
+    "unit": "mg/m3"
+   }
+  ],
+  "7440-66-6": [
+   {
+    "no": "3093",
+    "name": "Zinc",
+    "casCell": "7440-66-6",
+    "pac2": "40",
+    "source": "TEEL-2/11, TEEL-3/6, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "7446-09-5": [
+   {
+    "no": "2675",
+    "name": "Sulfur dioxide",
+    "casCell": "7446-09-5",
+    "pac2": "0.75",
+    "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "7446-18-6": [
+   {
+    "no": "2793",
+    "name": "Thallium(I) sulfate; (Sulfuric acid, dithallium(1+) salt)",
+    "casCell": "7446-18-6",
+    "pac2": "2.0",
+    "source": "TEEL-2/11, LOC, MW-adjusted soluble thallium (7440-28-0) IDLH (1990)",
+    "unit": "mg/m3"
+   }
+  ],
+  "7446-70-0": [
+   {
+    "no": "67",
+    "name": "Aluminum chloride",
+    "casCell": "7446-70-0",
+    "pac2": "110",
+    "source": "MW-adjusted soluble aluminum (7429-90-5) REL-TWA x 3, TEEL-3/6, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "7487-94-7": [
+   {
+    "no": "1691",
+    "name": "Mercury(II) chloride; (Mercury bichloride)",
+    "casCell": "7487-94-7",
+    "pac2": "1.2",
+    "source": "MW-adjusted inorganic mercury (7439-97-6) TLV-TWA x 3, PEL-C, MW-adjusted mercury IDLH (1990)",
+    "unit": "mg/m3"
+   }
+  ],
+  "7488-55-3": [
+   {
+    "no": "2832",
+    "name": "Tin(II) sulfate; (Stannous sulfate)",
+    "casCell": "7488-55-3",
+    "pac2": "120",
+    "source": "MW-adjusted inorganic tin (7440-31-5) TLV-TWA x 3, TEEL-3/6, MW-adjusted inorganic tin IDLH (1990)",
+    "unit": "mg/m3"
+   }
+  ],
+  "75-00-3": [
+   {
+    "no": "1160",
+    "name": "Ethyl chloride; (Chloroethane)",
+    "casCell": "75-00-3",
+    "pac2": "5100*",
+    "source": "TLV-TWA x 3, rat 120-min TCLo, IDLH (1990)",
+    "unit": "ppm"
+   }
+  ],
   "75-01-4": [
    {
     "no": "3059",
     "name": "Vinyl chloride",
     "casCell": "75-01-4",
     "pac2": "1200",
+    "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "75-05-8": [
+   {
+    "no": "17",
+    "name": "Acetonitrile",
+    "casCell": "75-05-8",
+    "pac2": "50",
+    "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "75-07-0": [
+   {
+    "no": "4",
+    "name": "Acetaldehyde",
+    "casCell": "75-07-0",
+    "pac2": "270",
+    "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "75-09-2": [
+   {
+    "no": "1803",
+    "name": "Methylene chloride; (Dichloromethane)",
+    "casCell": "75-09-2",
+    "pac2": "560",
     "source": "AEGL-1, AEGL-2, AEGL-3",
     "unit": "ppm"
    }
@@ -2528,6 +6039,36 @@
     "unit": "ppm"
    }
   ],
+  "75-57-0": [
+   {
+    "no": "2765",
+    "name": "Tetramethylammonium chloride",
+    "casCell": "75-57-0",
+    "pac2": "1.6",
+    "source": "TEEL-2/11, TEEL-3/6, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "75-59-2": [
+   {
+    "no": "2766",
+    "name": "Tetramethylammonium hydroxide",
+    "casCell": "75-59-2",
+    "pac2": "0.095",
+    "source": "TEEL-2/11, TEEL-3/6, rabbit iv LDLo",
+    "unit": "mg/m3"
+   }
+  ],
+  "75-75-2": [
+   {
+    "no": "1707",
+    "name": "Methanesulfonic acid",
+    "casCell": "75-75-2",
+    "pac2": "11",
+    "source": "TEEL-2/11, TEEL-3/6, rat 360-min LC50",
+    "unit": "mg/m3"
+   }
+  ],
   "75-76-3": [
    {
     "no": "2773",
@@ -2538,6 +6079,26 @@
     "unit": "ppm"
    }
   ],
+  "75-77-4": [
+   {
+    "no": "2960",
+    "name": "Trimethylchlorosilane",
+    "casCell": "75-77-4",
+    "pac2": "22",
+    "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "75-78-5": [
+   {
+    "no": "1002",
+    "name": "Dimethyldichlorosilane",
+    "casCell": "75-78-5",
+    "pac2": "11",
+    "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
   "75-79-6": [
    {
     "no": "1843",
@@ -2545,6 +6106,36 @@
     "casCell": "75-79-6",
     "pac2": "7.3",
     "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "75-86-5": [
+   {
+    "no": "1818",
+    "name": "Methyllactonitrile, 2-; \n(Acetone cyanohydrin)",
+    "casCell": "75-86-5",
+    "pac2": "7.1",
+    "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "75-89-8": [
+   {
+    "no": "2930",
+    "name": "Trifluoroethanol, 2,2,2-; (Trifluoroethyl alcohol)",
+    "casCell": "75-89-8",
+    "pac2": "10",
+    "source": "WEEL-TWA, rat 240-min TCLo, rat 360-min LC50",
+    "unit": "ppm"
+   }
+  ],
+  "75-91-2": [
+   {
+    "no": "1005",
+    "name": "Dimethylethyl hydroperoxide, 1,1-; (tert-Butylhydroperoxide)",
+    "casCell": "75-91-2",
+    "pac2": "3.7",
+    "source": "TEEL-2/11, guinea pig 360-min TCLo, rat oral LD50",
     "unit": "ppm"
    }
   ],
@@ -2568,6 +6159,16 @@
     "unit": "ppm"
    }
   ],
+  "76-03-9": [
+   {
+    "no": "2883",
+    "name": "Trichloroacetic acid",
+    "casCell": "76-03-9",
+    "pac2": "16",
+    "source": "TLV-TWA x 3, TEEL-3/6, dog oral LD50",
+    "unit": "ppm"
+   }
+  ],
   "76-06-2": [
    {
     "no": "622",
@@ -2578,6 +6179,16 @@
     "unit": "ppm"
    }
   ],
+  "76-44-8": [
+   {
+    "no": "1340",
+    "name": "Heptachlor",
+    "casCell": "76-44-8",
+    "pac2": "14",
+    "source": "TLV-TWA x 3, rat oral TDLo, IDLH (1990)",
+    "unit": "mg/m3"
+   }
+  ],
   "7631-99-4": [
    {
     "no": "2580",
@@ -2585,6 +6196,16 @@
     "casCell": "7631-99-4",
     "pac2": "42",
     "source": "TEEL-2/11, TEEL-3/6, mouse oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "7632-00-0": [
+   {
+    "no": "2581",
+    "name": "Sodium nitrite",
+    "casCell": "7632-00-0",
+    "pac2": "8.4",
+    "source": "TEEL-2/11, dog oral TDLo, rat 240-min LC50",
     "unit": "mg/m3"
    }
   ],
@@ -2598,6 +6219,36 @@
     "unit": "mg/m3"
    }
   ],
+  "7646-78-8": [
+   {
+    "no": "2639",
+    "name": "Stannic chloride; (Tin(IV) chloride; Tin(IV) tetrachloride)",
+    "casCell": "7646-78-8",
+    "pac2": "150",
+    "source": "MW-adjusted inorganic tin (7440-31-5) TLV-TWA x 3, TEEL-3/6, MW-adjusted inorganic tin IDLH (1990)",
+    "unit": "mg/m3"
+   }
+  ],
+  "7646-79-9": [
+   {
+    "no": "670",
+    "name": "Cobalt chloride",
+    "casCell": "7646-79-9",
+    "pac2": "2.6",
+    "source": "MW-adjusted inorganic cobalt (7440-48-4) TLV-TWA x 3, guinea pig ip TDLo, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "7646-85-7": [
+   {
+    "no": "3099",
+    "name": "Zinc chloride",
+    "casCell": "7646-85-7",
+    "pac2": "800",
+    "source": "TLV-STEL, TEEL-3/6, IDLH (1990)",
+    "unit": "mg/m3"
+   }
+  ],
   "7647-01-0": [
    {
     "no": "1421",
@@ -2606,6 +6257,16 @@
     "pac2": "22ₐ",
     "source": "AEGL-1, AEGL-2, AEGL-3",
     "unit": "ppm"
+   }
+  ],
+  "7647-18-9": [
+   {
+    "no": "183",
+    "name": "Antimony pentachloride",
+    "casCell": "7647-18-9",
+    "pac2": "4.2",
+    "source": "MW-adjusted antimony (7440-36-0) TLV-TWA x 3, TEEL-3/6, antimony IDLH (1990)",
+    "unit": "mg/m3"
    }
   ],
   "7664-39-3": [
@@ -2638,6 +6299,16 @@
     "unit": "mg/m3"
    }
   ],
+  "7681-49-4": [
+   {
+    "no": "2546",
+    "name": "Sodium fluoride",
+    "casCell": "7681-49-4",
+    "pac2": "3.8",
+    "source": "MW-adjusted fluorides TLV-TWA x 3, rat oral TDLo, MW-adjusted fluorides IDLH (1990)",
+    "unit": "mg/m3"
+   }
+  ],
   "7697-37-2": [
    {
     "no": "1951",
@@ -2646,6 +6317,46 @@
     "pac2": "24",
     "source": "AEGL-1, AEGL-2, AEGL-3",
     "unit": "ppm"
+   }
+  ],
+  "77-47-4": [
+   {
+    "no": "1356",
+    "name": "Hexachlorocylopentadiene",
+    "casCell": "77-47-4",
+    "pac2": "1.9",
+    "source": "TLV-TWA x 3, rat oral TDLo, dog 30-min LCLo",
+    "unit": "mg/m3"
+   }
+  ],
+  "77-73-6": [
+   {
+    "no": "878",
+    "name": "Dicyclopentadiene",
+    "casCell": "77-73-6",
+    "pac2": "5.0",
+    "source": "ERPG-1, ERPG-2, ERPG-3",
+    "unit": "ppm"
+   }
+  ],
+  "77-78-1": [
+   {
+    "no": "974",
+    "name": "Dimethyl sulfate",
+    "casCell": "77-78-1",
+    "pac2": "0.12",
+    "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "7718-54-9": [
+   {
+    "no": "1922",
+    "name": "Nickel chloride; (Nickelous chloride)",
+    "casCell": "7718-54-9",
+    "pac2": "22",
+    "source": "MW-adjusted soluble nickel (7440-02-0) TLV-TWA x 3, rat oral TDLo, rat oral LD50",
+    "unit": "mg/m3"
    }
   ],
   "7719-09-7": [
@@ -2698,6 +6409,16 @@
     "unit": "ppm"
    }
   ],
+  "7733-02-0": [
+   {
+    "no": "3113",
+    "name": "Zinc sulfate",
+    "casCell": "7733-02-0",
+    "pac2": "97",
+    "source": "TEEL-2/11, TEEL-3/6, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
   "7757-79-1": [
    {
     "no": "2328",
@@ -2705,6 +6426,66 @@
     "casCell": "7757-79-1",
     "pac2": "120",
     "source": "TEEL-2/11, TEEL-3/6, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "7758-19-2": [
+   {
+    "no": "2529",
+    "name": "Sodium chlorite",
+    "casCell": "7758-19-2",
+    "pac2": "1.7",
+    "source": "TEEL-2/11, TEEL-3/6, rat 240-min LC50",
+    "unit": "mg/m3"
+   }
+  ],
+  "7758-89-6": [
+   {
+    "no": "695",
+    "name": "Copper(I) chloride; (Cuprous chloride)",
+    "casCell": "7758-89-6",
+    "pac2": "53",
+    "source": "MW-adjusted copper (7440-50-8) TLV-TWA x 3, TEEL-1 x 11, TEEL-2 x 6",
+    "unit": "mg/m3"
+   }
+  ],
+  "7758-97-6": [
+   {
+    "no": "1555",
+    "name": "Lead chromate",
+    "casCell": "7758-97-6",
+    "pac2": "16",
+    "source": "TLV-TWA x 3, TEEL-3/6, MW-adjusted chromates (1333-82-0) IDLH (1990)",
+    "unit": "mg/m3"
+   }
+  ],
+  "7758-98-7": [
+   {
+    "no": "694",
+    "name": "Copper sulfate; (Copper(II) sulfate)",
+    "casCell": "7758-98-7",
+    "pac2": "9.9",
+    "source": "MW-adjusted copper (7440-50-8) TLV-TWA x 3, human oral TDLo, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "7761-88-8": [
+   {
+    "no": "2493",
+    "name": "Silver nitrate",
+    "casCell": "7761-88-8",
+    "pac2": "39",
+    "source": "MW-adjusted soluble silver (7440-22-4) TLV-TWA x 3, TEEL-1 x 11, TEEL-2 x 6",
+    "unit": "mg/m3"
+   }
+  ],
+  "7772-99-8": [
+   {
+    "no": "2640",
+    "name": "Stannous chloride; (Tin(II) chloride (1:2))",
+    "casCell": "7772-99-8",
+    "pac2": "65",
+    "source": "MW-adjusted inorganic tin (7440-31-5) TLV-TWA x 3, rat oral TDLo, MW-adjusted inorganic tin IDLH (1990)",
     "unit": "mg/m3"
    }
   ],
@@ -2716,6 +6497,36 @@
     "pac2": "170",
     "source": "TEEL-2/11, TEEL-3/6, rat oral LD50",
     "unit": "mg/m3"
+   }
+  ],
+  "7775-11-3": [
+   {
+    "no": "2532",
+    "name": "Sodium chromate(VI); (Disodium chromate)",
+    "casCell": "7775-11-3",
+    "pac2": "8.2",
+    "source": "MW-adjusted soluble chromium (VI) (7440-47-3) TLV-TWA x 3, TEEL-3/6, MW-adjusted chromates (1333-82-0) IDLH (1990)",
+    "unit": "mg/m3"
+   }
+  ],
+  "7778-39-4": [
+   {
+    "no": "195",
+    "name": "Arsenic acid; (o-Arsenic acid)\nAlso CASRN 1327-52-2",
+    "casCell": "7778-39-4",
+    "pac2": "32",
+    "source": "TEEL-2/11, TEEL-3/6, MW-adjusted arsenic (7440-38-2) IDLH (1990)",
+    "unit": "mg/m3"
+   }
+  ],
+  "7778-50-9": [
+   {
+    "no": "2303",
+    "name": "Potassium dichromate",
+    "casCell": "7778-50-9",
+    "pac2": "0.28",
+    "source": "MW-adjusted soluble chromium (VI) (7440-47-3) TLV-TWA x 3, TEEL-3/6, MW-adjusted chromates (1333-82-0) IDLH (1990)",
+    "unit": "ppm"
    }
   ],
   "7778-74-7": [
@@ -2736,6 +6547,16 @@
     "pac2": "5",
     "source": "AEGL-1, AEGL-2, AEGL-3",
     "unit": "ppm"
+   }
+  ],
+  "7782-49-2": [
+   {
+    "no": "2460",
+    "name": "Selenium",
+    "casCell": "7782-49-2",
+    "pac2": "17",
+    "source": "TLV-TWA x 3, TEEL-1 x 11, TEEL-2 x 6",
+    "unit": "mg/m3"
    }
   ],
   "7782-50-5": [
@@ -2778,6 +6599,26 @@
     "unit": "ppm"
    }
   ],
+  "7783-55-3": [
+   {
+    "no": "2189",
+    "name": "Phosphorous trifluoride",
+    "casCell": "7783-55-3",
+    "pac2": "35",
+    "source": "MW-adjusted fluorides TLV-TWA x 3, TEEL-3/6, MW-adjusted fluorides IDLH (1990) converted to ppm",
+    "unit": "ppm"
+   }
+  ],
+  "7783-56-4": [
+   {
+    "no": "188",
+    "name": "Antimony trifluoride",
+    "casCell": "7783-56-4",
+    "pac2": "20",
+    "source": "MW-adjusted antimony (7440-36-0) TLV-TWA x 3, TEEL-3/6, antimony IDLH (1990)",
+    "unit": "mg/m3"
+   }
+  ],
   "7783-61-1": [
    {
     "no": "2483",
@@ -2785,6 +6626,16 @@
     "casCell": "7783-61-1",
     "pac2": "3.3",
     "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "7783-82-6": [
+   {
+    "no": "3012",
+    "name": "Tungsten hexafluoride",
+    "casCell": "7783-82-6",
+    "pac2": "24",
+    "source": "MW-adjusted insoluble tungsten (7440-33-7) TLV-STEL, TEEL-1 x 11, TEEL-2 x 6",
     "unit": "ppm"
    }
   ],
@@ -2798,6 +6649,56 @@
     "unit": "ppm"
    }
   ],
+  "7786-81-4": [
+   {
+    "no": "1931",
+    "name": "Nickel sulfate; (Nickel(II) sulfate)",
+    "casCell": "7786-81-4",
+    "pac2": "8.6",
+    "source": "MW-adjusted soluble nickel (7440-02-0) TLV-TWA x 3, TEEL-1 x 11, TEEL-2 x 6",
+    "unit": "mg/m3"
+   }
+  ],
+  "7789-00-6": [
+   {
+    "no": "2298",
+    "name": "Potassium chromate(VI)",
+    "casCell": "7789-00-6",
+    "pac2": "9.7",
+    "source": "MW-adjusted chromium (VI) (7440-47-3) TLV-TWA x 3, MW-adjusted chromates (1333-82-0) IDLH (1990)",
+    "unit": "mg/m3"
+   }
+  ],
+  "7789-09-5": [
+   {
+    "no": "126",
+    "name": "Ammonium dichromate",
+    "casCell": "7789-09-5",
+    "pac2": "1.5",
+    "source": "MW-adjusted soluble chromium (VI) (7440-47-3)TLV-TWA x 3, TEEL-3/6, MW-adjusted chromates (1333-82-0) IDLH (1990)",
+    "unit": "mg/m3"
+   }
+  ],
+  "7789-23-3": [
+   {
+    "no": "2307",
+    "name": "Potassium fluoride",
+    "casCell": "7789-23-3",
+    "pac2": "250",
+    "source": "MW-adjusted fluorides TLV-TWA x 3, TEEL-3/6, MW-adjusted fluorides IDLH (1990)",
+    "unit": "mg/m3"
+   }
+  ],
+  "7789-24-4": [
+   {
+    "no": "1592",
+    "name": "Lithium fluoride",
+    "casCell": "7789-24-4",
+    "pac2": "110",
+    "source": "MW-adjusted fluorides TLV-TWA x 3, TEEL-3/6, MW-adjusted fluorides IDLH (1990)",
+    "unit": "mg/m3"
+   }
+  ],
   "7789-30-2": [
    {
     "no": "342",
@@ -2806,6 +6707,16 @@
     "pac2": "0.17",
     "source": "AEGL-2/11, AEGL-2, AEGL-3",
     "unit": "ppm"
+   }
+  ],
+  "7790-79-6": [
+   {
+    "no": "462",
+    "name": "Cadmium fluoride",
+    "casCell": "7790-79-6",
+    "pac2": "6.7",
+    "source": "Used MW-adjusted cadmium (7440-43-9) AEGL values",
+    "unit": "mg/m3"
    }
   ],
   "7790-94-5": [
@@ -2818,6 +6729,36 @@
     "unit": "mg/m3"
    }
   ],
+  "78-34-2": [
+   {
+    "no": "1047",
+    "name": "Dioxathion",
+    "casCell": "78-34-2",
+    "pac2": "3.4",
+    "source": "TEEL-2/11, LOC, rat 60-min LC50",
+    "unit": "mg/m3"
+   }
+  ],
+  "78-50-2": [
+   {
+    "no": "2979",
+    "name": "Tri-n-octylphosphine oxide; (Trioctylphophine oxide)",
+    "casCell": "78-50-2",
+    "pac2": "11",
+    "source": "TEEL-2/11, rat dermal TDLo, TEEL-2 x 6",
+    "unit": "mg/m3"
+   }
+  ],
+  "78-53-5": [
+   {
+    "no": "110",
+    "name": "Amiton; (O,O-Diethyl-S-(2-diethylaminoethyl) thiophosphate)",
+    "casCell": "78-53-5",
+    "pac2": "0.11",
+    "source": "TEEL-2/11, TEEL-3/6, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
   "78-79-5": [
    {
     "no": "1513",
@@ -2825,6 +6766,46 @@
     "casCell": "78-79-5",
     "pac2": "1000ₑ",
     "source": "ERPG-1, ERPG-2, ERPG-3",
+    "unit": "ppm"
+   }
+  ],
+  "78-81-9": [
+   {
+    "no": "1498",
+    "name": "Isobutylamine",
+    "casCell": "78-81-9",
+    "pac2": "10",
+    "source": "MAK-TWA x 3, MAK-C, rat oral LD50",
+    "unit": "ppm"
+   }
+  ],
+  "78-82-0": [
+   {
+    "no": "1502",
+    "name": "Isobutyronitrile",
+    "casCell": "78-82-0",
+    "pac2": "2.0",
+    "source": "AEGL-2/11, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "78-85-3": [
+   {
+    "no": "1697",
+    "name": "Methacrylaldehyde",
+    "casCell": "78-85-3",
+    "pac2": "0.33",
+    "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "78-87-5": [
+   {
+    "no": "863",
+    "name": "Dichloropropane, 1,2-; (Propylene dichloride)",
+    "casCell": "78-87-5",
+    "pac2": "220",
+    "source": "TLV-TWA x 3, mouse 120-min TCLo, IDLH (1990)",
     "unit": "ppm"
    }
   ],
@@ -2848,6 +6829,16 @@
     "unit": "ppm"
    }
   ],
+  "7803-49-8": [
+   {
+    "no": "1442",
+    "name": "Hydroxylamine",
+    "casCell": "7803-49-8",
+    "pac2": "3.9",
+    "source": "TEEL-2/11, TEEL-3/6, rat ip LD50",
+    "unit": "mg/m3"
+   }
+  ],
   "7803-51-2": [
    {
     "no": "2176",
@@ -2856,6 +6847,16 @@
     "pac2": "2.0",
     "source": "TLV-STEL, AEGL-2, AEGL-3",
     "unit": "ppm"
+   }
+  ],
+  "7803-57-8": [
+   {
+    "no": "1413",
+    "name": "Hydrazine hydrate; (Hydrazine monohydrate; aqueous solutions - 10217-52-4)",
+    "casCell": "7803-57-8",
+    "pac2": "20",
+    "source": "Used MW-adjusted hydrazine (302-01-2) AEGL values",
+    "unit": "mg/m3"
    }
   ],
   "7803-62-5": [
@@ -2868,6 +6869,56 @@
     "unit": "ppm"
    }
   ],
+  "786-19-6": [
+   {
+    "no": "527",
+    "name": "Carbophenothion; (Trithion)",
+    "casCell": "786-19-6",
+    "pac2": "6.8",
+    "source": "TEEL-2/11, LOC, mouse oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "79-00-5": [
+   {
+    "no": "2888",
+    "name": "Trichloroethane, 1,1,2-",
+    "casCell": "79-00-5",
+    "pac2": "180",
+    "source": "TLV-TWA x 3, mouse 120-min TCLo, IDLH (1990)",
+    "unit": "ppm"
+   }
+  ],
+  "79-01-6": [
+   {
+    "no": "2890",
+    "name": "Trichloroethylene",
+    "casCell": "79-01-6",
+    "pac2": "450",
+    "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "79-04-9": [
+   {
+    "no": "585",
+    "name": "Chloroacetyl chloride",
+    "casCell": "79-04-9",
+    "pac2": "1.6",
+    "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "79-06-1": [
+   {
+    "no": "29",
+    "name": "Acrylamide",
+    "casCell": "79-06-1",
+    "pac2": "110",
+    "source": "TLV-TWA x 3, monkey ip TDLo, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
   "79-10-7": [
    {
     "no": "31",
@@ -2876,6 +6927,146 @@
     "pac2": "46",
     "source": "AEGL-1, AEGL-2, AEGL-3",
     "unit": "ppm"
+   }
+  ],
+  "79-11-8": [
+   {
+    "no": "582",
+    "name": "Chloroacetic acid; (Monochloroacetic acid)",
+    "casCell": "79-11-8",
+    "pac2": "6.6",
+    "source": "AEGL-2/11, AEGL-2, rat oral LDLo",
+    "unit": "ppm"
+   }
+  ],
+  "79-19-6": [
+   {
+    "no": "2810",
+    "name": "Thiosemicarbazide; (1-Amino-2-thiourea)",
+    "casCell": "79-19-6",
+    "pac2": "0.69",
+    "source": "TEEL-2/11, rat ip TDLo, mouse oral LDLo",
+    "unit": "mg/m3"
+   }
+  ],
+  "79-27-6": [
+   {
+    "no": "2716",
+    "name": "Tetrabromoethane, 1,1,2,2-; (Acetylene tetrabromide)",
+    "casCell": "79-27-6",
+    "pac2": "4.3",
+    "source": "TLV-TWA x 3, mouse 180-min TCLo, IDLH (1990)",
+    "unit": "ppm"
+   }
+  ],
+  "79-41-4": [
+   {
+    "no": "1699",
+    "name": "Methacrylic acid",
+    "casCell": "79-41-4",
+    "pac2": "61",
+    "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "79-43-6": [
+   {
+    "no": "830",
+    "name": "Dichloroacetic acid",
+    "casCell": "79-43-6",
+    "pac2": "93",
+    "source": "TLV-TWA x 3, dog oral TDLo, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "80-05-7": [
+   {
+    "no": "319",
+    "name": "Bisphenol A; (4,4'-Isopropylidenediphenol)",
+    "casCell": "80-05-7",
+    "pac2": "110",
+    "source": "MAK-TWA x 3, rat TDLo, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "80-15-9": [
+   {
+    "no": "720",
+    "name": "Cumene hydroperoxide; (Isopropylbenzene hydroperoxide)",
+    "casCell": "80-15-9",
+    "pac2": "1.6",
+    "source": "TEEL-2/11, TEEL-3/6, rat 240-min LC50",
+    "unit": "ppm"
+   }
+  ],
+  "8001-35-2": [
+   {
+    "no": "2862",
+    "name": "Toxaphene; (Chlorinated camphene)",
+    "casCell": "8001-35-2",
+    "pac2": "20",
+    "source": "TLV-STEL, LOC, IDLH (1990 and 1994)",
+    "unit": "mg/m3"
+   }
+  ],
+  "8001-54-5": [
+   {
+    "no": "49",
+    "name": "Alkyl dimethylbenzyl ammonium chloride; (Benzalkonium chloride)",
+    "casCell": "8001-54-5",
+    "pac2": "7.9",
+    "source": "TEEL-2/11, TEEL-3/6, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "8001-58-9": [
+   {
+    "no": "708",
+    "name": "Creosote (coal tar)",
+    "casCell": "8001-58-9",
+    "pac2": "120",
+    "source": "TLV-TWA x 3, TEEL-3/6, IDLH (1990)",
+    "unit": "mg/m3"
+   }
+  ],
+  "8014-95-7": [
+   {
+    "no": "2050",
+    "name": "Oleum; (fuming Sulfuric acid)",
+    "casCell": "8014-95-7",
+    "pac2": "8.7",
+    "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "mg/m3"
+   }
+  ],
+  "8065-48-3": [
+   {
+    "no": "776",
+    "name": "Demeton",
+    "casCell": "8065-48-3",
+    "pac2": "2",
+    "source": "TEEL-2/11, LOC, IDLH (1990)",
+    "unit": "mg/m3"
+   }
+  ],
+  "81-81-2": [
+   {
+    "no": "3075",
+    "name": "Warfarin",
+    "casCell": "81-81-2",
+    "pac2": "20",
+    "source": "TEEL-2/11, LOC, IDLH (1990)",
+    "unit": "mg/m3"
+   }
+  ],
+  "814-49-3": [
+   {
+    "no": "887",
+    "name": "Diethyl chlorophosphate",
+    "casCell": "814-49-3",
+    "pac2": "8.0",
+    "source": "TEEL-2/11, LOC, mouse oral LD50",
+    "unit": "mg/m3"
    }
   ],
   "814-68-6": [
@@ -2888,6 +7079,486 @@
     "unit": "mg/m3"
    }
   ],
+  "81741-28-8": [
+   {
+    "no": "2876",
+    "name": "Tributyltetradecylphosphonium chloride",
+    "casCell": "81741-28-8",
+    "pac2": "330",
+    "source": "TLV-TWA (PNOS) x 3, TEEL-1 x 11, TEEL-2 x 6",
+    "unit": "mg/m3"
+   }
+  ],
+  "818-61-1": [
+   {
+    "no": "1437",
+    "name": "Hydroxyethyl acrylate, 2-; (Acrylic acid, 2-hydroxyethyl ester)",
+    "casCell": "818-61-1",
+    "pac2": "3.6",
+    "source": "TEEL-2/11, rat 360-min TCLo, rat 240-min LCLo",
+    "unit": "ppm"
+   }
+  ],
+  "82-66-6": [
+   {
+    "no": "1051",
+    "name": "Diphacinone; (Diphenadione)",
+    "casCell": "82-66-6",
+    "pac2": "0.90",
+    "source": "TEEL-2/11, LOC, rat 240-min LC50",
+    "unit": "mg/m3"
+   }
+  ],
+  "822-06-0": [
+   {
+    "no": "1385",
+    "name": "Hexamethylene diisocyanate; (1,6-Diisocyanatohexane)",
+    "casCell": "822-06-0",
+    "pac2": "0.2",
+    "source": "TEEL-2/11, REL-C (adjusted based on the ratio to toxicity data), rat 240-min LC50",
+    "unit": "ppm"
+   }
+  ],
+  "83-79-4": [
+   {
+    "no": "2437",
+    "name": "Rotenone",
+    "casCell": "83-79-4",
+    "pac2": "420",
+    "source": "TLV-TWA x 3, TEEL-3/6, IDLH (1990)",
+    "unit": "mg/m3"
+   }
+  ],
+  "84-74-2": [
+   {
+    "no": "821",
+    "name": "Dibutyl phthalate",
+    "casCell": "84-74-2",
+    "pac2": "670",
+    "source": "TLV-TWA x 3, human oral TDLo, IDLH (1990)",
+    "unit": "mg/m3"
+   }
+  ],
+  "84852-15-3": [
+   {
+    "no": "2014",
+    "name": "Nonyl phenol, 4- (branched)",
+    "casCell": "84852-15-3",
+    "pac2": "4.8",
+    "source": "TEEL-2/11, rat oral TDLo, rat oral LD50",
+    "unit": "ppm"
+   }
+  ],
+  "85-68-7": [
+   {
+    "no": "2199",
+    "name": "Phthalic acid, benzyl butyl ester; (Benzyl butyl phthalate)",
+    "casCell": "85-68-7",
+    "pac2": "77",
+    "source": "United Kingdom OEL-TWA x 3, TEEL-3/6, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "86-50-0": [
+   {
+    "no": "205",
+    "name": "Azinphos methyl; (Guthion)",
+    "casCell": "86-50-0",
+    "pac2": "0.7",
+    "source": "TLV-TWA x 3, LOC, IDLH (1990)",
+    "unit": "mg/m3"
+   }
+  ],
+  "86-88-4": [
+   {
+    "no": "1903",
+    "name": "Naphthylthiourea, alpha-; (ANTU)",
+    "casCell": "86-88-4",
+    "pac2": "10",
+    "source": "TEEL-2/11, LOC, IDLH (1990 and 1994)",
+    "unit": "mg/m3"
+   }
+  ],
+  "87-86-5": [
+   {
+    "no": "2092",
+    "name": "Pentachlorophenol",
+    "casCell": "87-86-5",
+    "pac2": "15",
+    "source": "TLV-STEL, LOC, IDLH (1990)",
+    "unit": "mg/m3"
+   }
+  ],
+  "87-90-1": [
+   {
+    "no": "2894",
+    "name": "Trichloroisocyanuric acid",
+    "casCell": "87-90-1",
+    "pac2": "0.070",
+    "source": "TEEL-2/11, TEEL-3/6, human oral LDLo",
+    "unit": "ppm"
+   }
+  ],
+  "872-50-4": [
+   {
+    "no": "1724",
+    "name": "Methyl 2-pyrrolidinone, 1-; (N-Methylpyrrolidone)",
+    "casCell": "872-50-4",
+    "pac2": "170",
+    "source": "WEEL-TWA x 3, TEEL-3/6, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "88-72-2": [
+   {
+    "no": "2000",
+    "name": "Nitrotoluene, o-",
+    "casCell": "88-72-2",
+    "pac2": "33",
+    "source": "TLV-TWA x 3, TEEL-3/6, IDLH (1990 and 1994)",
+    "unit": "ppm"
+   }
+  ],
+  "88-85-7": [
+   {
+    "no": "1041",
+    "name": "Dinoseb; (2-sec-Butyl-4,6-dinitrophenol)",
+    "casCell": "88-85-7",
+    "pac2": "4.5",
+    "source": "TEEL-2/11, LOC, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "88-89-1": [
+   {
+    "no": "2206",
+    "name": "Picric acid",
+    "casCell": "88-89-1",
+    "pac2": "17",
+    "source": "REL-STEL, TEEL-3/6, IDLH (1990)",
+    "unit": "mg/m3"
+   }
+  ],
+  "90-43-7": [
+   {
+    "no": "2160",
+    "name": "Phenylphenol, 2-",
+    "casCell": "90-43-7",
+    "pac2": "89",
+    "source": "TEEL-2/11, rat oral TDLo, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "90-72-2": [
+   {
+    "no": "3003",
+    "name": "Tris(dimethylaminomethyl)phenol, 2,4,6-",
+    "casCell": "90-72-2",
+    "pac2": "6.6",
+    "source": "TEEL-2/11, TEEL-3/6, rat oral LD50",
+    "unit": "ppm"
+   }
+  ],
+  "900-95-8": [
+   {
+    "no": "20",
+    "name": "Acetoxytriphenylstannane",
+    "casCell": "900-95-8",
+    "pac2": "20",
+    "source": "MW-adjusted organic tin (7440-31-5) TLV-STEL, LOC, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "9016-45-9": [
+   {
+    "no": "1149",
+    "name": "Ethoxylated nonylphenol; (Nonyl phenyl polyethylene glycol ether)",
+    "casCell": "9016-45-9",
+    "pac2": "43",
+    "source": "TEEL-2/11, rat oral TDLo, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "9046-10-0": [
+   {
+    "no": "2261",
+    "name": "Polyoxyalkyleneamine; (Poly(oxypropylene)diamine)",
+    "casCell": "9046-10-0",
+    "pac2": "1.0",
+    "source": "TEEL-2/11, TEEL-3/6, rat oral LD50",
+    "unit": "ppm"
+   }
+  ],
+  "91-08-7": [
+   {
+    "no": "2851",
+    "name": "Toluene-2,6-diisocyanate",
+    "casCell": "91-08-7",
+    "pac2": "0.083ₐ",
+    "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "91-20-3": [
+   {
+    "no": "1893",
+    "name": "Naphthalene",
+    "casCell": "91-20-3",
+    "pac2": "83",
+    "source": "REL-STEL, PAC-3/6, IDLH (1990)",
+    "unit": "ppm"
+   }
+  ],
+  "91-22-5": [
+   {
+    "no": "2425",
+    "name": "Quinoline",
+    "casCell": "91-22-5",
+    "pac2": "2.9",
+    "source": "WEEL-TWA x 3, TEEL-3/6, rat oral LD50",
+    "unit": "ppm"
+   }
+  ],
+  "91-59-8": [
+   {
+    "no": "1902",
+    "name": "Naphthylamine, beta-",
+    "casCell": "91-59-8",
+    "pac2": "24",
+    "source": "TEEL-2/11, TEEL-3/6, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "91-66-7": [
+   {
+    "no": "903",
+    "name": "Diethylaniline, N,N-",
+    "casCell": "91-66-7",
+    "pac2": "14",
+    "source": "TEEL-2/11, TEEL-3/6, rat 240-min LC50",
+    "unit": "mg/m3"
+   }
+  ],
+  "91-94-1": [
+   {
+    "no": "837",
+    "name": "Dichlorobenzidene, 3,3'-",
+    "casCell": "91-94-1",
+    "pac2": "130",
+    "source": "TEEL-2/11, TEEL-3/6, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "92-52-4": [
+   {
+    "no": "1055",
+    "name": "Diphenyl; (Biphenyl)",
+    "casCell": "92-52-4",
+    "pac2": "9.6",
+    "source": "AEGL-2/11, AEGL-2, IDLH (1990)",
+    "unit": "ppm"
+   }
+  ],
+  "92-67-1": [
+   {
+    "no": "94",
+    "name": "Aminodiphenyl, p-",
+    "casCell": "92-67-1",
+    "pac2": "2.5",
+    "source": "TEEL-2/11, mouse oral TDLo, rat oral LD50",
+    "unit": "ppm"
+   }
+  ],
+  "92-87-5": [
+   {
+    "no": "245",
+    "name": "Benzidine",
+    "casCell": "92-87-5",
+    "pac2": "10",
+    "source": "TEEL-2/11, TEEL-3/6, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "920-46-7": [
+   {
+    "no": "1703",
+    "name": "Methacryloyl chloride",
+    "casCell": "920-46-7",
+    "pac2": "0.60",
+    "source": "TEEL-2/11, LOC, rat 240-min LC50",
+    "unit": "mg/m3"
+   }
+  ],
+  "929-06-6": [
+   {
+    "no": "95",
+    "name": "Aminoethoxy)ethanol, 2-(2-",
+    "casCell": "929-06-6",
+    "pac2": "99",
+    "source": "TEEL-2/11, TEEL-3/6, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "93-76-5": [
+   {
+    "no": "2902",
+    "name": "Trichlorophenoxyacetic acid, 2,4,5-; (2,4,5-T)",
+    "casCell": "93-76-5",
+    "pac2": "42",
+    "source": "TLV-TWA x 3, TEEL-3/6, IDLH (1994, See white paper)",
+    "unit": "mg/m3"
+   }
+  ],
+  "94-36-0": [
+   {
+    "no": "260",
+    "name": "Benzoyl peroxide",
+    "casCell": "94-36-0",
+    "pac2": "1200",
+    "source": "TLV-TWA x 3, TEEL-3/6, IDLH (1990)",
+    "unit": "mg/m3"
+   }
+  ],
+  "94-75-7": [
+   {
+    "no": "861",
+    "name": "Dichlorophenoxyacetic acid, 2,4-; (2,4-D)",
+    "casCell": "94-75-7",
+    "pac2": "94",
+    "source": "TLV-TWA x 3, dog oral TDLo, IDLH (1990)",
+    "unit": "mg/m3"
+   }
+  ],
+  "944-22-9": [
+   {
+    "no": "1277",
+    "name": "Fonofos",
+    "casCell": "944-22-9",
+    "pac2": "1.3",
+    "source": "TLV-TWA x 3, LOC, rat 60-min LC50",
+    "unit": "mg/m3"
+   }
+  ],
+  "947-02-4": [
+   {
+    "no": "2171",
+    "name": "Phosfolan",
+    "casCell": "947-02-4",
+    "pac2": "9",
+    "source": "TEEL-2/11, LOC, TEEL-2 x 6",
+    "unit": "mg/m3"
+   }
+  ],
+  "95-50-1": [
+   {
+    "no": "835",
+    "name": "Dichlorobenzene, o-",
+    "casCell": "95-50-1",
+    "pac2": "170",
+    "source": "TLV-STEL, TEEL-3/6, IDLH (1990)",
+    "unit": "ppm"
+   }
+  ],
+  "95-53-4": [
+   {
+    "no": "2860",
+    "name": "Toluidine, o-",
+    "casCell": "95-53-4",
+    "pac2": "8.2",
+    "source": "TLV-TWA x 3, rat oral TDLo, IDLH (1990)",
+    "unit": "ppm"
+   }
+  ],
+  "95-54-5": [
+   {
+    "no": "2153",
+    "name": "Phenylenediamine, 1,2-; (o-Phenylenediamine)",
+    "casCell": "95-54-5",
+    "pac2": "35",
+    "source": "TLV-TWA x 3, TEEL-3/6, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "95-80-7": [
+   {
+    "no": "2853",
+    "name": "Toluenediamine, 2,4-; (2,4-Diaminotoluene)",
+    "casCell": "95-80-7",
+    "pac2": "2.4",
+    "source": "WEEL-TWA x 3, TEEL-3/6, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "950-10-7": [
+   {
+    "no": "1669",
+    "name": "Mephosfolan",
+    "casCell": "950-10-7",
+    "pac2": "9",
+    "source": "TEEL-2/11, LOC, TEEL-2 x 6",
+    "unit": "mg/m3"
+   }
+  ],
+  "950-37-8": [
+   {
+    "no": "1711",
+    "name": "Methidathion; (O,O-Dimethyl-S-(5-methoxy-1,3,4-thiadiazolinyl-3-methyl)dithiophosphate)",
+    "casCell": "950-37-8",
+    "pac2": "20",
+    "source": "TEEL-2/11, LOC, rat 240-min LC50",
+    "unit": "mg/m3"
+   }
+  ],
+  "96-09-3": [
+   {
+    "no": "2660",
+    "name": "Styrene oxide; (1,2-Epoxyethylbenzene)",
+    "casCell": "96-09-3",
+    "pac2": "3.6",
+    "source": "TEEL-2/11, TEEL-3/6, rat 240-min LCLo",
+    "unit": "ppm"
+   }
+  ],
+  "96-12-8": [
+   {
+    "no": "808",
+    "name": "Dibromo-3-chloropropane, 1,2-; (DBCP)",
+    "casCell": "96-12-8",
+    "pac2": "0.72",
+    "source": "PEL-TWA x 3, rat 1440-min TCLo, rat 60-min LC50",
+    "unit": "mg/m3"
+   }
+  ],
+  "96-23-1": [
+   {
+    "no": "828",
+    "name": "Dichloro-2-propanol, 1,3-",
+    "casCell": "96-23-1",
+    "pac2": "0.89",
+    "source": "TEEL-2/11, mouse 180-min TCLo, rat 240-min LCLo",
+    "unit": "ppm"
+   }
+  ],
+  "96-24-2": [
+   {
+    "no": "571",
+    "name": "Chloro-1,2-propanediol, 3-; (Chlorohydrin)",
+    "casCell": "96-24-2",
+    "pac2": "0.89",
+    "source": "TEEL-2/11, rat oral TDLo, rat 240-min LCLo",
+    "unit": "ppm"
+   }
+  ],
+  "96-29-7": [
+   {
+    "no": "402",
+    "name": "Butanone oxime; (Ethyl methyl ketoxime)",
+    "casCell": "96-29-7",
+    "pac2": "150",
+    "source": "WEEL-TWA x 3, rat 360-min TCLo, rat 240-min LC50",
+    "unit": "mg/m3"
+   }
+  ],
   "96-33-3": [
    {
     "no": "1728",
@@ -2895,6 +7566,96 @@
     "casCell": "96-33-3",
     "pac2": "170",
     "source": "TLV-TWA x 3, TEEL-3/6, IDLH (1990)",
+    "unit": "ppm"
+   }
+  ],
+  "96-45-7": [
+   {
+    "no": "1216",
+    "name": "Ethylenethiourea; (2-Imidazolidinethione)",
+    "casCell": "96-45-7",
+    "pac2": "18",
+    "source": "TEEL-2/11, rat oral TDLo, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "97-02-9": [
+   {
+    "no": "1028",
+    "name": "Dinitroaniline, 2,4-",
+    "casCell": "97-02-9",
+    "pac2": "9.4",
+    "source": "TEEl-2/11, TEEL-3/6, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "97-77-8": [
+   {
+    "no": "1082",
+    "name": "Disulfiram",
+    "casCell": "97-77-8",
+    "pac2": "17",
+    "source": "TLV-TWA x 3, TEEL-3/6, rat oral LD50",
+    "unit": "mg/m3"
+   }
+  ],
+  "98-00-0": [
+   {
+    "no": "1295",
+    "name": "Furfuryl alcohol",
+    "casCell": "98-00-0",
+    "pac2": "42",
+    "source": "TLV-STEL, TEEL-3/6, IDLH (1990)",
+    "unit": "ppm"
+   }
+  ],
+  "98-01-1": [
+   {
+    "no": "1293",
+    "name": "Furancarboxaldehyde, 2-; (Furfural)",
+    "casCell": "98-01-1",
+    "pac2": "10ₑ",
+    "source": "ERPG-1, ERPG-2, ERPG-3",
+    "unit": "ppm"
+   }
+  ],
+  "98-07-7": [
+   {
+    "no": "268",
+    "name": "Benzyl trichloride; (Trichloromethylbenzene)",
+    "casCell": "98-07-7",
+    "pac2": "0.088",
+    "source": "TEEL-2/11, LOC, rat 120-min LC50",
+    "unit": "ppm"
+   }
+  ],
+  "98-54-4": [
+   {
+    "no": "2712",
+    "name": "Tert-butylphenol, p-; (Tert-butylphenol, 4-)",
+    "casCell": "98-54-4",
+    "pac2": "40",
+    "source": "MAK-TWA x 3, TEEL-3/6, rat 240-min LCLo",
+    "unit": "mg/m3"
+   }
+  ],
+  "98-82-8": [
+   {
+    "no": "721",
+    "name": "Cumene; (Isopropyl benzene)",
+    "casCell": "98-82-8",
+    "pac2": "300",
+    "source": "AEGL-1, AEGL-2, AEGL-3",
+    "unit": "ppm"
+   }
+  ],
+  "98-88-4": [
+   {
+    "no": "259",
+    "name": "Benzoyl chloride",
+    "casCell": "98-88-4",
+    "pac2": "5.0",
+    "source": "ERPG-1, ERPG-2, ERPG-3",
     "unit": "ppm"
    }
   ],
@@ -2916,6 +7677,26 @@
     "pac2": "33",
     "source": "TLV-TWA x 3, TEEL-3/6, IDLH (1990 and 1994)",
     "unit": "ppm"
+   }
+  ],
+  "998-40-3": [
+   {
+    "no": "2875",
+    "name": "Tributylphosphine",
+    "casCell": "998-40-3",
+    "pac2": "3",
+    "source": "TEEL-2/11, TEEL-3/6, rat oral LD50",
+    "unit": "ppm"
+   }
+  ],
+  "999-97-3": [
+   {
+    "no": "1382",
+    "name": "Hexamethyldisilazane",
+    "casCell": "999-97-3",
+    "pac2": "64",
+    "source": "TEEL-2/11, TEEL-3/6, rat oral LD50",
+    "unit": "mg/m3"
    }
   ]
  },

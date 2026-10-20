@@ -13,6 +13,28 @@ def test_committed_table_matches_raw():
     assert ex.render(ex.build()) == ex.OUT.read_text(encoding="utf-8").replace("\r\n", "\n")
 
 
+def test_erpg_errata_applied_and_no_conflicts():
+    """AIHA 표의 CAS 오기 2건(2026-10-20 발견)이 정정되고, 한 CAS에 값이 다른 ERPG 행이 남지 않는다."""
+    d = ex.build()
+    assert d["erpgConflicts"] == []
+    assert [e["correctedCas"] for e in d["erpgErrata"]] == ["7580-67-8", "108-31-6"]
+    assert {r["name"] for r in d["erpg"]["101-68-8"]} == {"Methyl diphenyl diisocyanate (MDI)"}
+    assert {r["name"] for r in d["erpg"]["7439-97-6"]} == {"Mercury vapor"}
+    assert d["erpg"]["108-31-6"][0]["erpg2"] == "5 ppm"
+    assert d["erpg"]["7580-67-8"][0]["name"] == "Lithium hydride"
+
+
+def test_conflict_detector_catches_wrong_cas():
+    """정정을 빼면 충돌로 잡힌다(검출기가 실제로 잡는지)."""
+    saved = dict(ex.ERPG_ERRATA)
+    try:
+        ex.ERPG_ERRATA.clear()
+        erpg = ex.extract_erpg(ex.RAW / "aiha_erpg/ERPG.html", [])
+        assert {c["cas"] for c in ex.erpg_conflicts(erpg)} == {"101-68-8", "7439-97-6"}
+    finally:
+        ex.ERPG_ERRATA.update(saved)
+
+
 def test_nothing_skipped_and_samples():
     d = ex.build()
     assert d["skipped"] == []
