@@ -1,4 +1,4 @@
-/// A-010 생성 전체 — 원문 저장본(`assets/form6/raw/`)만 읽어 `form6_constants.json`의 내용을 만든다(REQUIREMENTS_AGENT A-010 D2).
+/// A-010 생성 전체 — 원문 저장본(`assets/form6/raw/`의 압축 묶음)만 읽어 `form6_constants.json`의 내용을 만든다(REQUIREMENTS_AGENT A-010 D2).
 ///
 /// 네트워크 없이 결정적이다: 시각은 수집 기록(`raw/collected.json`)에서만 온다.
 /// 원문이 하나라도 없으면 만들지 않고 [Form6BuildError]로 빠진 파일을 알린다(빈 값으로 조용히 채우지 않는다).
@@ -75,17 +75,18 @@ Future<Map<String, Object?>> buildForm6({
       ? (jsonDecode(collectedFile.readAsStringSync()) as Map).cast<String, Object?>()
       : const <String, Object?>{};
 
-  final replay = ReplayClient(dir: rawDir);
+  final store = RawStore.load(rawDir);
+  final replay = ReplayClient(store);
   final msds = MsdsClient(httpClient: replay, key: 'replay', log: log, clock: () => DateTime.utc(2000));
   final substances = <Map<String, Object?>>[];
   for (final cas in targets.cas) {
     final at = collected[cas] as String?;
     final kosha = await msds.lookup(cas);
-    final ghsFile = File('$rawDir/${rawNameOf(Uri.parse('$ghsEndpoint?${casJsonQuery(cas)}'))}');
+    final ghsText = store.get(rawNameOf(Uri.parse('$ghsEndpoint?${casJsonQuery(cas)}'))!);
     ServiceResult? ghs;
     var ghsRaw = '';
-    if (ghsFile.existsSync()) {
-      ghsRaw = readRawText(ghsFile);
+    if (ghsText != null) {
+      ghsRaw = ghsText;
       try {
         ghs = parseGhsResponse(ghsRaw);
       } on FormatException catch (e) {

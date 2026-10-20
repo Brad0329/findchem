@@ -7,6 +7,7 @@ import 'dart:io';
 import 'package:findchem/form6/exposure_tables.dart';
 import 'package:findchem/form6/form6_build.dart';
 import 'package:findchem/form6/form6_builder.dart';
+import 'package:findchem/form6/raw_store.dart';
 import 'package:findchem/form6/targets.dart';
 import 'package:findchem/lookup/chem_parse.dart';
 import 'package:findchem/msds/msds_client.dart';
@@ -85,6 +86,19 @@ void main() {
       final noCas = ds.entries.where((e) => e.src == Source.byeolpyo3 && !e.deleted && e.cas.isEmpty).length;
       expect((t['noCasEntries'] as List).length, noCas);
       expect(t['entryCount'], form6TargetsOf(ds).entryCount);
+    });
+
+    test('범위 확장(별표 2 포함) 대상 = 별표 3 CAS가 앞, 별표 2 살아 있는 항목 CAS가 뒤(중복 없음), CAS 없는 항목도 센다', () {
+      final b3 = form6TargetsOf(ds);
+      final all = form6TargetsOf(ds, includeByeolpyo2: true);
+      expect(all.cas.sublist(0, b3.cas.length), b3.cas);
+      final want = <String>{
+        for (final e in ds.entries)
+          if (!e.deleted) ...e.cas,
+      };
+      expect(all.cas.toSet(), want);
+      expect(all.cas.length, want.length);
+      expect(all.noCasEntries.length, ds.entries.where((e) => !e.deleted && e.cas.isEmpty).length);
     });
 
     test('원문이 없으면 만들지 않고 빠진 파일을 알린다', () async {
@@ -323,18 +337,43 @@ void main() {
       expect(jsonEncode(again), jsonEncode(built));
     });
 
-    test('원문이 CRLF로 체크아웃돼도(Windows autocrlf) 같은 결과', () async {
-      final crlf = Directory.systemTemp.createTempSync('form6_crlf');
-      addTearDown(() => crlf.deleteSync(recursive: true));
-      for (final f in Directory(rawDir).listSync(recursive: true).whereType<File>()) {
-        final rel = f.path.substring(rawDir.length + 1);
-        // exposure/는 파이썬 추출기(universal newline)만 읽는다 — 생성기가 읽는 KOSHA·GHS 원문만 바꾼다
-        if (rel.startsWith('exposure')) continue;
-        final out = File('${crlf.path}/$rel')..parent.createSync(recursive: true);
-        out.writeAsStringSync(f.readAsStringSync().replaceAll('\r\n', '\n').replaceAll('\n', '\r\n'));
-      }
-      final again = await buildForm6(dataset: ds, rawDir: crlf.path, overrides: const [], exposure: exposure);
-      expect(jsonEncode(again['substances']), jsonEncode(built['substances']));
+    // 원문은 압축 묶음이라 git 줄바꿈 변환을 타지 않는다(SCHEMA.md 2026-10-20 — 파일 하나씩일 때의 CRLF 테스트를 대신한다)
+    group('원문 압축 묶음', () {
+      test('읽어서 다시 저장하면 같은 내용(키 정렬 — 넣은 순서와 무관), 다시 읽으면 같은 생성물', () async {
+        final tmp = Directory.systemTemp.createTempSync('form6_store');
+        addTearDown(() => tmp.deleteSync(recursive: true));
+        final store = RawStore.load(rawDir);
+        final copy = RawStore.load(tmp.path); // 빈 묶음
+        for (final a in rawArchives) {
+          final names = <String>[];
+          // 원래 순서를 뒤집어 넣는다
+          final src = gzip.decode(File('$rawDir/$a.json.gz').readAsBytesSync());
+          names.addAll(((jsonDecode(utf8.decode(src)) as Map).keys.cast<String>()).toList().reversed);
+          for (final n in names) {
+            copy.put(n, store.get(n)!);
+          }
+        }
+        copy.save();
+        for (final a in rawArchives) {
+          expect(
+            gzip.decode(File('${tmp.path}/$a.json.gz').readAsBytesSync()),
+            gzip.decode(File('$rawDir/$a.json.gz').readAsBytesSync()),
+            reason: a,
+          );
+        }
+        File('$rawDir/collected.json').copySync('${tmp.path}/collected.json');
+        final again = await buildForm6(dataset: ds, rawDir: tmp.path, overrides: const [], exposure: exposure);
+        expect(jsonEncode(again['substances']), jsonEncode(built['substances']));
+      });
+
+      test('모르는 묶음 이름은 넣지 않는다', () {
+        final tmp = Directory.systemTemp.createTempSync('form6_store2');
+        addTearDown(() => tmp.deleteSync(recursive: true));
+        final s = RawStore.load(tmp.path);
+        expect(s.put('other/x.xml', 'x'), isFalse);
+        expect(s.put('ghs/1-1-1.json', '{}'), isTrue);
+        expect(s.get('ghs/1-1-1.json'), '{}');
+      });
     });
 
     test('커밋된 생성물이 지금 원문으로 만든 것과 같다(생성 스크립트를 돌리지 않고 원문만 바꾸면 잡힌다)', () {
